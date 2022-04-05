@@ -1,0 +1,30 @@
+﻿@using Entidad;
+@{
+    ViewBag.Title = "Pagina de Inicio";
+    EEmpresa oEmpresa = (EEmpresa)Session["Empresa"];
+}
+
+<div class="jumbotron">
+    <h1>@oEmpresa.Nombre</h1>
+    <p><a href="@Url.Action("Inicio", "Empresa", new { ordenar = 0 })" class="btn btn-primary btn-lg">Cambiar Empresa</a></p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+    </div>
+</div>
+
+
+@section Scripts
+{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+        
+        });
+    </script>
+}

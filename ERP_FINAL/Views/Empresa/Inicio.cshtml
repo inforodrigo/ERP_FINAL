@@ -1,0 +1,319 @@
+﻿
+@model IEnumerable<Entidad.EEmpresa>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Seleccionar Empresa</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/Front/plugins/fontawesome-free/css/all.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="~/Front/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Front/dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="card">
+            <div class="card-body login-card-body">
+                <p class="login-box-msg">Seleccionar Empresa</p>
+
+                <div class="form-group">
+                    <select class="form-control" name="select_empresa" id="select_empresa">
+                        @foreach (var p in Model)
+                        {
+                            <option value="@p.Id">@p.Nombre</option>
+                        }
+                    </select>
+                </div>
+                <div class="row">
+                    <div class="col-8">
+                        <button type="button" class="btn btn-primary" onclick="$('#modalempresa').modal('show');">Nueva</button>
+                    </div>
+                    <div class="col-4">
+                        <button type="button" class="btn btn-success float-right" onclick="cambiarEmpresa();">Seleccionar</button>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-8">
+                        <button type="button" class="btn btn-info" onclick="EditarEmpresa();">Editar</button>
+                    </div>
+                    <div class="col-4">
+                        <button type="button" class="btn btn-danger float-right" onclick="EliminarEmpresa();">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+            <!-- /.login-card-body -->
+        </div>
+    </div>
+
+    <!-- Modal Structure -->
+    <div class="modal" id="modalempresa" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registrar una empresa</h5>
+                </div>
+                <div class="alert alert-danger" style="display:none" role="alert" id="mensajeError"></div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre">
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="nit" class="form-label">Nit</label>
+                            <input type="text" class="form-control" id="nit">
+                        </div>
+                        <div class="col">
+                            <label for="sigla" class="form-label">Sigla</label>
+                            <input type="text" class="form-control" id="sigla">
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col">
+                            <label for="telefono" class="form-label">Telefono</label>
+                            <input type="text" class="form-control" id="telefono">
+                        </div>
+
+                        <div class="col">
+                            <label for="niveles" class="form-label">Niveles</label>
+                            <select class="form-control" name="niveles" id="niveles">
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="correo" class="form-label">Correo</label>
+                        <input type="email" class="form-control" id="correo">
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion" class="form-label">Direccion</label>
+                        <input type="text" class="form-control" id="direccion">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="Registrar()">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal Structure -->
+    <div class="modal" id="modalempresaed" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar datos</h5>
+                </div>
+                <div class="alert alert-danger" style="display:none" role="alert" id="mensajeErrorEd"></div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombreed">
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="nit" class="form-label">Nit</label>
+                            <input type="text" class="form-control" id="nited">
+                        </div>
+                        <div class="col">
+                            <label for="sigla" class="form-label">Sigla</label>
+                            <input type="text" class="form-control" id="siglaed">
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <input type="hidden" class="form-control" id="ided">
+                        <div class="col">
+                            <label for="telefono" class="form-label">Telefono</label>
+                            <input type="text" class="form-control" id="telefonoed">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="correo" class="form-label">Correo</label>
+                        <input type="email" class="form-control" id="correoed">
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion" class="form-label">Direccion</label>
+                        <input type="text" class="form-control" id="direccioned">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="Editar()">Actualizar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- /.login-box -->
+    <!-- jQuery -->
+    <script src="~/Front/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/Front/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/Front/dist/js/adminlte.min.js"></script>
+    <!--Sweet alert-->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script type="text/javascript">
+
+        function Validar() {
+            if ($("#nombre").val() == '') {
+                return MostrarMensaje('Error el nombre es obligatorio');
+                return false;
+            }
+            if ($("#nit").val() == '') {
+                return MostrarMensaje('Error el nit es obligatorio');
+                return false;
+            }
+            if ($("#sigla").val() == '') {
+                return MostrarMensaje('Error las siglas son obligatorias');
+                return false;
+            }
+            return true;
+        }
+
+        function ValidarEditar() {
+            if ($("#nombreed").val() == '') {
+                return MostrarMensaje('Error el nombre es obligatorio');
+                return false;
+            }
+            if ($("#nited").val() == '') {
+                return MostrarMensaje('Error el nit es obligatorio');
+                return false;
+            }
+            if ($("#siglaed").val() == '') {
+                return MostrarMensaje('Error las siglas son obligatorias');
+                return false;
+            }
+            return true;
+        }
+
+        function Registrar() {
+            var validate = Validar();
+            if (!validate) {
+                return;
+            }
+
+            $.ajax({
+                url: "@Url.Action("Create", "Empresa")",
+                cache: false,
+                data: {
+                    nombre: $("#nombre").val(), nit: $("#nit").val(), sigla: $("#sigla").val(),
+                    telefono: $("#telefono").val(), correo: $("#correo").val(), direccion: $("#direccion").val(),
+                    niveles: $("#niveles").val(), vista: 1
+                },
+                type: "POST",
+                dataType: "script"
+            });
+        }
+
+        function EditarEmpresa() {
+            $.ajax({
+                url: "@Url.Action("Edit", "Empresa")",
+                cache: false,
+                data: {
+                    id: $("#select_empresa").val()
+                },
+                type: "GET",
+                dataType: "script"
+            });
+        }
+
+        function datosEmpresa(id, nombre, nit, sigla, telefono, correo, direccion) {
+            $("#ided").val(id);
+            $("#nombreed").val(nombre);
+            $("#nited").val(nit);
+            $('#siglaed').val(sigla);
+            $("#telefonoed").val(telefono);
+            $('#correoed').val(correo);
+            $('#direccioned').val(direccion);
+            $('#modalempresaed').modal('show');
+        }
+
+        function cambiarEmpresa() {
+            $.ajax({
+                url: "@Url.Action("CambiarEmpresa", "Empresa")",
+                cache: false,
+                data: { id: $("#select_empresa").val() },
+                type: "POST",
+                dataType: "script"
+            });
+        }
+
+        function Editar() {
+            var validate = ValidarEditar();
+            if (!validate) {
+                return;
+            }
+
+            $.ajax({
+                url: "@Url.Action("Edit", "Empresa")",
+                cache: false,
+                data: {
+                    id: $("#ided").val(), nombre: $("#nombreed").val(), nit: $("#nited").val(), sigla: $("#siglaed").val(),
+                    telefono: $("#telefonoed").val(), correo: $("#correoed").val(), direccion: $("#direccioned").val()
+                },
+                type: "POST",
+                dataType: "script"
+            });
+        }
+
+        function EliminarEmpresa(id) {
+            swal.fire({
+                title: "ESTA SEGURO QUE DESEA ELIMINAR?",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Si, eliminarlo!",
+                cancelButtonText: "No, cancelar!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "@Url.Action("Delete", "Empresa")",
+                        cache: false,
+                        data: {
+                            id: $("#select_empresa").val()
+                        },
+                        type: "GET",
+                        dataType: "script"
+                    });
+                }
+
+            });
+        }
+
+        function MostrarMensaje(msj) {
+            $("#mensajeError").show();
+            $("#mensajeError").html(msj);
+        }
+
+        function MostrarMensajeEditar(msj) {
+            $("#mensajeErrorEd").show();
+            $("#mensajeErrorEd").html(msj);
+        }
+
+        function redireccionar(url) {
+            window.location = url;
+        }
+
+    </script>
+
+</body>
+</html>
+

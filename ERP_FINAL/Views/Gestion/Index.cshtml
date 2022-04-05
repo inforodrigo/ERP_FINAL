@@ -1,0 +1,363 @@
+﻿@model IEnumerable<Entidad.EGestion>
+
+@{
+    ViewBag.Title = "Index";
+    string FechaI = "a";
+    if(ViewBag.fechaInicio != null)
+    {
+        FechaI = ViewBag.fechaInicio;
+        string FechaF = "";
+
+    }
+
+}
+
+<h2>Gestiones</h2>
+<div class="row justify-content-end">
+    <div class="form-group">
+        <button class="btn btn-info" onclick="$('#modalgestion').modal('show');" style="margin-right:10px;">Nueva</button>
+    </div>
+
+    <div class="form-group">
+        <a href="@Url.Action("ReporteGestion", "Gestion")" class="btn btn-primary" style="margin-right:10px;"> <i class=" fas fa-print"></i>  </a>
+    </div>
+</div>
+   
+    <table class="table table-striped table-bordered table-hover" id="table_gestion">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaInicio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaFin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fechaIni)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fechaFi)
+                </td>
+                <td>
+                    @if (item.Estado == 0 || item.Estado == 4)
+                    {
+                        @Html.Label("Abierta");
+                    }
+                    else
+                    {
+                        @Html.Label("Cerrada");
+                    }
+                </td>
+                <td>
+                    @if (item.Estado == 0)
+                    {
+                        <a class="btn btn-outline btn-circle btn-sm purple" onclick="EditarGestion('@item.Id')"><i class="fa fa-edit"></i></a>
+                        <a class="btn btn-outline btn-circle btn-sm purple" onclick="EliminarGestion('@item.Id')"><i class="fa fa-trash"></i></a>
+                        <a class="btn btn-outline btn-circle btn-sm purple" href="@Url.Action("ListaPeriodo", "Gestion", new { id = item.Id })"><i class="fa fa-plus"></i></a>
+                    }
+                    else if (item.Estado == 4)
+                    {
+                        <a class="btn btn-outline btn-circle btn-sm purple" href="@Url.Action("ListaPeriodo", "Gestion", new { id = item.Id })"><i class="fa fa-plus"></i></a>
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+
+    <!-- Modal Structure -->
+    <div class="modal" id="modalgestion" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registrar una gestion</h5>
+                </div>
+                <div class="alert alert-danger" style="display:none" role="alert" id="mensajeError"></div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre">
+                    </div>
+                    <div class="form-group">
+                        <label for="fechainicio" class="form-label">Fecha Inicio</label>
+                        <input type="date" class="form-control" id="fechainicio">
+                    </div>
+                    <div class="form-group">
+                        <label for="fechafin" class="form-label">Fecha Fin</label>
+                        <input type="date" class="form-control" id="fechafin">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="Registrar()">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Structure Edit -->
+    <div class="modal" id="modalgestioned" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar datos</h5>
+                </div>
+                <div class="alert alert-danger" style="display:none" role="alert" id="mensajeErrorEd"></div>
+                <div class="modal-body">
+                    <input type="hidden" id="ided">
+                    <div class="form-group">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombreed">
+                    </div>
+                    <div class="form-group">
+                        <label for="fechainicio" class="form-label">Fecha Inicio</label>
+                        <input type="text" class="form-control" id="fechainicioed" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="fechafin" class="form-label">Fecha Fin</label>
+                        <input type="text" class="form-control" id="fechafined" value="">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="Editar()">Actualizar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+    $(document).ready(function () {
+        TableDatatablesRowreorder.init();
+    });
+
+    function Validar() {
+        if ($("#nombre").val() == '') {
+            return MostrarMensaje('Error el nombre es obligatorio');
+            return false;
+        }
+        if ($("#fechainicio").val() == '') {
+            return MostrarMensaje('Error la fecha de inicio es obligatoria');
+            return false;
+        }
+        if ($("#fechafin").val() == '') {
+            return MostrarMensaje('Error la fecha de fin es obligatoria');
+            return false;
+        }
+        if ($("#fechafin").val() <= $("#fechainicio").val()) {
+            return MostrarMensaje('Error la fecha de fin es menor a la fecha de inicio');
+            return false;
+        }
+        return true;
+    }
+
+    function ValidarEditar() {
+        if ($("#nombreed").val() == '') {
+            return MostrarMensaje('Error el nombre es obligatorio');
+            return false;
+        }
+        if ($("#fechainicioed").val() == '') {
+            return MostrarMensaje('Error la fecha de inicio es obligatoria');
+            return false;
+        }
+        if ($("#fechafined").val() == '') {
+            return MostrarMensaje('Error la fecha de fin es obligatoria');
+            return false;
+        }
+        if ($("#fechafined").val() <= $("#fechainicioed").val()) {
+            return MostrarMensaje('Error la fecha de fin es menor a la fecha de inicio');
+            return false;
+        }
+        return true;
+    }
+
+    function Registrar() {
+        var validate = Validar();
+        if (!validate) {
+            return;
+        }
+
+        $.ajax({
+            url: "@Url.Action("Create", "Gestion")",
+            cache: false,
+            data: { nombre: $("#nombre").val(), fechainicio: $("#fechainicio").val(), fechafin: $("#fechafin").val() },
+            type: "POST",
+            dataType: "script"
+        });
+    }
+
+    function EditarGestion(id) {
+        $.ajax({
+            url: "@Url.Action("Edit", "Gestion")",
+            cache: false,
+            data: {
+                id: id
+            },
+            type: "GET",
+            dataType: "script"
+        });
+    }
+
+    function datosGestion(id, nombre, fechainicio, fechafin) {
+        $("#ided").val(id);
+        $("#nombreed").val(nombre);
+        $("#fechainicioed").val(fechainicio);
+        $('#fechafined').val(fechafin);
+        $('#modalgestioned').modal('show');
+        //var fe = document.getElementById('fechainicioed');
+        //fe.type = "date";
+        //const fi = new Date(fechainicio); //fechainicio
+        //var dia = fi.getDate();
+        //var mes = fi.getMonth();
+        //var anio = fi.getFullYear();
+        //var a = dia + "-" + mes + "-" + anio;
+        //document.getElementById('fechainicioed').value = a;//anio + "-" + mes + "-" + dia;
+    }
+
+    function Editar() {
+        var validate = ValidarEditar();
+        if (!validate) {
+            return;
+        }
+
+        $.ajax({
+            url: "@Url.Action("Edit", "Gestion")",
+            cache: false,
+            data: { id: $("#ided").val(),  nombre: $("#nombreed").val(), fechainicio: $("#fechainicioed").val(), fechafin: $("#fechafined").val() },
+            type: "POST",
+            dataType: "script"
+        });
+    }
+
+    function EliminarGestion(id) {
+        swal.fire({
+            title: "ESTA SEGURO QUE DESEA ELIMINAR?",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si, eliminarlo!",
+            cancelButtonText: "No, cancelar!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "@Url.Action("Delete", "Gestion")",
+                    cache: false,
+                    data: {
+                        id: id
+                    },
+                    type: "GET",
+                    dataType: "script"
+                });
+            }
+
+        });
+    }
+
+    function MostrarMensaje(msj) {
+        $("#mensajeError").show();
+        $("#mensajeError").html(msj);
+    }
+
+    function MostrarMensajeEditar(msj) {
+        $("#mensajeErrorEd").show();
+        $("#mensajeErrorEd").html(msj);
+    }
+
+    function LimpiarMensaje() {
+        $("#mensajeError").hide();
+        $("#mensajeError").html('');
+    }
+
+    function redireccionar(url) {
+        window.location = url;
+    }
+
+    var TableDatatablesRowreorder = function () {
+        var initTable1 = function () {
+            var table = $('#table_gestion');
+
+            var oTable = table.dataTable({
+
+                // Internationalisation. For more info refer to http://datatables.net/manual/i18n
+                "language": {
+                    "aria": {
+                        "sortAscending": ": activate to sort column ascending",
+                        "sortDescending": ": activate to sort column descending"
+                    },
+                    "emptyTable": "No hay datos para mostrar",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Gestión",
+                    "infoEmpty": "No hay datos para mostrar",
+                    "infoFiltered": "(Filtrado de _MAX_ total Gestión)",
+                    "lengthMenu": "_MENU_ Gestión",
+                    "search": "Buscar:",
+                    "zeroRecords": "No se encontraron coincidencias"
+                },
+
+                // Or you can use remote translation file
+                //"language": {
+                //   url: '//cdn.datatables.net/plug-ins/3cfcc339e89/i18n/Portuguese.json'
+                //},
+
+                // setup buttons extentension: http://datatables.net/extensions/buttons/
+                buttons: [
+                    //{ extend: 'print', className: 'btn dark btn-outline', exportOptions: { columns: [0, 1, 2, 3] } },
+                    { extend: 'copy', className: 'btn purple btn-outline ', exportOptions: { columns: [0, 1] } },
+                    { extend: 'pdf', className: 'btn red btn-outline', exportOptions: { columns: [0, 1] } },
+                    { extend: 'csv', className: 'btn blue btn-outline ', exportOptions: { columns: [0, 1] } },
+                    { extend: 'excel', className: 'btn green btn-outline ', exportOptions: { columns: [0, 1] } }
+                ],
+                columnDefs: [
+                    { orderable: false, targets: [] }
+                ],
+                // setup rowreorder extension: http://datatables.net/extensions/rowreorder/
+
+                "order": [
+                    [0, 'asc']
+                ],
+
+                "lengthMenu": [
+                    [5, 10, 15, 20, -1],
+                    [5, 10, 15, 20, "Todos"] // change per page values here
+                ],
+                // set the initial value
+                "pageLength": 10,
+
+                "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
+
+                // Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
+                // setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js).
+                // So when dropdowns used the scrollable div should be removed.
+                //"dom": "<'row' <'col-md-12'T>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r>t<'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
+            });
+        }
+
+        return {
+
+            //main function to initiate the module
+            init: function () {
+
+                if (!$().dataTable) {
+                    return;
+                }
+
+                initTable1();
+            }
+
+        };
+
+    }();
+    </script>

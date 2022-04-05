@@ -1,0 +1,402 @@
+﻿@model IEnumerable<Entidad.EEmpresa>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Empresas</h2>
+
+<p>
+    <button class="btn btn-primary pull-right" onclick="$('#modalempresa').modal('show');">Nueva</button>
+</p>
+<table class="table table-striped table-bordered table-hover" id="table_empresa">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Nit)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Sigla)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Telefono)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Correo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Direccion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Niveles)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Estado)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sigla)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telefono)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Correo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Direccion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Niveles)
+            </td>
+            <td>
+                @if (item.Estado == 0)
+                {
+                    @Html.Label("Abierto");
+                }
+                else
+                {
+                    @Html.Label("Cerrado");
+                }
+            </td>
+            <td>
+                <a class="btn btn-outline btn-circle btn-sm purple" onclick="EditarEmpresa('@item.Id')"><i class="fa fa-edit"></i></a>
+                <a class="btn btn-outline btn-circle btn-sm purple" onclick="EliminarEmpresa('@item.Id')"><i class="fa fa-trash"></i></a>
+            </td>
+        </tr>
+    }
+
+</table>
+
+<!-- Modal Structure -->
+<div class="modal" id="modalempresa" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registrar una empresa</h5>
+            </div>
+            <div class="alert alert-danger" style="display:none" role="alert" id="mensajeError"></div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombre">
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="nit" class="form-label">Nit</label>
+                        <input type="text" class="form-control" id="nit">
+                    </div>
+                    <div class="col">
+                        <label for="sigla" class="form-label">Sigla</label>
+                        <input type="text" class="form-control" id="sigla">
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col">
+                        <label for="telefono" class="form-label">Telefono</label>
+                        <input type="text" class="form-control" id="telefono">
+                    </div>
+
+                    <div class="col">
+                        <label for="niveles" class="form-label">Niveles</label>
+                        <input type="text" class="form-control" id="niveles">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="correo" class="form-label">Correo</label>
+                    <input type="email" class="form-control" id="correo">
+                </div>
+                <div class="form-group">
+                    <label for="direccion" class="form-label">Direccion</label>
+                    <input type="text" class="form-control" id="direccion">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="Registrar()">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Structure -->
+<div class="modal" id="modalempresaed" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar datos</h5>
+            </div>
+            <div class="alert alert-danger" style="display:none" role="alert" id="mensajeErrorEd"></div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombreed">
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="nit" class="form-label">Nit</label>
+                        <input type="text" class="form-control" id="nited">
+                    </div>
+                    <div class="col">
+                        <label for="sigla" class="form-label">Sigla</label>
+                        <input type="text" class="form-control" id="siglaed">
+                    </div>
+                </div>
+                <div class="row ">
+                    <input type="hidden" class="form-control" id="ided">
+                    <div class="col">
+                        <label for="telefono" class="form-label">Telefono</label>
+                        <input type="text" class="form-control" id="telefonoed">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="correo" class="form-label">Correo</label>
+                    <input type="email" class="form-control" id="correoed">
+                </div>
+                <div class="form-group">
+                    <label for="direccion" class="form-label">Direccion</label>
+                    <input type="text" class="form-control" id="direccioned">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="Editar()">Actualizar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        TableDatatablesRowreorder.init();
+    });
+
+    function Validar() {
+        if ($("#nombre").val() == '') {
+            return MostrarMensaje('Error el nombre es obligatorio');
+            return false;
+        }
+        if ($("#nit").val() == '') {
+            return MostrarMensaje('Error el nit es obligatorio');
+            return false;
+        }
+        if ($("#sigla").val() == '') {
+            return MostrarMensaje('Error las siglas son obligatorias');
+            return false;
+        }
+        return true;
+    }
+
+    function ValidarEditar() {
+        if ($("#nombreed").val() == '') {
+            return MostrarMensaje('Error el nombre es obligatorio');
+            return false;
+        }
+        if ($("#nited").val() == '') {
+            return MostrarMensaje('Error el nit es obligatorio');
+            return false;
+        }
+        if ($("#siglaed").val() == '') {
+            return MostrarMensaje('Error las siglas son obligatorias');
+            return false;
+        }
+        return true;
+    }
+
+    function Registrar() {
+        var validate = Validar();
+        if (!validate) {
+            return;
+        }
+
+        $.ajax({
+            url: "@Url.Action("Create", "Empresa")",
+            cache: false,
+            data: {
+                nombre: $("#nombre").val(), nit: $("#nit").val(), sigla: $("#sigla").val(),
+                telefono: $("#telefono").val(), correo: $("#correo").val(), direccion: $("#direccion").val(),
+                niveles: $("#niveles").val(), vista: 2
+            },
+            type: "POST",
+            dataType: "script"
+        });
+    }
+
+    function EditarEmpresa(id) {
+        $.ajax({
+            url: "@Url.Action("Edit", "Empresa")",
+            cache: false,
+            data: {
+                id: id
+            },
+            type: "GET",
+            dataType: "script"
+        });
+    }
+
+    function datosEmpresa(id, nombre, nit, sigla, telefono, correo, direccion) {
+        $("#ided").val(id);
+        $("#nombreed").val(nombre);
+        $("#nited").val(nit);
+        $('#siglaed').val(sigla);
+        $("#telefonoed").val(telefono);
+        $('#correoed').val(correo);
+        $('#direccioned').val(direccion);
+        $('#modalempresaed').modal('show');
+    }
+
+    function Editar() {
+        var validate = ValidarEditar();
+        if (!validate) {
+            return;
+        }
+
+        $.ajax({
+            url: "@Url.Action("Edit", "Empresa")",
+            cache: false,
+            data: {
+                id: $("#ided").val(), nombre: $("#nombreed").val(), nit: $("#nited").val(), sigla: $("#siglaed").val(),
+                telefono: $("#telefonoed").val(), correo: $("#correoed").val(), direccion: $("#direccioned").val()
+            },
+            type: "POST",
+            dataType: "script"
+        });
+    }
+
+    function EliminarEmpresa(id) {
+        swal.fire({
+            title: "ESTA SEGURO QUE DESEA ELIMINAR?",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si, eliminarlo!",
+            cancelButtonText: "No, cancelar!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "@Url.Action("Delete", "Empresa")",
+                    cache: false,
+                    data: {
+                        id: id
+                    },
+                    type: "GET",
+                    dataType: "script"
+                });
+
+               /*Swal.fire(
+                    'Eliminado!',
+                    'Se ha eliminado correctamente.',
+                    'success'
+                );*/
+            }
+
+        });
+    }
+
+    function MostrarMensaje(msj) {
+        $("#mensajeError").show();
+        $("#mensajeError").html(msj);
+    }
+
+    function MostrarMensajeEditar(msj) {
+        $("#mensajeErrorEd").show();
+        $("#mensajeErrorEd").html(msj);
+    }
+
+    function LimpiarMensaje() {
+        $("#mensajeError").hide();
+        $("#mensajeError").html('');
+    }
+
+    function redireccionar(url) {
+        window.location = url;
+    }
+
+    var TableDatatablesRowreorder = function () {
+        var initTable1 = function () {
+            var table = $('#table_empresa');
+
+            var oTable = table.dataTable({
+
+                // Internationalisation. For more info refer to http://datatables.net/manual/i18n
+                "language": {
+                    "aria": {
+                        "sortAscending": ": activate to sort column ascending",
+                        "sortDescending": ": activate to sort column descending"
+                    },
+                    "emptyTable": "No hay datos para mostrar",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Gestión",
+                    "infoEmpty": "No hay datos para mostrar",
+                    "infoFiltered": "(Filtrado de _MAX_ total Gestión)",
+                    "lengthMenu": "_MENU_ Gestión",
+                    "search": "Buscar:",
+                    "zeroRecords": "No se encontraron coincidencias"
+                },
+
+                // Or you can use remote translation file
+                //"language": {
+                //   url: '//cdn.datatables.net/plug-ins/3cfcc339e89/i18n/Portuguese.json'
+                //},
+
+                // setup buttons extentension: http://datatables.net/extensions/buttons/
+                buttons: [
+                    //{ extend: 'print', className: 'btn dark btn-outline', exportOptions: { columns: [0, 1, 2, 3] } },
+                    { extend: 'copy', className: 'btn purple btn-outline ', exportOptions: { columns: [0, 1] } },
+                    { extend: 'pdf', className: 'btn red btn-outline', exportOptions: { columns: [0, 1] } },
+                    { extend: 'csv', className: 'btn blue btn-outline ', exportOptions: { columns: [0, 1] } },
+                    { extend: 'excel', className: 'btn green btn-outline ', exportOptions: { columns: [0, 1] } }
+                ],
+                columnDefs: [
+                    { orderable: false, targets: [] }
+                ],
+                // setup rowreorder extension: http://datatables.net/extensions/rowreorder/
+
+                "order": [
+                    [0, 'asc']
+                ],
+
+                "lengthMenu": [
+                    [5, 10, 15, 20, -1],
+                    [5, 10, 15, 20, "Todos"] // change per page values here
+                ],
+                // set the initial value
+                "pageLength": 10,
+
+                "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
+
+                // Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
+                // setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js).
+                // So when dropdowns used the scrollable div should be removed.
+                //"dom": "<'row' <'col-md-12'T>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r>t<'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
+            });
+        }
+
+        return {
+
+            //main function to initiate the module
+            init: function () {
+
+                if (!$().dataTable) {
+                    return;
+                }
+
+                initTable1();
+            }
+
+        };
+
+    }();
+</script>

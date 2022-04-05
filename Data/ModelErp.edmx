@@ -1,0 +1,524 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="dbErpModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="cuenta">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codigo" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="nivel" Type="int" Nullable="false" />
+          <Property Name="tipocuenta" Type="int" Nullable="false" />
+          <Property Name="estado" Type="int" Nullable="false" />
+          <Property Name="idUsuario" Type="int" Nullable="false" />
+          <Property Name="idEmpresa" Type="int" Nullable="false" />
+          <Property Name="idCuentaPadre" Type="int" />
+        </EntityType>
+        <EntityType Name="empresa">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="nit" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="sigla" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="telefono" Type="int" />
+          <Property Name="correo" Type="varchar" MaxLength="100" />
+          <Property Name="direccion" Type="varchar" MaxLength="500" />
+          <Property Name="niveles" Type="int" Nullable="false" />
+          <Property Name="idUsuario" Type="int" Nullable="false" />
+          <Property Name="estado" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="gestion">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="fechainicio" Type="datetime" Nullable="false" />
+          <Property Name="fechafin" Type="datetime" Nullable="false" />
+          <Property Name="idUsuario" Type="int" Nullable="false" />
+          <Property Name="idEmpresa" Type="int" Nullable="false" />
+          <Property Name="estado" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="periodo">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="fechainicio" Type="datetime" Nullable="false" />
+          <Property Name="fechafin" Type="datetime" Nullable="false" />
+          <Property Name="idUsuario" Type="int" Nullable="false" />
+          <Property Name="idGestion" Type="int" Nullable="false" />
+          <Property Name="estado" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="usuario">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="nickname" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="pass" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="tipo" Type="int" Nullable="false" />
+          <Property Name="estado" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__cuenta__idCuenta__1CBC4616">
+          <End Role="cuenta" Type="Self.cuenta" Multiplicity="0..1" />
+          <End Role="cuenta1" Type="Self.cuenta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuenta">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="cuenta1">
+              <PropertyRef Name="idCuentaPadre" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__cuenta__idEmpres__1BC821DD">
+          <End Role="empresa" Type="Self.empresa" Multiplicity="1" />
+          <End Role="cuenta" Type="Self.cuenta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="empresa">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="cuenta">
+              <PropertyRef Name="idEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__cuenta__idUsuari__1AD3FDA4">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="cuenta" Type="Self.cuenta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="cuenta">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__empresa__idUsuar__2B3F6F97">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="empresa" Type="Self.empresa" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="empresa">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__gestion__idEmpre__30F848ED">
+          <End Role="empresa" Type="Self.empresa" Multiplicity="1" />
+          <End Role="gestion" Type="Self.gestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="empresa">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gestion">
+              <PropertyRef Name="idEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__gestion__idUsuar__300424B4">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="gestion" Type="Self.gestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gestion">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__periodo__idGesti__36B12243">
+          <End Role="gestion" Type="Self.gestion" Multiplicity="1" />
+          <End Role="periodo" Type="Self.periodo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="gestion">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="periodo">
+              <PropertyRef Name="idGestion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__periodo__idUsuar__35BCFE0A">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="periodo" Type="Self.periodo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="periodo">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="dbErpModelStoreContainer">
+          <EntitySet Name="cuenta" EntityType="Self.cuenta" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="empresa" EntityType="Self.empresa" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="gestion" EntityType="Self.gestion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="periodo" EntityType="Self.periodo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="usuario" EntityType="Self.usuario" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__cuenta__idCuenta__1CBC4616" Association="Self.FK__cuenta__idCuenta__1CBC4616">
+            <End Role="cuenta" EntitySet="cuenta" />
+            <End Role="cuenta1" EntitySet="cuenta" />
+          </AssociationSet>
+          <AssociationSet Name="FK__cuenta__idEmpres__1BC821DD" Association="Self.FK__cuenta__idEmpres__1BC821DD">
+            <End Role="empresa" EntitySet="empresa" />
+            <End Role="cuenta" EntitySet="cuenta" />
+          </AssociationSet>
+          <AssociationSet Name="FK__cuenta__idUsuari__1AD3FDA4" Association="Self.FK__cuenta__idUsuari__1AD3FDA4">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="cuenta" EntitySet="cuenta" />
+          </AssociationSet>
+          <AssociationSet Name="FK__empresa__idUsuar__2B3F6F97" Association="Self.FK__empresa__idUsuar__2B3F6F97">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="empresa" EntitySet="empresa" />
+          </AssociationSet>
+          <AssociationSet Name="FK__gestion__idEmpre__30F848ED" Association="Self.FK__gestion__idEmpre__30F848ED">
+            <End Role="empresa" EntitySet="empresa" />
+            <End Role="gestion" EntitySet="gestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__gestion__idUsuar__300424B4" Association="Self.FK__gestion__idUsuar__300424B4">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="gestion" EntitySet="gestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__periodo__idGesti__36B12243" Association="Self.FK__periodo__idGesti__36B12243">
+            <End Role="gestion" EntitySet="gestion" />
+            <End Role="periodo" EntitySet="periodo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__periodo__idUsuar__35BCFE0A" Association="Self.FK__periodo__idUsuar__35BCFE0A">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="periodo" EntitySet="periodo" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="dbErpModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="empresa">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nit" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="sigla" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="telefono" Type="Int32" />
+          <Property Name="correo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="direccion" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="niveles" Type="Int32" Nullable="false" />
+          <Property Name="idUsuario" Type="Int32" Nullable="false" />
+          <Property Name="estado" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="usuario" Relationship="Self.FK__empresa__idUsuar__2B3F6F97" FromRole="empresa" ToRole="usuario" />
+          <NavigationProperty Name="gestion" Relationship="Self.FK__gestion__idEmpre__30F848ED" FromRole="empresa" ToRole="gestion" />
+          <NavigationProperty Name="cuenta" Relationship="dbErpModel.FK__cuenta__idEmpres__1BC821DD" FromRole="empresa" ToRole="cuenta" />
+        </EntityType>
+        <EntityType Name="gestion">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="fechainicio" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="fechafin" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="idUsuario" Type="Int32" Nullable="false" />
+          <Property Name="idEmpresa" Type="Int32" Nullable="false" />
+          <Property Name="estado" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="empresa" Relationship="Self.FK__gestion__idEmpre__30F848ED" FromRole="gestion" ToRole="empresa" />
+          <NavigationProperty Name="usuario" Relationship="Self.FK__gestion__idUsuar__300424B4" FromRole="gestion" ToRole="usuario" />
+          <NavigationProperty Name="periodo" Relationship="dbErpModel.FK__periodo__idGesti__36B12243" FromRole="gestion" ToRole="periodo" />
+        </EntityType>
+        <EntityType Name="usuario">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nickname" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="pass" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="tipo" Type="Int32" Nullable="false" />
+          <Property Name="estado" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="empresa" Relationship="Self.FK__empresa__idUsuar__2B3F6F97" FromRole="usuario" ToRole="empresa" />
+          <NavigationProperty Name="gestion" Relationship="Self.FK__gestion__idUsuar__300424B4" FromRole="usuario" ToRole="gestion" />
+          <NavigationProperty Name="periodo" Relationship="dbErpModel.FK__periodo__idUsuar__35BCFE0A" FromRole="usuario" ToRole="periodo" />
+          <NavigationProperty Name="cuenta" Relationship="dbErpModel.FK__cuenta__idUsuari__1AD3FDA4" FromRole="usuario" ToRole="cuenta" />
+        </EntityType>
+        <Association Name="FK__empresa__idUsuar__2B3F6F97">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="empresa" Type="Self.empresa" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="empresa">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__gestion__idEmpre__30F848ED">
+          <End Role="empresa" Type="Self.empresa" Multiplicity="1" />
+          <End Role="gestion" Type="Self.gestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="empresa">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gestion">
+              <PropertyRef Name="idEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__gestion__idUsuar__300424B4">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="gestion" Type="Self.gestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gestion">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="dbErpEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="empresa" EntityType="Self.empresa" />
+          <EntitySet Name="gestion" EntityType="Self.gestion" />
+          <EntitySet Name="usuario" EntityType="Self.usuario" />
+          <AssociationSet Name="FK__empresa__idUsuar__2B3F6F97" Association="Self.FK__empresa__idUsuar__2B3F6F97">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="empresa" EntitySet="empresa" />
+          </AssociationSet>
+          <AssociationSet Name="FK__gestion__idEmpre__30F848ED" Association="Self.FK__gestion__idEmpre__30F848ED">
+            <End Role="empresa" EntitySet="empresa" />
+            <End Role="gestion" EntitySet="gestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__gestion__idUsuar__300424B4" Association="Self.FK__gestion__idUsuar__300424B4">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="gestion" EntitySet="gestion" />
+          </AssociationSet>
+          <EntitySet Name="periodo" EntityType="dbErpModel.periodo" />
+          <AssociationSet Name="FK__periodo__idGesti__36B12243" Association="dbErpModel.FK__periodo__idGesti__36B12243">
+            <End Role="gestion" EntitySet="gestion" />
+            <End Role="periodo" EntitySet="periodo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__periodo__idUsuar__35BCFE0A" Association="dbErpModel.FK__periodo__idUsuar__35BCFE0A">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="periodo" EntitySet="periodo" />
+          </AssociationSet>
+          <EntitySet Name="cuenta" EntityType="dbErpModel.cuenta" />
+          <AssociationSet Name="FK__cuenta__idCuenta__1CBC4616" Association="dbErpModel.FK__cuenta__idCuenta__1CBC4616">
+            <End Role="cuenta" EntitySet="cuenta" />
+            <End Role="cuenta1" EntitySet="cuenta" />
+          </AssociationSet>
+          <AssociationSet Name="FK__cuenta__idEmpres__1BC821DD" Association="dbErpModel.FK__cuenta__idEmpres__1BC821DD">
+            <End Role="empresa" EntitySet="empresa" />
+            <End Role="cuenta" EntitySet="cuenta" />
+          </AssociationSet>
+          <AssociationSet Name="FK__cuenta__idUsuari__1AD3FDA4" Association="dbErpModel.FK__cuenta__idUsuari__1AD3FDA4">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="cuenta" EntitySet="cuenta" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="periodo">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="fechainicio" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="fechafin" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="idUsuario" Type="Int32" Nullable="false" />
+          <Property Name="idGestion" Type="Int32" Nullable="false" />
+          <Property Name="estado" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="gestion" Relationship="dbErpModel.FK__periodo__idGesti__36B12243" FromRole="periodo" ToRole="gestion" />
+          <NavigationProperty Name="usuario" Relationship="dbErpModel.FK__periodo__idUsuar__35BCFE0A" FromRole="periodo" ToRole="usuario" />
+        </EntityType>
+        <Association Name="FK__periodo__idGesti__36B12243">
+          <End Type="dbErpModel.gestion" Role="gestion" Multiplicity="1" />
+          <End Type="dbErpModel.periodo" Role="periodo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="gestion">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="periodo">
+              <PropertyRef Name="idGestion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__periodo__idUsuar__35BCFE0A">
+          <End Type="dbErpModel.usuario" Role="usuario" Multiplicity="1" />
+          <End Type="dbErpModel.periodo" Role="periodo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="periodo">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="cuenta">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codigo" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="nombre" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="nivel" Type="Int32" Nullable="false" />
+          <Property Name="tipocuenta" Type="Int32" Nullable="false" />
+          <Property Name="estado" Type="Int32" Nullable="false" />
+          <Property Name="idUsuario" Type="Int32" Nullable="false" />
+          <Property Name="idEmpresa" Type="Int32" Nullable="false" />
+          <Property Name="idCuentaPadre" Type="Int32" />
+          <NavigationProperty Name="cuenta1" Relationship="dbErpModel.FK__cuenta__idCuenta__1CBC4616" FromRole="cuenta" ToRole="cuenta1" />
+          <NavigationProperty Name="cuenta2" Relationship="dbErpModel.FK__cuenta__idCuenta__1CBC4616" FromRole="cuenta1" ToRole="cuenta" />
+          <NavigationProperty Name="empresa" Relationship="dbErpModel.FK__cuenta__idEmpres__1BC821DD" FromRole="cuenta" ToRole="empresa" />
+          <NavigationProperty Name="usuario" Relationship="dbErpModel.FK__cuenta__idUsuari__1AD3FDA4" FromRole="cuenta" ToRole="usuario" />
+        </EntityType>
+        <Association Name="FK__cuenta__idCuenta__1CBC4616">
+          <End Type="dbErpModel.cuenta" Role="cuenta" Multiplicity="0..1" />
+          <End Type="dbErpModel.cuenta" Role="cuenta1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuenta">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="cuenta1">
+              <PropertyRef Name="idCuentaPadre" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__cuenta__idEmpres__1BC821DD">
+          <End Type="dbErpModel.empresa" Role="empresa" Multiplicity="1" />
+          <End Type="dbErpModel.cuenta" Role="cuenta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="empresa">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="cuenta">
+              <PropertyRef Name="idEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__cuenta__idUsuari__1AD3FDA4">
+          <End Type="dbErpModel.usuario" Role="usuario" Multiplicity="1" />
+          <End Type="dbErpModel.cuenta" Role="cuenta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="cuenta">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="dbErpModelStoreContainer" CdmEntityContainer="dbErpEntities">
+          <EntitySetMapping Name="empresa">
+            <EntityTypeMapping TypeName="dbErpModel.empresa">
+              <MappingFragment StoreEntitySet="empresa">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="nit" ColumnName="nit" />
+                <ScalarProperty Name="sigla" ColumnName="sigla" />
+                <ScalarProperty Name="telefono" ColumnName="telefono" />
+                <ScalarProperty Name="correo" ColumnName="correo" />
+                <ScalarProperty Name="direccion" ColumnName="direccion" />
+                <ScalarProperty Name="niveles" ColumnName="niveles" />
+                <ScalarProperty Name="idUsuario" ColumnName="idUsuario" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="gestion">
+            <EntityTypeMapping TypeName="dbErpModel.gestion">
+              <MappingFragment StoreEntitySet="gestion">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="fechainicio" ColumnName="fechainicio" />
+                <ScalarProperty Name="fechafin" ColumnName="fechafin" />
+                <ScalarProperty Name="idUsuario" ColumnName="idUsuario" />
+                <ScalarProperty Name="idEmpresa" ColumnName="idEmpresa" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="usuario">
+            <EntityTypeMapping TypeName="dbErpModel.usuario">
+              <MappingFragment StoreEntitySet="usuario">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="nickname" ColumnName="nickname" />
+                <ScalarProperty Name="pass" ColumnName="pass" />
+                <ScalarProperty Name="tipo" ColumnName="tipo" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="periodo">
+            <EntityTypeMapping TypeName="dbErpModel.periodo">
+              <MappingFragment StoreEntitySet="periodo">
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="idGestion" ColumnName="idGestion" />
+                <ScalarProperty Name="idUsuario" ColumnName="idUsuario" />
+                <ScalarProperty Name="fechafin" ColumnName="fechafin" />
+                <ScalarProperty Name="fechainicio" ColumnName="fechainicio" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cuenta">
+            <EntityTypeMapping TypeName="dbErpModel.cuenta">
+              <MappingFragment StoreEntitySet="cuenta">
+                <ScalarProperty Name="idCuentaPadre" ColumnName="idCuentaPadre" />
+                <ScalarProperty Name="idEmpresa" ColumnName="idEmpresa" />
+                <ScalarProperty Name="idUsuario" ColumnName="idUsuario" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="tipocuenta" ColumnName="tipocuenta" />
+                <ScalarProperty Name="nivel" ColumnName="nivel" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
