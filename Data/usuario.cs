@@ -21,6 +21,10 @@ namespace Data
             this.gestion = new HashSet<gestion>();
             this.periodo = new HashSet<periodo>();
             this.cuenta = new HashSet<cuenta>();
+            this.comprobante = new HashSet<comprobante>();
+            this.detalleComprobante = new HashSet<detalleComprobante>();
+            this.moneda = new HashSet<moneda>();
+            this.empresaMoneda = new HashSet<empresaMoneda>();
         }
     
         public int id { get; set; }
@@ -38,5 +42,13 @@ namespace Data
         public virtual ICollection<periodo> periodo { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<cuenta> cuenta { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<comprobante> comprobante { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<detalleComprobante> detalleComprobante { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<moneda> moneda { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<empresaMoneda> empresaMoneda { get; set; }
     }
 }

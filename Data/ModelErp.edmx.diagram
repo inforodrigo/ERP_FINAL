@@ -18,6 +18,20 @@
         <AssociationConnector Association="dbErpModel.FK__cuenta__idCuenta__1CBC4616" />
         <AssociationConnector Association="dbErpModel.FK__cuenta__idEmpres__1BC821DD" />
         <AssociationConnector Association="dbErpModel.FK__cuenta__idUsuari__1AD3FDA4" />
+        <EntityTypeShape EntityType="dbErpModel.comprobante" Width="1.5" PointX="8.25" PointY="6.875" />
+        <EntityTypeShape EntityType="dbErpModel.detalleComprobante" Width="1.5" PointX="10.5" PointY="4.875" />
+        <EntityTypeShape EntityType="dbErpModel.moneda" Width="1.5" PointX="3" PointY="7.5" />
+        <AssociationConnector Association="dbErpModel.FK__comproban__idMon__339FAB6E" />
+        <AssociationConnector Association="dbErpModel.FK__comproban__idUsu__32AB8735" />
+        <AssociationConnector Association="dbErpModel.FK__detalleCo__idCom__37703C52" />
+        <AssociationConnector Association="dbErpModel.FK__detalleCo__idCue__3864608B" />
+        <AssociationConnector Association="dbErpModel.FK__detalleCo__idUsu__367C1819" />
+        <AssociationConnector Association="dbErpModel.FK__moneda__idUsuari__29221CFB" />
+        <EntityTypeShape EntityType="dbErpModel.empresaMoneda" Width="1.5" PointX="10.25" PointY="0.75" />
+        <AssociationConnector Association="dbErpModel.FK__empresaMo__idEmp__42E1EEFE" />
+        <AssociationConnector Association="dbErpModel.FK__empresaMo__idMon__43D61337" />
+        <AssociationConnector Association="dbErpModel.FK__empresaMo__idMon__44CA3770" />
+        <AssociationConnector Association="dbErpModel.FK__empresaMo__idUsu__41EDCAC5" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

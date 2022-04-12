@@ -30,5 +30,9 @@ namespace Data
         public virtual DbSet<usuario> usuario { get; set; }
         public virtual DbSet<periodo> periodo { get; set; }
         public virtual DbSet<cuenta> cuenta { get; set; }
+        public virtual DbSet<comprobante> comprobante { get; set; }
+        public virtual DbSet<detalleComprobante> detalleComprobante { get; set; }
+        public virtual DbSet<moneda> moneda { get; set; }
+        public virtual DbSet<empresaMoneda> empresaMoneda { get; set; }
     }
 }

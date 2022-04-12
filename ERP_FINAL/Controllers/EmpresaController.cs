@@ -33,13 +33,14 @@ namespace ERP_FINAL.Controllers
 
         // POST: Empresa/Create
         [HttpPost]
-        public JavaScriptResult Create(string nombre, string nit, string sigla, string telefono, string correo, string direccion, string niveles, int vista)
+        public JavaScriptResult Create(string nombre, string nit, string sigla, string telefono, string correo, string direccion, string niveles, int moneda, int vista)
         {
             try
             {
 
                 LEmpresa Empresa = new LEmpresa();
                 EEmpresa objEmpresa = new EEmpresa();
+                EEmpresaMoneda objEEMoneda = new EEmpresaMoneda();
                 EUsuario oUsuario = (EUsuario)Session["Usuario"];
 
                 objEmpresa.Nombre = nombre;
@@ -52,7 +53,10 @@ namespace ERP_FINAL.Controllers
                 objEmpresa.Niveles = Convert.ToInt32(niveles);
                 objEmpresa.idUsuario = oUsuario.Id;
 
-                Empresa.Agregar(objEmpresa);
+                objEEMoneda.idMonedaPrincipal = moneda;
+                objEEMoneda.idUsuario = oUsuario.Id;
+
+                Empresa.Agregar(objEmpresa, objEEMoneda);
 
                 if(vista == 1)
                 {
@@ -101,7 +105,9 @@ namespace ERP_FINAL.Controllers
         public JavaScriptResult Edit(int id)
         {
             EEmpresa empresa = lLogica.ObtenerPorid(id);
-            return JavaScript("datosEmpresa('" + empresa.Id + "', '"+ empresa.Nombre + "', '" + empresa.Nit + "', '" + empresa.Sigla + "', '" + empresa.Telefono + "', '" + empresa.Correo + "', '" + empresa.Direccion + "');");
+            //1 se puede editar - 2 no se puede editar
+            var moneda = lLogica.VerificarMonedas(empresa.Id);
+            return JavaScript("datosEmpresa('" + empresa.Id + "', '"+ empresa.Nombre + "', '" + empresa.Nit + "', '" + empresa.Sigla + "', '" + empresa.Telefono + "', '" + empresa.Correo + "', '" + empresa.Direccion + "', '" + moneda + "');");
         }
 
         // POST: Empresa/Edit/5
@@ -161,6 +167,36 @@ namespace ERP_FINAL.Controllers
             {
                 return View();
             }
+        }
+
+        [HttpPost]
+        public ActionResult ObtenerMonedas()
+        {
+            try
+            {
+                EUsuario oUsuario = (EUsuario)Session["Usuario"];           
+
+                List<EMoneda> monedas = new List<EMoneda>();
+                monedas = lLogica.ObtenerMonedas(oUsuario.Id);
+
+                return Json(new
+                {
+                    monedas = monedas
+
+                });
+
+            }
+            catch (BussinessException ex)
+            {
+                string mensaje = ex.Message.Replace("'", "");
+                ViewBag.Mensaje = mensaje;
+                return JavaScript("MostrarMensaje('" + mensaje + "');");
+            }
+            catch (Exception ex)
+            {
+                return JavaScript("MostrarMensaje('Ha ocurrido un error');");
+            }
+
         }
     }
 }

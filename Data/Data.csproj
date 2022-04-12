@@ -50,10 +50,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="comprobante.cs">
+      <DependentUpon>ModelErp.tt</DependentUpon>
+    </Compile>
     <Compile Include="cuenta.cs">
       <DependentUpon>ModelErp.tt</DependentUpon>
     </Compile>
+    <Compile Include="detalleComprobante.cs">
+      <DependentUpon>ModelErp.tt</DependentUpon>
+    </Compile>
     <Compile Include="empresa.cs">
+      <DependentUpon>ModelErp.tt</DependentUpon>
+    </Compile>
+    <Compile Include="empresaMoneda.cs">
       <DependentUpon>ModelErp.tt</DependentUpon>
     </Compile>
     <Compile Include="gestion.cs">
@@ -73,6 +82,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ModelErp.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="moneda.cs">
+      <DependentUpon>ModelErp.tt</DependentUpon>
     </Compile>
     <Compile Include="periodo.cs">
       <DependentUpon>ModelErp.tt</DependentUpon>

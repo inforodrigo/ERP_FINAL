@@ -66,16 +66,16 @@
                 <div class="alert alert-danger" style="display:none" role="alert" id="mensajeError"></div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="nombre" class="form-label">Nombre</label>
+                        <label for="nombre" class="form-label">Nombre *</label>
                         <input type="text" class="form-control" id="nombre">
                     </div>
                     <div class="row">
                         <div class="col">
-                            <label for="nit" class="form-label">Nit</label>
+                            <label for="nit" class="form-label">Nit *</label>
                             <input type="text" class="form-control" id="nit">
                         </div>
                         <div class="col">
-                            <label for="sigla" class="form-label">Sigla</label>
+                            <label for="sigla" class="form-label">Sigla *</label>
                             <input type="text" class="form-control" id="sigla">
                         </div>
                     </div>
@@ -86,13 +86,20 @@
                         </div>
 
                         <div class="col">
-                            <label for="niveles" class="form-label">Niveles</label>
+                            <label for="niveles" class="form-label">Niveles *</label>
                             <select class="form-control" name="niveles" id="niveles">
                                 <option value="3">3</option>
                                 <option value="4">4</option>
                                 <option value="5">5</option>
                                 <option value="6">6</option>
                                 <option value="7">7</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label id="lmoneda" for="moneda">Moneda *</label>
+                            <select name="moneda" id="moneda" class="form-control" style="width: 100%;">
                             </select>
                         </div>
                     </div>
@@ -124,16 +131,16 @@
                 <div class="alert alert-danger" style="display:none" role="alert" id="mensajeErrorEd"></div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="nombre" class="form-label">Nombre</label>
+                        <label for="nombre" class="form-label">Nombre *</label>
                         <input type="text" class="form-control" id="nombreed">
                     </div>
                     <div class="row">
                         <div class="col">
-                            <label for="nit" class="form-label">Nit</label>
+                            <label for="nit" class="form-label">Nit *</label>
                             <input type="text" class="form-control" id="nited">
                         </div>
                         <div class="col">
-                            <label for="sigla" class="form-label">Sigla</label>
+                            <label for="sigla" class="form-label">Sigla *</label>
                             <input type="text" class="form-control" id="siglaed">
                         </div>
                     </div>
@@ -142,6 +149,13 @@
                         <div class="col">
                             <label for="telefono" class="form-label">Telefono</label>
                             <input type="text" class="form-control" id="telefonoed">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label id="lemoneda" for="monedaed">Moneda *</label>
+                            <select name="monedaed" id="monedaed" class="form-control" style="width: 100%;">
+                            </select>
                         </div>
                     </div>
                     <div class="form-group">
@@ -172,6 +186,38 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script type="text/javascript">
+
+        $(document).ready(function () {
+            listarMonedas(1,0);
+        });
+
+        function listarMonedas(con, edit) {
+            $("#moneda").empty();
+            $("#monedaed").empty()
+            $.ajax({
+                url: "@Url.Action("ObtenerMonedas", "Empresa")",
+                cache: false,
+                        type: "POST",
+                        dataType: "json",
+                data: {
+                    datos: 1
+                }, success: function (result) {                 
+                    $.each(result.monedas, function (index, value) {
+                        if (con == 1) {
+                            $('#moneda').append('<option value=' + value.Id + ' > ' + value.Nombre + '</option>');
+                        } else {
+                            if (edit == 1) {
+                                $('#monedaed').append('<option value=' + value.Id + ' > ' + value.Nombre + '</option>');        
+                            } else {
+                                $('#monedaed').append('<option value=' + value.Id + ' > ' + value.Nombre + '</option>');
+                                $('#monedaed').prop('disabled', 'disabled');
+                            }
+                        }                                            
+                    })
+                }
+
+            });
+        }
 
         function Validar() {
             if ($("#nombre").val() == '') {
@@ -217,7 +263,7 @@
                 data: {
                     nombre: $("#nombre").val(), nit: $("#nit").val(), sigla: $("#sigla").val(),
                     telefono: $("#telefono").val(), correo: $("#correo").val(), direccion: $("#direccion").val(),
-                    niveles: $("#niveles").val(), vista: 1
+                    niveles: $("#niveles").val(), moneda: $("#moneda").val(), vista: 1
                 },
                 type: "POST",
                 dataType: "script"
@@ -236,7 +282,7 @@
             });
         }
 
-        function datosEmpresa(id, nombre, nit, sigla, telefono, correo, direccion) {
+        function datosEmpresa(id, nombre, nit, sigla, telefono, correo, direccion, moneda) {
             $("#ided").val(id);
             $("#nombreed").val(nombre);
             $("#nited").val(nit);
@@ -244,6 +290,12 @@
             $("#telefonoed").val(telefono);
             $('#correoed').val(correo);
             $('#direccioned').val(direccion);
+            if (moneda == 1) {
+                listarMonedas(2, 1);
+            } else {
+                listarMonedas(2, 2);
+            }
+            
             $('#modalempresaed').modal('show');
         }
 

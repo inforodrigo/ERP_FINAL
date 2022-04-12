@@ -12,29 +12,25 @@ namespace Data
     using System;
     using System.Collections.Generic;
     
-    public partial class cuenta
+    public partial class comprobante
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public cuenta()
+        public comprobante()
         {
-            this.cuenta1 = new HashSet<cuenta>();
             this.detalleComprobante = new HashSet<detalleComprobante>();
         }
     
         public int id { get; set; }
-        public string codigo { get; set; }
-        public string nombre { get; set; }
-        public int nivel { get; set; }
-        public int tipocuenta { get; set; }
+        public int serie { get; set; }
+        public string glosa { get; set; }
+        public System.DateTime fecha { get; set; }
+        public double tipoCambio { get; set; }
         public int estado { get; set; }
+        public int tipoComprobante { get; set; }
         public int idUsuario { get; set; }
-        public int idEmpresa { get; set; }
-        public Nullable<int> idCuentaPadre { get; set; }
+        public int idMoneda { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<cuenta> cuenta1 { get; set; }
-        public virtual cuenta cuenta2 { get; set; }
-        public virtual empresa empresa { get; set; }
+        public virtual moneda moneda { get; set; }
         public virtual usuario usuario { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<detalleComprobante> detalleComprobante { get; set; }

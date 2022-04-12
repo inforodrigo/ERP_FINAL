@@ -48,7 +48,7 @@ namespace Logica
                         var resultado = (from x in esquema.empresa
                                          where x.estado != (int)Estado.Eliminado
                                          select x).ToList();
-                       
+
                         foreach (var item in resultado)
                         {
                             EEmpresa e = new EEmpresa();
@@ -70,11 +70,11 @@ namespace Logica
                     else
                     {
                         var resultado = (from x in esquema.empresa
-                                     where x.estado != (int)Estado.Eliminado
-                                     orderby x.id descending
-                                     select x).ToList();
+                                         where x.estado != (int)Estado.Eliminado
+                                         orderby x.id descending
+                                         select x).ToList();
 
-                        
+
                         foreach (var item in resultado)
                         {
                             EEmpresa e = new EEmpresa();
@@ -93,9 +93,9 @@ namespace Logica
                         }
 
                     }
-                    
 
-                    
+
+
 
                     return empresas;
                 }
@@ -139,7 +139,98 @@ namespace Logica
             }
         }
 
-        public EEmpresa Agregar(EEmpresa objempresa)
+        public EEmpresa ObtenerPorNit(string nit)
+        {
+            try
+            {
+                using (var esquema = GetEsquema())
+                {
+                    var resultado = (from x in esquema.empresa
+                                     where x.estado != (int)Estado.Eliminado
+                                     where x.nit == nit
+                                     select x).FirstOrDefault();
+
+                    EEmpresa emp = new EEmpresa();
+                    emp.Id = resultado.id;
+                    emp.Nombre = resultado.nombre;
+                    emp.Nit = resultado.nit;
+                    emp.Sigla = resultado.sigla;
+                    emp.Telefono = (int)resultado.telefono;
+                    emp.Correo = resultado.correo;
+                    emp.Direccion = resultado.direccion;
+                    emp.Niveles = resultado.niveles;
+                    emp.idUsuario = resultado.idUsuario;
+                    emp.Usuario = resultado.usuario.nombre;
+                    emp.Estado = resultado.estado;
+
+                    return emp;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public List<EMoneda> ObtenerMonedas(int id)
+        {
+            try
+            {
+                using (var esquema = GetEsquema())
+                {
+                    List<EMoneda> monedas = new List<EMoneda>();
+
+                    var resultado = (from x in esquema.moneda
+                                     where x.idUsuario == id
+                                     select x).ToList();
+
+                    foreach (var item in resultado)
+                    {
+                        EMoneda mon = new EMoneda();
+                        mon.Id = item.id;
+                        mon.Nombre = item.nombre;
+                        monedas.Add(mon);
+                    }
+
+
+                    return monedas;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public int VerificarMonedas(int id)
+        {
+            try
+            {
+                using (var esquema = GetEsquema())
+                {
+                    var resultado = (from x in esquema.empresaMoneda
+                                     where x.idEmpresa == id
+                                     select x).ToList();
+                    var result = 0;
+                    if (resultado.Count > 1)
+                    {
+                        result = 2;
+                    }
+                    else
+                    {
+                        result = 1;
+                    }
+
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public EEmpresa Agregar(EEmpresa objempresa, EEmpresaMoneda objEmoneda)
         {
             try
             {
@@ -218,6 +309,25 @@ namespace Logica
                     empresa.estado = 0;
                     esquema.empresa.Add(empresa);
                     esquema.SaveChanges();
+
+                    EEmpresa emp = ObtenerPorNit(objempresa.Nit);
+
+                    empresaMoneda emoneda = new empresaMoneda();
+                    emoneda.activo = 1;
+                    emoneda.fechaRegistro = DateTime.Now;
+                    emoneda.idEmpresa = emp.Id;
+                    emoneda.idMonedaPrincipal = objEmoneda.idMonedaPrincipal;
+                    emoneda.idUsuario = objEmoneda.idUsuario;
+                    esquema.empresaMoneda.Add(emoneda);
+                    esquema.SaveChanges();
+
+                    AgregarCuentaActivo(emp.Id, objempresa.Niveles, objempresa.idUsuario);
+                    AgregarCuentaPasivo(emp.Id, objempresa.Niveles, objempresa.idUsuario);
+                    AgregarCuentaPatrimonio(emp.Id, objempresa.Niveles, objempresa.idUsuario);
+                    AgregarCuentaIngresos(emp.Id, objempresa.Niveles, objempresa.idUsuario);
+                    AgregarCuentaEgresos(emp.Id, objempresa.Niveles, objempresa.idUsuario);
+                    AgregarCuentaCostos(emp.Id, objempresa.Niveles, objempresa.idUsuario);
+                    AgregarCuentaGastos(emp.Id, objempresa.Niveles, objempresa.idUsuario);
 
                     return objempresa;
                 }
@@ -308,7 +418,7 @@ namespace Logica
                     empresa.sigla = objempresa.Sigla;
                     empresa.telefono = objempresa.Telefono;
                     empresa.correo = objempresa.Correo;
-                    empresa.direccion = objempresa.Direccion;          
+                    empresa.direccion = objempresa.Direccion;
                     esquema.SaveChanges();
 
                     return objempresa;
@@ -344,6 +454,397 @@ namespace Logica
                 }
 
             }
+        }
+
+        public bool AgregarCuentaActivo(int idEmpresa, int nivel, int idUsuario)
+        {
+            try
+            {
+                using (var esquema = GetEsquema())
+                {
+                    var codigo = "";
+                    switch (nivel)
+                    {
+
+                        case 3:
+                            codigo = "1.0.0";
+                            break;
+                        case 4:
+                            codigo = "1.0.0.0";
+                            break;
+                        case 5:
+                            codigo = "1.0.0.0.0";
+                            break;
+                        case 6:
+                            codigo = "1.0.0.0.0.0";
+                            break;
+                        case 7:
+                            codigo = "1.0.0.0.0.0.0";
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    cuenta cuenta = new cuenta();
+                    cuenta.codigo = codigo;
+                    cuenta.nombre = "Activo";
+                    cuenta.nivel = 1;
+                    cuenta.tipocuenta = 1;
+                    cuenta.estado = 0;
+                    cuenta.idUsuario = idUsuario;
+                    cuenta.idEmpresa = idEmpresa;
+                    esquema.cuenta.Add(cuenta);
+                    esquema.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return true;
+        }
+
+        public bool AgregarCuentaPasivo(int idEmpresa,int nivel, int idUsuario)
+        {
+            try
+            {
+                using (var esquema = GetEsquema())
+                {
+                    var codigo = "";
+                    switch (nivel)
+                    {
+
+                        case 3:
+                            codigo = "2.0.0";
+                            break;
+                        case 4:
+                            codigo = "2.0.0.0";
+                            break;
+                        case 5:
+                            codigo = "2.0.0.0.0";
+                            break;
+                        case 6:
+                            codigo = "2.0.0.0.0.0";
+                            break;
+                        case 7:
+                            codigo = "2.0.0.0.0.0.0";
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    cuenta cuenta = new cuenta();
+                    cuenta.codigo = codigo;
+                    cuenta.nombre = "Pasivo";
+                    cuenta.nivel = 1;
+                    cuenta.tipocuenta = 1;
+                    cuenta.estado = 0;
+                    cuenta.idUsuario = idUsuario;
+                    cuenta.idEmpresa = idEmpresa;
+                    esquema.cuenta.Add(cuenta);
+                    esquema.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return true;
+        }
+
+        public bool AgregarCuentaPatrimonio(int idEmpresa, int nivel, int idUsuario)
+        {
+            try
+            {
+                using (var esquema = GetEsquema())
+                {
+                    var codigo = "";
+                    switch (nivel)
+                    {
+
+                        case 3:
+                            codigo = "3.0.0";
+                            break;
+                        case 4:
+                            codigo = "3.0.0.0";
+                            break;
+                        case 5:
+                            codigo = "3.0.0.0.0";
+                            break;
+                        case 6:
+                            codigo = "3.0.0.0.0.0";
+                            break;
+                        case 7:
+                            codigo = "3.0.0.0.0.0.0";
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    cuenta cuenta = new cuenta();
+                    cuenta.codigo = codigo;
+                    cuenta.nombre = "Patrimonio";
+                    cuenta.nivel = 1;
+                    cuenta.tipocuenta = 1;
+                    cuenta.estado = 0;
+                    cuenta.idUsuario = idUsuario;
+                    cuenta.idEmpresa = idEmpresa;
+                    esquema.cuenta.Add(cuenta);
+                    esquema.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return true;
+        }
+
+        public bool AgregarCuentaIngresos(int idEmpresa, int nivel, int idUsuario)
+        {
+            try
+            {
+                using (var esquema = GetEsquema())
+                {
+                    var codigo = "";
+                    switch (nivel)
+                    {
+
+                        case 3:
+                            codigo = "4.0.0";
+                            break;
+                        case 4:
+                            codigo = "4.0.0.0";
+                            break;
+                        case 5:
+                            codigo = "4.0.0.0.0";
+                            break;
+                        case 6:
+                            codigo = "4.0.0.0.0.0";
+                            break;
+                        case 7:
+                            codigo = "4.0.0.0.0.0.0";
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    cuenta cuenta = new cuenta();
+                    cuenta.codigo = codigo;
+                    cuenta.nombre = "Ingresos";
+                    cuenta.nivel = 1;
+                    cuenta.tipocuenta = 1;
+                    cuenta.estado = 0;
+                    cuenta.idUsuario = idUsuario;
+                    cuenta.idEmpresa = idEmpresa;
+                    esquema.cuenta.Add(cuenta);
+                    esquema.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return true;
+        }
+
+        public bool AgregarCuentaEgresos(int idEmpresa, int nivel, int idUsuario)
+        {
+            try
+            {
+                using (var esquema = GetEsquema())
+                {
+                    var codigo = "";
+                    switch (nivel)
+                    {
+
+                        case 3:
+                            codigo = "5.0.0";
+                            break;
+                        case 4:
+                            codigo = "5.0.0.0";
+                            break;
+                        case 5:
+                            codigo = "5.0.0.0.0";
+                            break;
+                        case 6:
+                            codigo = "5.0.0.0.0.0";
+                            break;
+                        case 7:
+                            codigo = "5.0.0.0.0.0.0";
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    cuenta cuenta = new cuenta();
+                    cuenta.codigo = codigo;
+                    cuenta.nombre = "Egresos";
+                    cuenta.nivel = 1;
+                    cuenta.tipocuenta = 1;
+                    cuenta.estado = 0;
+                    cuenta.idUsuario = idUsuario;
+                    cuenta.idEmpresa = idEmpresa;
+                    esquema.cuenta.Add(cuenta);
+                    esquema.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return true;
+        }
+
+        public bool AgregarCuentaCostos(int idEmpresa, int nivel, int idUsuario)
+        {
+            try
+            {
+                using (var esquema = GetEsquema())
+                {
+                    var cuentapadre = (from x in esquema.cuenta
+                                                    where x.idEmpresa == idEmpresa
+                                                    select x).FirstOrDefault(); 
+                    var codigo = "";
+                    switch (nivel)
+                    {
+
+                        case 3:
+                            codigo = "5.1.0";
+                            cuentapadre = (from x in esquema.cuenta
+                                           where x.idEmpresa == idEmpresa &&
+                                           x.codigo == "5.0.0"
+                                           select x).FirstOrDefault();
+                            break;
+                        case 4:
+                            codigo = "5.1.0.0";
+                            cuentapadre = (from x in esquema.cuenta
+                                           where x.idEmpresa == idEmpresa &&
+                                           x.codigo == "5.0.0.0"
+                                           select x).FirstOrDefault();
+                            break;
+                        case 5:
+                            codigo = "5.1.0.0.0";
+                            cuentapadre = (from x in esquema.cuenta
+                                           where x.idEmpresa == idEmpresa &&
+                                           x.codigo == "5.0.0.0.0"
+                                           select x).FirstOrDefault();
+                            break;
+                        case 6:
+                            codigo = "5.1.0.0.0.0";
+                            cuentapadre = (from x in esquema.cuenta
+                                           where x.idEmpresa == idEmpresa &&
+                                           x.codigo == "5.0.0.0.0.0"
+                                           select x).FirstOrDefault();
+                            break;
+                        case 7:
+                            codigo = "5.1.0.0.0.0.0";
+                            cuentapadre = (from x in esquema.cuenta
+                                           where x.idEmpresa == idEmpresa &&
+                                           x.codigo == "5.0.0.0.0.0.0"
+                                           select x).FirstOrDefault();
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    cuenta cuenta = new cuenta();
+                    cuenta.codigo = codigo;
+                    cuenta.nombre = "Costos";
+                    cuenta.nivel = 2;
+                    cuenta.tipocuenta = 1;
+                    cuenta.estado = 0;
+                    cuenta.idUsuario = idUsuario;
+                    cuenta.idEmpresa = idEmpresa;
+                    cuenta.idCuentaPadre = cuentapadre.id;
+                    esquema.cuenta.Add(cuenta);
+                    esquema.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return true;
+        }
+
+        public bool AgregarCuentaGastos(int idEmpresa, int nivel, int idUsuario)
+        {
+            try
+            {
+                using (var esquema = GetEsquema())
+                {
+                    var cuentapadre = (from x in esquema.cuenta
+                                       where x.idEmpresa == idEmpresa
+                                       select x).FirstOrDefault();
+                    var codigo = "";
+                    switch (nivel)
+                    {
+
+                        case 3:
+                            codigo = "5.2.0";
+                            cuentapadre = (from x in esquema.cuenta
+                                           where x.idEmpresa == idEmpresa &&
+                                           x.codigo == "5.0.0"
+                                           select x).FirstOrDefault();
+                            break;
+                        case 4:
+                            codigo = "5.2.0.0";
+                            cuentapadre = (from x in esquema.cuenta
+                                           where x.idEmpresa == idEmpresa &&
+                                           x.codigo == "5.0.0.0"
+                                           select x).FirstOrDefault();
+                            break;
+                        case 5:
+                            codigo = "5.2.0.0.0";
+                            cuentapadre = (from x in esquema.cuenta
+                                           where x.idEmpresa == idEmpresa &&
+                                           x.codigo == "5.0.0.0.0"
+                                           select x).FirstOrDefault();
+                            break;
+                        case 6:
+                            codigo = "5.2.0.0.0.0";
+                            cuentapadre = (from x in esquema.cuenta
+                                           where x.idEmpresa == idEmpresa &&
+                                           x.codigo == "5.0.0.0.0.0"
+                                           select x).FirstOrDefault();
+                            break;
+                        case 7:
+                            codigo = "5.2.0.0.0.0.0";
+                            cuentapadre = (from x in esquema.cuenta
+                                           where x.idEmpresa == idEmpresa &&
+                                           x.codigo == "5.0.0.0.0.0.0"
+                                           select x).FirstOrDefault();
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    cuenta cuenta = new cuenta();
+                    cuenta.codigo = codigo;
+                    cuenta.nombre = "Gastos";
+                    cuenta.nivel = 2;
+                    cuenta.tipocuenta = 1;
+                    cuenta.estado = 0;
+                    cuenta.idUsuario = idUsuario;
+                    cuenta.idEmpresa = idEmpresa;
+                    cuenta.idCuentaPadre = cuentapadre.id;
+                    esquema.cuenta.Add(cuenta);
+                    esquema.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return true;
         }
     }
 }
