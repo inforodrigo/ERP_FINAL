@@ -23,6 +23,7 @@ namespace Logica
         private LEmpresa lEmpresa;
         private LPeriodo lPeriodo;
         private LCuenta lCuenta;
+        private LEmpresaMoneda lEmpresaMoneda;
 
         public static LBase<E> Instancia
         {
@@ -92,6 +93,18 @@ namespace Logica
                     lCuenta = new LCuenta();
                 }
                 return lCuenta;
+            }
+        }
+
+        public LEmpresaMoneda LEmpresaMoneda
+        {
+            get
+            {
+                if (lEmpresaMoneda == null)
+                {
+                    lEmpresaMoneda = new LEmpresaMoneda();
+                }
+                return lEmpresaMoneda;
             }
         }
     }

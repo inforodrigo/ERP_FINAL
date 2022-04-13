@@ -188,12 +188,12 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            listarMonedas(1,0);
+            listarMonedas(1,0,0,'');
         });
 
-        function listarMonedas(con, edit) {
+        function listarMonedas(con, edit, idmoneda, moneda) {
             $("#moneda").empty();
-            $("#monedaed").empty()
+            $("#monedaed").empty();
             $.ajax({
                 url: "@Url.Action("ObtenerMonedas", "Empresa")",
                 cache: false,
@@ -206,10 +206,11 @@
                         if (con == 1) {
                             $('#moneda').append('<option value=' + value.Id + ' > ' + value.Nombre + '</option>');
                         } else {
-                            if (edit == 1) {
-                                $('#monedaed').append('<option value=' + value.Id + ' > ' + value.Nombre + '</option>');        
-                            } else {
+                            if (edit == 1) {                               
                                 $('#monedaed').append('<option value=' + value.Id + ' > ' + value.Nombre + '</option>');
+                                $('#monedaed').prop('disabled', false);
+                            } else {
+                                $('#monedaed').append('<option value=' + idmoneda + ' > ' + moneda + '</option>');
                                 $('#monedaed').prop('disabled', 'disabled');
                             }
                         }                                            
@@ -282,18 +283,18 @@
             });
         }
 
-        function datosEmpresa(id, nombre, nit, sigla, telefono, correo, direccion, moneda) {
+        function datosEmpresa(id, nombre, nit, sigla, telefono, correo, direccion, idmoneda, nombremoneda) {
             $("#ided").val(id);
             $("#nombreed").val(nombre);
             $("#nited").val(nit);
             $('#siglaed').val(sigla);
             $("#telefonoed").val(telefono);
             $('#correoed').val(correo);
-            $('#direccioned').val(direccion);
-            if (moneda == 1) {
-                listarMonedas(2, 1);
-            } else {
-                listarMonedas(2, 2);
+            $('#direccioned').val(direccion);          
+            if (idmoneda == 0) {
+                listarMonedas(2, 1, 0, '');               
+            } else {               
+                listarMonedas(2, 2, idmoneda, nombremoneda);
             }
             
             $('#modalempresaed').modal('show');
@@ -320,7 +321,8 @@
                 cache: false,
                 data: {
                     id: $("#ided").val(), nombre: $("#nombreed").val(), nit: $("#nited").val(), sigla: $("#siglaed").val(),
-                    telefono: $("#telefonoed").val(), correo: $("#correoed").val(), direccion: $("#direccioned").val()
+                    telefono: $("#telefonoed").val(), correo: $("#correoed").val(), direccion: $("#direccioned").val(),
+                    moneda: $("#monedaed").val()
                 },
                 type: "POST",
                 dataType: "script"

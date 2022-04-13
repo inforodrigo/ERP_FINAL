@@ -202,7 +202,7 @@ namespace Logica
             }
         }
 
-        public int VerificarMonedas(int id)
+        public EMoneda VerificarMonedas(int id)
         {
             try
             {
@@ -211,14 +211,24 @@ namespace Logica
                     var resultado = (from x in esquema.empresaMoneda
                                      where x.idEmpresa == id
                                      select x).ToList();
-                    var result = 0;
+                    EMoneda result =  new EMoneda();
                     if (resultado.Count > 1)
                     {
-                        result = 2;
+                        var consulta = (from x in esquema.empresaMoneda
+                                        where x.idEmpresa == id
+                                        select x).FirstOrDefault();
+
+                        var conmo = (from x in esquema.moneda
+                                     where x.id == consulta.idMonedaPrincipal
+                                     select x).FirstOrDefault();
+
+                        result.Id = conmo.id;
+                        result.Nombre = conmo.nombre;      
                     }
                     else
                     {
-                        result = 1;
+                        result.Id = 0;
+                        result.Nombre = "";
                     }
 
                     return result;
@@ -342,7 +352,7 @@ namespace Logica
             }
         }
 
-        public EEmpresa Editar(EEmpresa objempresa)
+        public EEmpresa Editar(EEmpresa objempresa, EEmpresaMoneda objEMoneda)
         {
             try
             {
@@ -421,6 +431,8 @@ namespace Logica
                     empresa.direccion = objempresa.Direccion;
                     esquema.SaveChanges();
 
+                    CambiarMonedaPrincipal(objEMoneda);
+
                     return objempresa;
                 }
             }
@@ -431,6 +443,27 @@ namespace Logica
             catch (Exception ex)
             {
                 throw;
+            }
+        }
+
+        public bool CambiarMonedaPrincipal(EEmpresaMoneda objEM)
+        {
+            using (var esquema = GetEsquema())
+            {
+                var resultado = (from x in esquema.empresaMoneda
+                                 where x.idEmpresa == objEM.idEmpresa &&
+                                 x.activo == 1
+                                 select x).FirstOrDefault();
+                try
+                {
+                    resultado.idMonedaPrincipal = objEM.idMonedaPrincipal;
+                    esquema.SaveChanges();
+                    return true;
+                }
+                catch (BussinessException ex)
+                {
+                    return false;
+                }
             }
         }
 

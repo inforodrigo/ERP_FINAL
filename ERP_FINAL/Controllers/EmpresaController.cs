@@ -105,18 +105,21 @@ namespace ERP_FINAL.Controllers
         public JavaScriptResult Edit(int id)
         {
             EEmpresa empresa = lLogica.ObtenerPorid(id);
-            //1 se puede editar - 2 no se puede editar
-            var moneda = lLogica.VerificarMonedas(empresa.Id);
-            return JavaScript("datosEmpresa('" + empresa.Id + "', '"+ empresa.Nombre + "', '" + empresa.Nit + "', '" + empresa.Sigla + "', '" + empresa.Telefono + "', '" + empresa.Correo + "', '" + empresa.Direccion + "', '" + moneda + "');");
+            //si el id es mayor a 0 se puede editar - 0 no se puede editar -Moneda
+            EMoneda mon = new EMoneda();
+            mon = lLogica.VerificarMonedas(empresa.Id);
+            return JavaScript("datosEmpresa('" + empresa.Id + "', '"+ empresa.Nombre + "', '" + empresa.Nit + "', '" + empresa.Sigla + "', '" + empresa.Telefono + "', '" + empresa.Correo + "', '" + empresa.Direccion + "', '" + mon.Id + "', '" + mon.Nombre + "');");
         }
 
         // POST: Empresa/Edit/5
         [HttpPost]
-        public JavaScriptResult Edit(int id, string nombre, string nit, string sigla, string telefono, string correo, string direccion)
+        public JavaScriptResult Edit(int id, string nombre, string nit, string sigla, string telefono, string correo, string direccion, int moneda)
         {
             try
             {
                 EEmpresa objEmpresa = new EEmpresa();
+                EEmpresaMoneda objEEMoneda = new EEmpresaMoneda();
+                EUsuario oUsuario = (EUsuario)Session["Usuario"];
 
                 objEmpresa.Id = id;
                 objEmpresa.Nombre = nombre;
@@ -127,7 +130,11 @@ namespace ERP_FINAL.Controllers
                 objEmpresa.Correo = correo;
                 objEmpresa.Direccion = direccion;
 
-                lLogica.Editar(objEmpresa);
+                objEEMoneda.idEmpresa = id;
+                objEEMoneda.idMonedaPrincipal = moneda;
+                objEEMoneda.idUsuario = oUsuario.Id;
+
+                lLogica.Editar(objEmpresa, objEEMoneda);
 
                 return JavaScript("redireccionar('" + Url.Action("Inicio", "Empresa", new { ordenar = 0 }) + "');");
             }
