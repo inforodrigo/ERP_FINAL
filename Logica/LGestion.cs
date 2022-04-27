@@ -307,7 +307,7 @@ namespace Logica
                 {
                     var gestion = (from x in esquema.gestion
                                    where x.idEmpresa == idempresa
-                                   select x).ToList();
+                                   select x).OrderBy(x => x.fechainicio).ToList();
 
 
 

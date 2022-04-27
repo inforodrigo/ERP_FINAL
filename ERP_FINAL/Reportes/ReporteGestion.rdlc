@@ -20,7 +20,7 @@
           </TablixColumns>
           <TablixRows>
             <TablixRow>
-              <Height>0.6cm</Height>
+              <Height>1.07597cm</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -189,7 +189,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.6cm</Height>
+              <Height>1.07597cm</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -207,7 +207,9 @@
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>NombreGestion</rd:DefaultName>
@@ -240,7 +242,9 @@
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>FechaInicio</rd:DefaultName>
@@ -273,7 +277,9 @@
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>FechaFin</rd:DefaultName>
@@ -306,7 +312,9 @@
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>Estado</rd:DefaultName>
@@ -344,7 +352,7 @@
         <DataSetName>DSReporteGestion</DataSetName>
         <Top>5.90021cm</Top>
         <Left>0.87313cm</Left>
-        <Height>1.2cm</Height>
+        <Height>2.15193cm</Height>
         <Width>14.71276cm</Width>
         <Style>
           <Border>
