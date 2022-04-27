@@ -1,11 +1,13 @@
 ﻿using Entidad;
 using Entidad.Enums;
+using Entidad.EReportes;
 using Logica;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Reporting.WebForms;
 
 namespace ERP_FINAL.Controllers
 {
@@ -182,6 +184,50 @@ namespace ERP_FINAL.Controllers
                 glosa = c.Glosa,
                 detalle = deta,               
             });
+        }
+
+        public ActionResult ReporteComprobante(int id)
+        {
+            try
+            {
+                EUsuario oUsuario = (EUsuario)Session["Usuario"];
+                EEmpresa oEmpresa = (EEmpresa)Session["Empresa"];
+                List<ERComprobanteContable> comprobante = new List<ERComprobanteContable>();
+                comprobante = lLogica.ReporteComprobanteContable(oEmpresa.Id, id);
+                List<ERDetalleComprobanteContable> detalle = new List<ERDetalleComprobanteContable>();
+                detalle = lLogica.ReporteDetalleComprobante(id);
+
+                List<ERDatosBasicoComprobante> datosBasico = new List<ERDatosBasicoComprobante>();
+                datosBasico = lLogica.ReporteDatosBasicoComprobante(oUsuario.Nickname, oEmpresa.Nombre);
+                ReportViewer viewer = new ReportViewer();
+                viewer.AsyncRendering = false;
+                viewer.SizeToReportContent = true;
+
+                ReportDataSource rp = new ReportDataSource("DSReporteComprobanteContable", comprobante);
+                ReportDataSource rd = new ReportDataSource("DSReporteDetalleComprobanteContable", detalle);
+                ReportDataSource rb = new ReportDataSource("DSReporteBasicoComprobante", datosBasico);
+                viewer.LocalReport.ReportPath = Server.MapPath("~/Reportes/ReporteComprobanteContable.rdlc");
+                viewer.LocalReport.DataSources.Clear();
+                viewer.LocalReport.DataSources.Add(rp);
+                viewer.LocalReport.DataSources.Add(rd);
+                viewer.LocalReport.DataSources.Add(rb);
+
+                viewer.LocalReport.Refresh();
+                ViewBag.ReporteComprobante = viewer;
+
+                return View("ReporteComprobante");
+
+            }
+            catch (BussinessException ex)
+            {
+                string mensaje = ex.Message.Replace("'", "");
+                ViewBag.Mensaje = mensaje;
+                return JavaScript("MostrarMensaje('" + mensaje + "');");
+            }
+            catch (Exception ex)
+            {
+                return JavaScript("MostrarMensaje('Ha ocurrido un error');");
+            }          
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Data;
 using Entidad;
 using Entidad.Enums;
+using Entidad.EReportes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -477,8 +478,124 @@ namespace Logica
                 {
                     return false;
                 }
+            }                       
+        }
+
+        public List<ERComprobanteContable> ReporteComprobanteContable(int idempresa, int idcomprobante)
+        {
+            List<ERComprobanteContable> comprobante = new List<ERComprobanteContable>();
+            try
+            {
+                using (var esquema = GetEsquema())
+                {
+                    var comprob = (from x in esquema.comprobante
+                                   where x.id == idcomprobante
+                                   && x.idEmpresa == idempresa
+                                   select x).ToList();
+
+                    foreach (var compro in comprob)
+                    {
+
+                        ERComprobanteContable cc = new ERComprobanteContable();
+                        cc.Serie = compro.serie;
+                        if (compro.estado == 0){
+                            cc.Estado = "Cerrado";
+                        }else if (compro.estado == 1){
+                            cc.Estado = "Abierto";
+                        }
+                        cc.Fecha = compro.fecha.ToString();
+                        cc.Moneda = compro.moneda.nombre + " - " + compro.moneda.abreviatura;
+                        cc.TipoCambio = compro.tipoCambio.ToString();
+                        if (compro.tipoComprobante == 1){
+                            cc.TipoComprobante = "Ingreso";
+                        }else if (compro.tipoComprobante == 2){
+                            cc.TipoComprobante = "Egreso";
+                        }else if (compro.tipoComprobante == 3){
+                            cc.TipoComprobante = "Traspaso";
+                        }else if (compro.tipoComprobante == 4){
+                            cc.TipoComprobante = "Apertura";
+                        }else if (compro.tipoComprobante == 5){
+                            cc.TipoComprobante = "Ajuste";
+                        }
+                        cc.Glosa = compro.glosa;
+
+                        var detallec = (from x in esquema.detalleComprobante
+                                        where x.idComprobante == idcomprobante
+                                        select x).ToList();
+
+                        double totaldebe = 0;
+                        double totalhaber = 0;
+                        foreach (var de in detallec)
+                        {
+                            totaldebe = totaldebe + de.montoDebe;
+                            totalhaber = totalhaber + de.montoHaber;
+                        }
+
+                        cc.TotalDebe = totaldebe.ToString();
+                        cc.TotalHaber = totalhaber.ToString();
+
+                        comprobante.Add(cc);
+                    }
+                }
             }
-                        
+            catch (Exception ex)
+            {
+                throw new BussinessException("Error no se puede obtener el reporte de gestiones");
+            }
+
+            return comprobante;
+        }
+
+        public List<ERDetalleComprobanteContable> ReporteDetalleComprobante(int idcomprobante)
+        {
+            List<ERDetalleComprobanteContable> detalles = new List<ERDetalleComprobanteContable>();
+            try
+            {
+                using (var esquema = GetEsquema())
+                {
+                    var detallec = (from x in esquema.detalleComprobante
+                                   where x.idComprobante == idcomprobante
+                                   select x).ToList();
+
+                    foreach (var de in detallec)
+                    {
+
+                        ERDetalleComprobanteContable dc = new ERDetalleComprobanteContable();
+                        dc.Cuenta = de.cuenta.codigo + " - " + de.cuenta.nombre;
+                        dc.Glosa = de.glosa;
+                        dc.Debe = de.montoDebe.ToString();
+                        dc.Haber = de.montoHaber.ToString();                     
+
+                        detalles.Add(dc);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new BussinessException("Error no se puede obtener el reporte de gestiones");
+            }
+
+            return detalles;
+        }
+
+        public List<ERDatosBasicoComprobante> ReporteDatosBasicoComprobante(string usuario, string empresa)
+        {
+            try
+            {
+                List<ERDatosBasicoComprobante> basicos = new List<ERDatosBasicoComprobante>();
+                ERDatosBasicoComprobante eRDatosBasico = new ERDatosBasicoComprobante();
+                eRDatosBasico.Usuario = usuario;
+                eRDatosBasico.NombreEmpresa = empresa;
+                eRDatosBasico.FechaActual = DateTime.Now.ToString("dd/MM/yyyy");
+
+                basicos.Add(eRDatosBasico);
+
+                return basicos;
+            }
+            catch (Exception ex)
+            {
+                throw new BussinessException("Ha ocurrido un error.");
+            }
         }
     }
 }

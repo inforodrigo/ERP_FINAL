@@ -58,7 +58,9 @@
     <Compile Include="Enums\EUtils.cs" />
     <Compile Include="Enums\EValidaciones.cs" />
     <Compile Include="EPeriodo.cs" />
+    <Compile Include="EReportes\ERComprobanteContable.cs" />
     <Compile Include="EReportes\ERDatosbasicos.cs" />
+    <Compile Include="EReportes\ERDetalleComprobanteContable.cs" />
     <Compile Include="EReportes\ERGestion.cs" />
     <Compile Include="EUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
