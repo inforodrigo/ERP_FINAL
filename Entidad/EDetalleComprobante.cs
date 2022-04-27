@@ -18,5 +18,6 @@ namespace Entidad
         public int idUsuario { get; set; }
         public int idComprobante { get; set; }
         public int idCuenta { get; set; }
+        public string Cuenta { get; set; }
     }
 }

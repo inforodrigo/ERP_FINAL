@@ -52,6 +52,8 @@
     <Compile Include="ELogin.cs" />
     <Compile Include="EMoneda.cs" />
     <Compile Include="Enums\Estado.cs" />
+    <Compile Include="Enums\EstadosComprobante.cs" />
+    <Compile Include="Enums\ETipoComprobante.cs" />
     <Compile Include="Enums\ETipoCuentas.cs" />
     <Compile Include="Enums\EUtils.cs" />
     <Compile Include="Enums\EValidaciones.cs" />

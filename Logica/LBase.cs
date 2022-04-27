@@ -24,6 +24,7 @@ namespace Logica
         private LPeriodo lPeriodo;
         private LCuenta lCuenta;
         private LEmpresaMoneda lEmpresaMoneda;
+        private LComprobante lComprobante;
 
         public static LBase<E> Instancia
         {
@@ -105,6 +106,18 @@ namespace Logica
                     lEmpresaMoneda = new LEmpresaMoneda();
                 }
                 return lEmpresaMoneda;
+            }
+        }
+
+        public LComprobante LComprobante
+        {
+            get
+            {
+                if(lComprobante == null)
+                {
+                    lComprobante = new LComprobante();
+                }
+                return lComprobante;
             }
         }
     }

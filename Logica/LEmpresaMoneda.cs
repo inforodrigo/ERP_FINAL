@@ -20,7 +20,7 @@ namespace Logica
                 {
                     var resultado = (from x in esquema.empresaMoneda
                                      where x.idEmpresa == id
-                                     select x).ToList();
+                                     select x).OrderByDescending(x => x.id).ToList();
 
                     List<EEmpresaMoneda> empresaMonedas = new List<EEmpresaMoneda>();
                     foreach(var item in resultado)

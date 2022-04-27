@@ -1,0 +1,153 @@
+﻿
+@{
+    ViewBag.Title = "Details";
+}
+
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<div class="row justify-content-between">
+    <div class="col-4">
+        <h2>Detalle de Comprobante</h2>
+        <input type="hidden" class="form-control" id="idComprobante" value="@ViewBag.idComprobante">
+    </div>
+    <div class="col-4">
+        <div class="form-group">           
+            <a class="btn btn-danger" href="@Url.Action("Index", "Comprobante")" style="margin-right: 10px; margin-top: 10px;">Volver</a>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-2">
+                <label>Serie</label>
+                <input type="text" class="form-control" id="serie" style="text-align: right;" disabled>
+            </div>
+            <div class="col-2">
+                <label>Estado</label>
+                <input type="text" class="form-control" placeholder="Abierto" disabled>
+            </div>
+            <div class="col-2">
+                <label>Fecha</label>
+                <input type="text" class="form-control" id="fecha" disabled>
+            </div>
+            <div class="col-3">
+                <label>Moneda</label>
+                <input type="text" class="form-control" id="moneda" name="moneda" disabled>
+            </div>
+            <div class="col-3">
+                <label>Tipo Cambio</label>
+                <input type="text" class="form-control" id="tipocambio" style="text-align: right;" disabled>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <label>Tipo Comprobante</label>
+                <input type="text" class="form-control" id="tipocomprobante" name="tipocomprobante" disabled>                   
+            </div>
+            <div class="col-8">
+                <label>Glosa</label>
+                <input type="text" class="form-control" id="glosa" disabled>
+            </div>           
+        </div>
+        <div class="row">
+            <div class="col-12" style="padding-top: 20px;">
+                <table id="detallecomprobante" class="table table-bordered table-striped mb-0 h-50">
+                    <thead>
+                        <tr>
+                            <th class="th-sm">
+                                Cuenta
+                            </th>
+                            <th class="th-sm">
+                                Glosa
+                            </th>
+                            <th class="th-sm">
+                                Debe
+                            </th>
+                            <th class="th-sm">
+                                Haber
+                            </th>                            
+                        </tr>
+                    </thead>
+                    <tbody id="datosdetallecomprobante">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row justify-content-end">
+            <div class="col-2">
+                <label>TOTALES:</label>
+            </div>
+            <div class="col-3">
+                <label>Total Debe:</label>
+                <input type="text" class="form-control" id="totaldebe" disabled style="text-align: right;">
+            </div>
+            <div class="col-3">
+                <label>Total Haber:</label>
+                <input type="text" class="form-control" id="totalhaber" disabled style="text-align: right;">
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="//cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#detallecomprobante').DataTable({
+                "scrollY": "25vh",
+                "scrollCollapse": true,
+                "searching": false,
+                "paging": false,
+                "ordering": false,
+            });                            
+            CargarComprobante();
+        });
+
+        function CargarComprobante() {
+             $.ajax({
+                url: "@Url.Action("CargarDatosComprobante", "Comprobante")",
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: $("#idComprobante").val()
+                }, success: function (result) {
+                    $("#serie").val(result.serie);
+                    $("#estado").val(result.estado);
+                    $("#fecha").val(result.fecha);
+                    $("#moneda").val(result.moneda);
+                    $("#tipocambio").val(result.cambio);
+                    $("#tipocomprobante").val(result.tipocomprobante);
+                    $("#glosa").val(result.glosa);
+                    var totaldebe = 0;
+                    var totalhaber = 0;
+                    var listadetalle = result.detalle;
+                    var tabladatos = $('#datosdetallecomprobante');
+                    $('#datosdetallecomprobante').empty();
+
+                    for (let i = 0; i < listadetalle.length; i++) {
+                        row = "<tr>" +
+                            "<td>" + listadetalle[i].Cuenta + "</td>" +
+                            "<td>" + listadetalle[i].Glosa + "</td>" +
+                            "<td style='text-align: right;'>" + listadetalle[i].montoDebe + "</td>" +
+                            "<td style='text-align: right;'>" + listadetalle[i].montoHaber + "</td>" +
+                            "</tr>"
+                        tabladatos.append(row);
+                        totaldebe = totaldebe + listadetalle[i].montoDebe;
+                        totalhaber = totalhaber + listadetalle[i].montoHaber;
+                    }
+
+                    $("#totaldebe").val(totaldebe);
+                    $("#totalhaber").val(totalhaber);
+                }
+            });
+        }
+    </script>
+}
+

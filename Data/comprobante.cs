@@ -29,10 +29,12 @@ namespace Data
         public int tipoComprobante { get; set; }
         public int idUsuario { get; set; }
         public int idMoneda { get; set; }
+        public int idEmpresa { get; set; }
     
         public virtual moneda moneda { get; set; }
         public virtual usuario usuario { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<detalleComprobante> detalleComprobante { get; set; }
+        public virtual empresa empresa { get; set; }
     }
 }

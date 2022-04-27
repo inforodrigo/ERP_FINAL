@@ -32,6 +32,7 @@
         <AssociationConnector Association="dbErpModel.FK__empresaMo__idMon__43D61337" />
         <AssociationConnector Association="dbErpModel.FK__empresaMo__idMon__44CA3770" />
         <AssociationConnector Association="dbErpModel.FK__empresaMo__idUsu__41EDCAC5" />
+        <AssociationConnector Association="dbErpModel.FK__comproban__idEmp__4F47C5E3" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

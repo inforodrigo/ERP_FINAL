@@ -1,0 +1,582 @@
+﻿@model Entidad.EComprobante
+
+@{
+    ViewBag.Title = "Create";
+}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<div class="row justify-content-between">
+    <div class="col-4">
+        <h2>Nuevo Comprobante</h2>
+    </div>
+    <div class="col-4">
+        <div class="form-group">
+            <button class="btn btn-info" onclick="GuardarComprobante()" style="margin-right: 10px; margin-top: 10px;">Guardar</button>
+            <button class="btn btn-danger" onclick="$('#modalvolver').modal('show');" style="margin-right: 10px; margin-top: 10px;">Volver</button>
+        </div>       
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-2">
+                <label>Serie</label>
+                <input type="text" class="form-control" id="serie" style="text-align: right;" disabled>
+            </div>
+            <div class="col-2">
+                <label>Estado</label>
+                <input type="text" class="form-control" placeholder="Abierto" disabled>
+            </div>
+            <div class="col-2">
+                <label>Fecha</label>
+                <input type="text" class="form-control" id="fecha">
+            </div>
+            <div class="col-3">
+                <label>Moneda</label>
+                <select class="form-control" id="moneda" name="moneda"></select>
+            </div>
+            <div class="col-3">
+                <label>Tipo Cambio</label>
+                <input type="text" class="form-control" id="tipocambio" style="text-align: right;">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <label>Tipo Comprobante</label>
+                <select class="form-control" id="tipocomprobante" name="tipocomprobante">
+                    <option value="1">Ingreso</option>
+                    <option value="2">Egreso</option>
+                    <option value="3">Traspaso</option>
+                    <option value="4">Apertura</option>
+                    <option value="5">Ajuste</option>
+                </select>
+            </div>
+            <div class="col-8">
+                <label>Glosa</label>
+                <input type="text" class="form-control" id="glosa">
+            </div>
+            <div class="col-1" style="text-align: right;">
+                <button class="btn btn-info" onclick="CargarDatosDetalle()" style="margin-top:30px;"> <i class="fas fa-plus"></i></button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12" style="padding-top: 20px;">
+                <table id="detallecomprobante" class="table table-bordered table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th class="th-sm">
+                                Cuenta
+                            </th>
+                            <th class="th-sm">
+                                Glosa
+                            </th>
+                            <th class="th-sm">
+                                Debe
+                            </th>
+                            <th class="th-sm">
+                                Haber
+                            </th>
+                            <th class="th-sm">
+                                Opciones
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="datosdetallecomprobante">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row justify-content-end">
+            <div class="col-2">
+                <label>TOTALES:</label>
+            </div>
+            <div class="col-3">
+                <label>Total Debe:</label>
+                <input type="text" class="form-control" id="totaldebe" disabled style="text-align: right;">
+            </div>
+            <div class="col-3">
+                <label>Total Haber:</label>
+                <input type="text" class="form-control" id="totalhaber" disabled style="text-align: right;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal" id="modaldetalle" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Agregar detalle</h5>
+            </div>
+            <div class="alert alert-danger" style="display:none" role="alert" id="mensajeError"></div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-3">
+                        <label for="cuenta" class="form-label">Cuenta</label>
+                        <select class="cuenta js-states form-control" id="cuentadetalle" name="cuentadetalle"></select>
+                    </div>
+                    <div class="col-5">
+                        <label for="glosadetalle" class="form-label">Glosa</label>
+                        <input type="text" class="form-control" id="glosadetalle">
+                    </div>
+                    <div class="col-2">
+                        <label for="debe" class="form-label">Debe</label>
+                        <input type="text" class="form-control" id="debe" name="debe" style="text-align: right;">
+                    </div>
+                    <div class="col-2">
+                        <label for="haber" class="form-label">Haber</label>
+                        <input type="text" class="form-control" id="haber" name="haber"  style="text-align: right;">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="GuardarDetalle()">Agregar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modaleditardetalle" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar detalle</h5>
+            </div>
+            <div class="alert alert-danger" style="display:none" role="alert" id="mensajeError"></div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-3">
+                        <label for="cuenta" class="form-label">Cuenta</label>
+                        <select class="cuenta js-states form-control" id="cuentadetalleedit" name="cuentadetalleedit"></select>
+                    </div>
+                    <div class="col-5">
+                        <label for="glosadetalle" class="form-label">Glosa</label>
+                        <input type="text" class="form-control" id="glosadetalleedit">
+                    </div>
+                    <div class="col-2">
+                        <label for="debe" class="form-label">Debe</label>
+                        <input type="text" class="form-control" id="debeedit" name="debeedit" style="text-align: right;">
+                    </div>
+                    <div class="col-2">
+                        <label for="haber" class="form-label">Haber</label>
+                        <input type="text" class="form-control" id="haberedit" name="haberedit" style="text-align: right;">
+                    </div>
+                    <input type="hidden" class="form-control" id="seleccionadoedit" name="seleccionadoedit">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="EditDetalle()">Editar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modalvolver" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">ADVERTENCIA</h5>
+      </div>
+      <div class="modal-body">
+        <p>Si vuelve los cambios realizados se borraran, Esta Seguro que desea Volver?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+        <button type="button" onclick="VolverAtras()" class="btn btn-primary">Si, Volver</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="//cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#detallecomprobante').DataTable({
+                "scrollY": "25vh",
+                "scrollCollapse": true,
+                "searching": false,
+                "paging": false,
+                "ordering": false,
+            });
+            CargarDatos();
+        });
+        let listadetalle = [];
+        var totaldebe = 0;
+        var totalhaber = 0;
+
+        function CargarDatos() {
+            $.ajax({
+                url: "@Url.Action("CargarDatos", "Comprobante")",
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: 0
+                }, success: function (result) {
+                    $("#serie").val(result.serie);
+                    $("#fecha").val(result.fecha);
+                    $("#tipocambio").val(result.cambio);
+                    $.each(result.monedas, function (index, value) {
+                        $('#moneda').append('<option value=' + value.Id + ' > ' + value.Nombre + ' - ' + value.Abreviatura + '</option>');
+                    });
+                }
+            });
+        }
+
+        function CargarDatosDetalle() {
+            $('#glosadetalle').val($('#glosa').val());
+            $('#modaldetalle').modal('show');
+            $("#cuentadetalle").empty();
+            $.ajax({
+                url: "@Url.Action("CargarCuentas", "Comprobante")",
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: 0
+                }, success: function (result) {
+                    $.each(result.cuentas, function (index, value) {
+                        $('#cuentadetalle').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                    });
+                }
+            });
+
+            //$('.cuenta').select2({
+            /*$.ajax({
+                url: "",
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: 0
+                }, success: function (result) {
+                    /*var query = {
+                        search: result.Nombre,
+                        type: 'public'
+                    }
+
+                    return query;
+                    //$.each(result.cuentas, function (index, value) {
+                    //    $('#cuentadetalle').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                    //});
+                    $(".cuenta").select2({
+                        data: result.cuentas
+                    })
+                }
+            });*/
+            //});
+        }
+
+        $('#debe').keyup(function () {
+            var value = $(this).val();
+            if (value.length != 0) {
+                $('#haber').val(0);
+                $('#haber').attr("disabled", true);
+            }
+            else {
+                $('#haber').val('');
+                $('#haber').removeAttr("disabled");
+            }
+        });
+
+        $('#haber').keyup(function () {
+            var value = $(this).val();
+            if (value.length != 0) {
+                $('#debe').val(0);
+                $('#debe').attr("disabled", true);
+            }
+            else {
+                $('#debe').val('');
+                $('#debe').removeAttr("disabled");
+            }
+        });
+
+        $('#debeedit').keyup(function () {
+            var value = $(this).val();
+            if (value.length != 0) {
+                $('#haberedit').val(0);
+                $('#haberedit').attr("disabled", true);
+            }
+            else {
+                $('#haberedit').val('');
+                $('#haberedit').removeAttr("disabled");
+            }
+        });
+
+        $('#haberedit').keyup(function () {
+            var value = $(this).val();
+            if (value.length != 0) {
+                $('#debeedit').val(0);
+                $('#debeedit').attr("disabled", true);
+            }
+            else {
+                $('#debeedit').val('');
+                $('#debeedit').removeAttr("disabled");
+            }
+        });
+
+        function GuardarDetalle() {
+            var debe = $('#debe').val();
+            var haber = $('#haber').val();
+            if (debe.length > haber.length) {
+                if (debe == 0) {
+                    return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+                }
+            } else {
+                if (haber == 0) {
+                    return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+                }
+            }
+
+            if ($('#glosadetalle').val() == '') {
+                return MostrarMensaje('Error el debe introducir una glosa al detalle');
+            }
+
+            for (let j = 0; j < listadetalle.length; j++) {
+                if ($('#cuentadetalle').val() == listadetalle[j].idCuenta) {
+                    return MostrarMensaje('Error esta cuenta ya ha sido agregada al detalle');
+                }
+            }
+
+            const det = {
+                idCuenta: $('#cuentadetalle').val(),
+                cuenta: $('#cuentadetalle option:selected').text(),
+                glosa: $('#glosadetalle').val(),
+                montoDebe: $('#debe').val(),
+                montoHaber: $('#haber').val()
+            };
+
+            if ($('#debe').val() != 0) {
+                totaldebe = parseFloat(totaldebe) + parseFloat($('#debe').val());
+            } else if ($('#haber').val() != 0) {
+                totalhaber = parseFloat(totalhaber) + parseFloat($('#haber').val());
+            }
+
+            listadetalle.push(det);
+            var tabladatos = $('#datosdetallecomprobante');
+            $('#datosdetallecomprobante').empty();
+
+            for (let i = 0; i < listadetalle.length; i++) {
+                row = "<tr>" +
+                    "<td>" + listadetalle[i].cuenta + "</td>" +
+                    "<td>" + listadetalle[i].glosa + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].montoDebe + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].montoHaber + "</td>" +
+                    "<td><button value=" + listadetalle.indexOf(listadetalle[i]) + " class='btn btn-outline btn-circle btn-sm purple' onclick='EditarDetalle(this);'><i class='fa fa-edit'></i></button>"
+                    + "<button value=" + listadetalle.indexOf(listadetalle[i]) + " class='btn btn-outline btn-circle btn-sm purple' onclick='EliminarDetalle(this);'><i class='fa fa-trash'></i></button></td>" +
+                    "</tr>"
+                tabladatos.append(row);
+            }
+
+            $('#totaldebe').val(totaldebe);
+            $('#totalhaber').val(totalhaber);
+
+            $('#debe').val('');
+            $('#debe').removeAttr("disabled");
+            $('#haber').val('');
+            $('#haber').removeAttr("disabled");
+
+        }
+
+        function EditarDetalle(seleccionado) {           
+            $('#glosadetalleedit').val(listadetalle[seleccionado.value].glosa);
+            $('#debeedit').val(listadetalle[seleccionado.value].montoDebe);
+            $('#haberedit').val(listadetalle[seleccionado.value].montoHaber);
+            $('#seleccionadoedit').val(seleccionado.value);           
+            $("#cuentadetalleedit").empty();
+            $.ajax({
+                url: "@Url.Action("CargarCuentas", "Comprobante")",
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: 0
+                }, success: function (result) {
+                    $.each(result.cuentas, function (index, value) {
+                        $('#cuentadetalleedit').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                    });
+                }
+            });
+
+            $('#modaleditardetalle').modal('show');
+        }
+
+        function EditDetalle() {
+            var seleccionado = $('#seleccionadoedit').val();
+            var debe = $('#debeedit').val();
+            var haber = $('#haberedit').val();
+            if (debe.length > haber.length) {
+                if (debe == 0) {
+                    return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+                }
+            } else {
+                if (haber == 0) {
+                    return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+                }
+            }
+
+            if ($('#glosadetalleedit').val() == '') {
+                return MostrarMensaje('Error el debe introducir una glosa al detalle');
+            }
+
+            for (let j = 0; j < listadetalle.length; j++) {
+                if (j != seleccionado) {                  
+                    if ($('#cuentadetalleedit').val() == listadetalle[j].idCuenta) {
+                        return MostrarMensaje('Error esta cuenta ya ha sido agregada al detalle');
+                    }
+                }
+            }
+
+            //Actualizamos el total debe y haber, primero eliminados el valor anterior           
+            var debe = listadetalle[seleccionado].montoDebe;
+            var haber = listadetalle[seleccionado].montoHaber;
+
+            //restamos el valor anterior
+            if (debe > 0) {
+                totaldebe = totaldebe - debe;
+            } else if (haber > 0) {
+                totalhaber = totalhaber - haber;
+            }
+            //Sumamos el nuevo valor
+            if ($('#debeedit').val() != 0) {
+                totaldebe = parseFloat(totaldebe) + parseFloat($('#debeedit').val());
+            } else if ($('#haberedit').val() != 0) {
+                totalhaber = parseFloat(totalhaber) + parseFloat($('#haberedit').val());
+            }
+
+            $('#totaldebe').val(totaldebe);
+            $('#totalhaber').val(totalhaber);           
+
+            //Editamos la lista
+            listadetalle[seleccionado].idCuenta = $('#cuentadetalleedit').val();
+            listadetalle[seleccionado].cuenta = $('#cuentadetalleedit option:selected').text();
+            listadetalle[seleccionado].glosa = $('#glosadetalleedit').val();
+            listadetalle[seleccionado].montoDebe = $('#debeedit').val();
+            listadetalle[seleccionado].montoHaber = $('#haberedit').val();
+
+            //Actualizamos la tablas, la vaciamos y volvemos a cargar
+            var tabladatos = $('#datosdetallecomprobante');
+            $('#datosdetallecomprobante').empty();
+
+            for (let i = 0; i < listadetalle.length; i++) {
+                row = "<tr>" +
+                    "<td>" + listadetalle[i].cuenta + "</td>" +
+                    "<td>" + listadetalle[i].glosa + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].montoDebe + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].montoHaber + "</td>" +
+                    "<td><button value=" + listadetalle.indexOf(listadetalle[i]) + " class='btn btn-outline btn-circle btn-sm purple' onclick='EditarDetalle(this);'><i class='fa fa-edit'></i></button>"
+                    + "<button value=" + listadetalle.indexOf(listadetalle[i]) + " class='btn btn-outline btn-circle btn-sm purple' onclick='EliminarDetalle(this);'><i class='fa fa-trash'></i></button></td>" +
+                    "</tr>"
+                tabladatos.append(row);
+            }
+
+            $('#debeedit').val('');
+            $('#debeedit').removeAttr("disabled");
+            $('#haberedit').val('');
+            $('#haberedit').removeAttr("disabled");
+
+            $('#modaleditardetalle').modal('hide');
+            MostrarMensajeExitoso('Editado Correctamente')
+        }
+
+        function EliminarDetalle(seleccionado) {
+            //Primero Actualizamos el total debe y haber
+            var debe = listadetalle[seleccionado.value].montoDebe;
+            var haber = listadetalle[seleccionado.value].montoHaber;
+
+            if (debe > 0) {
+                totaldebe = totaldebe - debe;
+            } else if (haber > 0) {
+                totalhaber = totalhaber - haber;
+            }
+
+            $('#totaldebe').val(totaldebe);
+            $('#totalhaber').val(totalhaber);
+
+            //Luego eliminamos el elemento y volvermos a cargar la tabla
+            listadetalle.splice(seleccionado.value, 1);
+
+            var tabladatos = $('#datosdetallecomprobante');
+            $('#datosdetallecomprobante').empty();
+
+            for (let i = 0; i < listadetalle.length; i++) {
+                row = "<tr>" +
+                    "<td>" + listadetalle[i].cuenta + "</td>" +
+                    "<td>" + listadetalle[i].glosa + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].montoDebe + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].montoHaber + "</td>" +
+                    "<td><button value=" + listadetalle.indexOf(listadetalle[i]) + " class='btn btn-outline btn-circle btn-sm purple' onclick='EditarDetalle(this);'><i class='fa fa-edit'></i></button>"
+                    + "<button value=" + listadetalle.indexOf(listadetalle[i]) + " class='btn btn-outline btn-circle btn-sm purple' onclick='EliminarDetalle(this);'><i class='fa fa-trash'></i></button></td>" +
+                    "</tr>"
+                tabladatos.append(row);
+            }
+        }
+
+        function GuardarComprobante() {
+            var cambio = $('#tipocambio').val();
+            if (cambio < 0) {
+                return MostrarMensaje('Error el tipo de cambio no puede ser menor a 0');
+            }
+
+            if (listadetalle.length < 2) {
+                return MostrarMensaje('Error debe agregar almenos 2 detalles de comprobante');
+            }
+
+            if (totaldebe != totalhaber) {
+                return MostrarMensaje('Error los totales del debe y el haber no coinciden');
+            }
+            console.log($('#serie').val(), $('#fecha').val(), $('#moneda').val(), $('#tipocambio').val(),
+                 $('#tipocomprobante').val(), $('#glosa').val(), listadetalle);
+            $.ajax({
+                url: "@Url.Action("Create", "Comprobante")",
+                cache: false,
+                type: "POST",
+                dataType: "script",
+                data: {
+                    serie: $('#serie').val(), fecha: $('#fecha').val(), moneda: $('#moneda').val(), tipocambio: $('#tipocambio').val(),
+                    tipodecomprobante: $('#tipocomprobante').val(), glosa: $('#glosa').val(), detalle: listadetalle
+                }
+            });
+        }
+
+        function VolverAtras() {
+            redireccionar("@Url.Action("Index", "Comprobante")")
+        }
+
+        function LimpiarModal() {
+
+        }
+
+        function MostrarMensajeExitoso(msj) {           
+            $(document).Toasts('create', {
+                class: 'bg-success',
+                title: "Alerta",
+                autohide: true,
+                delay: 10000,
+                body: msj
+            });
+        }
+
+        function MostrarMensaje(msj) {
+            $(document).Toasts('create', {
+                class: ' bg-danger',
+                title: "Alerta",
+                autohide: true,
+                delay: 10000,
+                body: msj
+            });
+        }
+
+        function redireccionar(url) {
+            window.location = url;
+        }
+
+    </script>
+}
