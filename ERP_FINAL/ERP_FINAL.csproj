@@ -205,6 +205,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ReporteController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -2528,6 +2529,14 @@
     <Content Include="Views\Comprobante\Create.cshtml" />
     <Content Include="Views\Comprobante\Details.cshtml" />
     <Content Include="Views\Comprobante\ReporteComprobante.cshtml" />
+    <Content Include="Views\Reporte\ReporteComprobacionSumasySaldos.cshtml" />
+    <Content Include="Views\Reporte\ReporteSumasySaldosParcial.cshtml" />
+    <Content Include="Views\Reporte\ReporteBalanceInicial.cshtml" />
+    <Content Include="Views\Reporte\ReporteBalanceInicialParcial.cshtml" />
+    <Content Include="Views\Reporte\ReporteLibroDiario.cshtml" />
+    <Content Include="Views\Reporte\ReporteLibroDiarioParcial.cshtml" />
+    <Content Include="Views\Reporte\ReporteLibroMayor.cshtml" />
+    <Content Include="Views\Reporte\ReporteLibroMayorParcial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2560,6 +2569,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Reportes\ReporteComprobanteContable.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteGestion.rdlc" />
+    <EmbeddedResource Include="Reportes\ReporteLibroDiario.rdlc" />
+    <EmbeddedResource Include="Reportes\ReporteLibroMayor.rdlc" />
+    <EmbeddedResource Include="Reportes\ReporteSumasSaldos.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

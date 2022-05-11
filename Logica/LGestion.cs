@@ -101,7 +101,9 @@ namespace Logica
                     ges.Id = resultado.id;
                     ges.Nombre = resultado.nombre;
                     ges.FechaInicio = resultado.fechainicio;
+                    ges.fechaIni = resultado.fechainicio.ToString("dd/MM/yyyy");
                     ges.FechaFin = resultado.fechafin;
+                    ges.fechaFi = resultado.fechafin.ToString("dd/MM/yyyy");
                     ges.IdUsuario = (int)resultado.idUsuario;
                     ges.IdEmpresa = (int)resultado.idEmpresa;
                     ges.Estado = resultado.estado;
@@ -317,7 +319,7 @@ namespace Logica
                         g.NombreGestion = ge.nombre;
                         g.FechaInicio = ge.fechainicio.ToString("dd/MM/yyyy");
                         g.FechaFin = ge.fechafin.ToString("dd/MM/yyyy");
-                        if (ge.estado == (int)Estado.Habilitado)
+                        if (ge.estado == (int)Estado.Habilitado || ge.estado == (int)Estado.Asignado)
                         {
                             g.Estado = "Abierta";
                         }

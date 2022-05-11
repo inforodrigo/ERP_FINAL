@@ -35,7 +35,7 @@
                     <div class="card-body">
                         <div class="row ">
                             <div class="form-group">
-                                <a href="@Url.Action("Index", "Gestion")" class="btn btn-secondary" style="margin-left:10px;"> <i class=" fas fa-undo-alt"></i>  </a>
+                                <a href="@Url.Action("Index", "Gestion")" class="btn btn-danger" style="margin-left:10px;"> <i class="fas fa-arrow-left"></i>  </a>
                             </div>
 
                         </div>
@@ -57,19 +57,14 @@
 
 @section Scripts{
 
-
     <script src="@Url.Content("~/Content/adminLte/plugins/datatables/jquery.dataTables.min.js")"></script>
-
     <script src="@Url.Content("~/Content/adminLte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js")"></script>
     <script src="@Url.Content("~/Content/adminLte/plugins/datatables-responsive/js/dataTables.responsive.min.js")"></script>
     <script src="@Url.Content("~/Content/adminLte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js")"></script>
-
     <script src="@Url.Content("~/Content/bootstrap-datepicker/js/bootstrap-datepicker.min.js")"></script>
 
     <script type="text/javascript">
-
         $(document).ready(function () {
-
 
         });
 
@@ -77,10 +72,7 @@
             window.location = url;
         }
 
-        function MostrarMensaje(msj) {
-            $("#modalEliminar").modal('hide');
-
-
+        function MostrarMensaje(msj) {           
             $(document).Toasts('create', {
                 class: ' bg-danger',
                 title: "Alerta",
@@ -88,45 +80,6 @@
                 delay: 10000,
                 body: msj
             });
-        }
-
-
-        function MostrarMensajeExito(msj) {
-
-            listar();
-            var msjbody = "Se Modifico los Datos Exitosamente";
-            if ($("#itIdGestion").val().length === 0) {
-                msjbody = "Se Registro los Datos Exitosamente";
-            }
-
-            $(document).Toasts('create', {
-                class: 'bg-success',
-                title: msj,
-                autohide: true,
-                delay: 10000,
-                body: msjbody
-            });
-            $("#itIdGestion").val("");
-            $("#itNombre").val("");
-
-            $("#modalEmpresa").modal('hide');         
-        }
-
-        function MostrarMensajeEliminacion(msj) {
-
-            listar();
-            var msjbody = "Se elimino la gestion";
-
-
-            $(document).Toasts('create', {
-                class: 'bg-success',
-                title: msj,
-                autohide: true,
-                delay: 10000,
-                body: msjbody
-            });
-
-            $("#modalEliminar").modal('hide');            
         }
     </script>
 

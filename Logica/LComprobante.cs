@@ -296,7 +296,7 @@ namespace Logica
                     var consultarserie = (from x in esquema.comprobante
                                           where x.idEmpresa == comprobante.IdEmpresa
                                           && x.serie == comprobante.Serie
-                                          select x).FirstOrDefault();
+                                          select x).OrderByDescending(x => x.serie).FirstOrDefault();
 
                     if (consultarserie != null)
                     {
@@ -326,42 +326,25 @@ namespace Logica
                     }
 
                     //Verificar si ya existe un comprobante de apertura
-                    /*if(comprobante.TipoComprobante == (int)ETipoComprobante.Apertura)
-                    {
-                        var aux = 0;
-                        var comprobantea = (from x in esquema.comprobante
+                    if(comprobante.TipoComprobante == (int)ETipoComprobante.Apertura)
+                    {                        
+                        var linqgestion = (from x in esquema.gestion
                                             where x.idEmpresa == comprobante.IdEmpresa
-                                            && x.tipoComprobante == (int)ETipoComprobante.Apertura
-                                            && x.estado == (int)EstadosComprobante.Abierto
-                                            select x).OrderBy(x => x.fecha).ToList();
-                        
-                        foreach (var itemg in obtenergestion)
-                        {                                                                                  
-                            foreach (var itemc in comprobantea)
-                            {
-                                var verificarcomprobantea = (from x in esquema.gestion
-                                                             where x.id == itemg.id
-                                                             && (comprobante.Fecha >= x.fechainicio) && (comprobante.Fecha <= x.fechafin)
-                                                             && (itemc.fecha >= x.fechainicio) && (itemc.fecha <= x.fechafin)
-                                                             select x).ToList();
+                                            && (comprobante.Fecha >= x.fechainicio) && (comprobante.Fecha <= x.fechafin)
+                                            select x).First();
 
-                                if (verificarcomprobantea.Count > 0)
-                                {                                   
-                                    throw new BussinessException("Error ya existe un comprobante de apertura activo para esta gestion.");
-                                }
-                                else
-                                {
-                                    aux ++;
-                                    //break;
-                                }
-                            }
-                            
-                            if(aux > 0)
-                            {
-                                break;
-                            }
+                        var linqcompro = (from x in esquema.comprobante
+                                          where x.idEmpresa == comprobante.IdEmpresa
+                                          && (x.fecha >= linqgestion.fechainicio) && (x.fecha <= linqgestion.fechafin)
+                                          && x.tipoComprobante == (int)ETipoComprobante.Apertura
+                                          && x.estado == (int)EstadosComprobante.Abierto
+                                          select x).ToList();
+
+                        if(linqcompro.Count > 0)
+                        {
+                            throw new BussinessException("Error ya existe un comprobante de apertura activo para esta gestion.");
                         }
-                    } */                
+                    }                
                     
                     comprobante compro = new comprobante();
                     compro.serie = comprobante.Serie;
@@ -420,8 +403,6 @@ namespace Logica
                         detalleComprobante d = new detalleComprobante();
                         d.numero = num;
                         d.glosa = det.Glosa;
-                        d.montoDebe = det.montoDebe;
-                        d.montoHaber = det.montoHaber;
                         if (esmonedaprincipal)
                         {
                             if(comprobante.TipoCambio == 0)
@@ -431,14 +412,18 @@ namespace Logica
                             }
                             else
                             {
+                                d.montoDebe = det.montoDebe;
+                                d.montoHaber = det.montoHaber;
                                 d.montoDebeAlt = det.montoDebe / comprobante.TipoCambio;
                                 d.montoHaberAlt = det.montoHaber / comprobante.TipoCambio;
                             }
                         }
                         else
-                        {                         
-                            d.montoDebeAlt = det.montoDebe * comprobante.TipoCambio;
-                            d.montoHaberAlt = det.montoHaber * comprobante.TipoCambio;                          
+                        {
+                            d.montoDebe = det.montoDebe * comprobante.TipoCambio;
+                            d.montoHaber = det.montoHaber * comprobante.TipoCambio;
+                            d.montoDebeAlt = det.montoDebe;
+                            d.montoHaberAlt = det.montoHaber;
                         }                                                       
                         d.idUsuario = det.idUsuario;
                         d.idCuenta = det.idCuenta;
@@ -503,7 +488,7 @@ namespace Logica
                         }else if (compro.estado == 1){
                             cc.Estado = "Abierto";
                         }
-                        cc.Fecha = compro.fecha.ToString();
+                        cc.Fecha = compro.fecha.ToString("dd/MM/yyyy");
                         cc.Moneda = compro.moneda.nombre + " - " + compro.moneda.abreviatura;
                         cc.TipoCambio = compro.tipoCambio.ToString();
                         if (compro.tipoComprobante == 1){

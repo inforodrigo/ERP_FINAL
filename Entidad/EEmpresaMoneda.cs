@@ -27,5 +27,9 @@ namespace Entidad
 
         [DisplayName("Moneda Alternativa")]
         public string MonedaAlternativa { get; set; }
+
+        public EMoneda Moneda { get; set; }
+
+        public EMoneda Moneda1 { get; set; }
     }
 }

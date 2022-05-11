@@ -57,6 +57,7 @@
     <Compile Include="LGestion.cs" />
     <Compile Include="LLogin.cs" />
     <Compile Include="LPeriodo.cs" />
+    <Compile Include="LReporte.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

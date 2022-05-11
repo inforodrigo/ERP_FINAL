@@ -79,6 +79,49 @@ namespace Logica
             }
         }
 
+        public List<EPeriodo> ObtenerPorIdGestionReporte(int id)
+        {
+            try
+            {
+                using (var esquema = GetEsquema())
+                {
+                    var resultado = (from x in esquema.periodo
+                                     where x.estado != (int)Estado.Eliminado
+                                     where x.idGestion == id
+                                     select x).OrderBy(x => x.fechainicio).ToList();
+
+                    List<EPeriodo> periodos = new List<EPeriodo>();
+                    EPeriodo t = new EPeriodo();
+                    t.Id = 0;
+                    t.Nombre = "Todos";
+                    periodos.Add(t);
+
+                    foreach (var item in resultado)
+                    {
+                        EPeriodo e = new EPeriodo();
+                        e.Id = item.id;
+                        e.Nombre = item.nombre;
+                        e.FechaInicio = item.fechainicio;
+                        e.fechaIni = item.fechainicio.ToString("dd/MM/yyyy");
+                        e.FechaFin = item.fechafin;
+                        e.fechaFi = item.fechafin.ToString("dd/MM/yyyy");
+                        e.IdUsuario = item.usuario.id;
+                        e.IdGestion = item.gestion.id;
+                        e.Usuario = item.usuario.nombre;
+                        e.Gestion = item.gestion.nombre;
+                        e.Estado = item.estado;
+                        periodos.Add(e);
+                    }
+
+                    return periodos;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public EPeriodo Agregar(EPeriodo objperiodo)
         {
             try

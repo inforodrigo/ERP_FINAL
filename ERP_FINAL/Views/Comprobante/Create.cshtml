@@ -5,6 +5,8 @@
 }
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="@Url.Content("~/Front/plugins/select2/css/select2.min.css")" rel="stylesheet" />
+<link href="@Url.Content("~/Front/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css")" rel="stylesheet" />
 
 <div class="row justify-content-between">
     <div class="col-4">
@@ -14,7 +16,7 @@
         <div class="form-group">
             <button class="btn btn-info" onclick="GuardarComprobante()" style="margin-right: 10px; margin-top: 10px;">Guardar</button>
             <button class="btn btn-danger" onclick="$('#modalvolver').modal('show');" style="margin-right: 10px; margin-top: 10px;">Volver</button>
-        </div>       
+        </div>
     </div>
 </div>
 
@@ -93,18 +95,16 @@
                 <label>TOTALES:</label>
             </div>
             <div class="col-3">
-                <label>Total Debe:</label>
                 <input type="text" class="form-control" id="totaldebe" disabled style="text-align: right;">
             </div>
             <div class="col-3">
-                <label>Total Haber:</label>
                 <input type="text" class="form-control" id="totalhaber" disabled style="text-align: right;">
             </div>
         </div>
     </div>
 </section>
 
-<div class="modal" id="modaldetalle" tabindex="-1" role="dialog">
+<div class="modal" id="modaldetalle" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -115,7 +115,7 @@
                 <div class="row">
                     <div class="col-3">
                         <label for="cuenta" class="form-label">Cuenta</label>
-                        <select class="cuenta js-states form-control" id="cuentadetalle" name="cuentadetalle"></select>
+                        <select class="form-control" id="cuentadetalle" name="cuentadetalle"></select>
                     </div>
                     <div class="col-5">
                         <label for="glosadetalle" class="form-label">Glosa</label>
@@ -127,7 +127,7 @@
                     </div>
                     <div class="col-2">
                         <label for="haber" class="form-label">Haber</label>
-                        <input type="text" class="form-control" id="haber" name="haber"  style="text-align: right;">
+                        <input type="text" class="form-control" id="haber" name="haber" style="text-align: right;">
                     </div>
                 </div>
             </div>
@@ -139,7 +139,7 @@
     </div>
 </div>
 
-<div class="modal" id="modaleditardetalle" tabindex="-1" role="dialog">
+<div class="modal" id="modaleditardetalle" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -150,7 +150,7 @@
                 <div class="row">
                     <div class="col-3">
                         <label for="cuenta" class="form-label">Cuenta</label>
-                        <select class="cuenta js-states form-control" id="cuentadetalleedit" name="cuentadetalleedit"></select>
+                        <select class="form-control" id="cuentadetalleedit" name="cuentadetalleedit"></select>
                     </div>
                     <div class="col-5">
                         <label for="glosadetalle" class="form-label">Glosa</label>
@@ -176,26 +176,27 @@
 </div>
 
 <div class="modal" id="modalvolver" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">ADVERTENCIA</h5>
-      </div>
-      <div class="modal-body">
-        <p>Si vuelve los cambios realizados se borraran, Esta Seguro que desea Volver?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-        <button type="button" onclick="VolverAtras()" class="btn btn-primary">Si, Volver</button>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">ADVERTENCIA</h5>
+            </div>
+            <div class="modal-body">
+                <p>Si vuelve los cambios realizados se borraran, Esta Seguro que desea Volver?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                <button type="button" onclick="VolverAtras()" class="btn btn-primary">Si, Volver</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="//cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="~/Front/plugins/select2/js/select2.full.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $('#detallecomprobante').DataTable({
@@ -244,34 +245,15 @@
                 }, success: function (result) {
                     $.each(result.cuentas, function (index, value) {
                         $('#cuentadetalle').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                        $('#cuentadetalle').select2({
+                            theme: "classic"
+                            //theme: "bootstrap",
+                            //containerCssClass: "select2--small",
+                            //dropdownCssClass: "select2--small",
+                        });
                     });
                 }
             });
-
-            //$('.cuenta').select2({
-            /*$.ajax({
-                url: "",
-                cache: false,
-                type: "POST",
-                dataType: "json",
-                data: {
-                    id: 0
-                }, success: function (result) {
-                    /*var query = {
-                        search: result.Nombre,
-                        type: 'public'
-                    }
-
-                    return query;
-                    //$.each(result.cuentas, function (index, value) {
-                    //    $('#cuentadetalle').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
-                    //});
-                    $(".cuenta").select2({
-                        data: result.cuentas
-                    })
-                }
-            });*/
-            //});
         }
 
         $('#debe').keyup(function () {
@@ -385,11 +367,11 @@
 
         }
 
-        function EditarDetalle(seleccionado) {           
+        function EditarDetalle(seleccionado) {
             $('#glosadetalleedit').val(listadetalle[seleccionado.value].glosa);
             $('#debeedit').val(listadetalle[seleccionado.value].montoDebe);
             $('#haberedit').val(listadetalle[seleccionado.value].montoHaber);
-            $('#seleccionadoedit').val(seleccionado.value);           
+            $('#seleccionadoedit').val(seleccionado.value);
             $("#cuentadetalleedit").empty();
             $.ajax({
                 url: "@Url.Action("CargarCuentas", "Comprobante")",
@@ -400,7 +382,10 @@
                     id: 0
                 }, success: function (result) {
                     $.each(result.cuentas, function (index, value) {
-                        $('#cuentadetalleedit').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                        $('#cuentadetalleedit').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');                        
+                        $('#cuentadetalleedit').select2({
+                            theme: "classic"            
+                        });
                     });
                 }
             });
@@ -427,14 +412,14 @@
             }
 
             for (let j = 0; j < listadetalle.length; j++) {
-                if (j != seleccionado) {                  
+                if (j != seleccionado) {
                     if ($('#cuentadetalleedit').val() == listadetalle[j].idCuenta) {
                         return MostrarMensaje('Error esta cuenta ya ha sido agregada al detalle');
                     }
                 }
             }
 
-            //Actualizamos el total debe y haber, primero eliminados el valor anterior           
+            //Actualizamos el total debe y haber, primero eliminados el valor anterior
             var debe = listadetalle[seleccionado].montoDebe;
             var haber = listadetalle[seleccionado].montoHaber;
 
@@ -452,7 +437,7 @@
             }
 
             $('#totaldebe').val(totaldebe);
-            $('#totalhaber').val(totalhaber);           
+            $('#totalhaber').val(totalhaber);
 
             //Editamos la lista
             listadetalle[seleccionado].idCuenta = $('#cuentadetalleedit').val();
@@ -554,7 +539,7 @@
 
         }
 
-        function MostrarMensajeExitoso(msj) {           
+        function MostrarMensajeExitoso(msj) {
             $(document).Toasts('create', {
                 class: 'bg-success',
                 title: "Alerta",

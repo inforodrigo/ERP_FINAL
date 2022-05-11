@@ -51,6 +51,29 @@ namespace Logica
             }
         }
 
+        public EMoneda ObtenerMonedaPorId(int id)
+        {
+            try
+            {
+                using (var esquema = GetEsquema())
+                {
+                    var moneda = (from x in esquema.moneda
+                                  where x.id == id
+                                  select x).FirstOrDefault();
+
+                    EMoneda monedaPrin = new EMoneda();
+                    monedaPrin.Id = moneda.id;
+                    monedaPrin.Nombre = moneda.nombre;
+
+                    return monedaPrin;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public EMoneda ObtenerMonedaPrincipal(int id)
         {
             try
@@ -126,6 +149,16 @@ namespace Logica
                         {
                             throw new BussinessException("No se puede registrar el mismo tipo de cambio dos veces seguidas.");
                         }    
+                    }
+
+                    var verificarcompro = (from x in esquema.comprobante
+                                           where x.idEmpresa == objEmpresaMoneda.idEmpresa
+                                           && x.estado == (int)EstadosComprobante.Abierto
+                                           select x).ToList();
+
+                    if (verificarcompro.Count > 0)
+                    {
+                        throw new BussinessException("Error ya se han generado comprobantes contables, ya no se puede modificar la moneda alternativa.");
                     }
 
                     CambiarEstado(objEmpresaMoneda.idEmpresa);
