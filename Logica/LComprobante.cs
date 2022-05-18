@@ -38,8 +38,8 @@ namespace Logica
                         comprobante.TipoCambio = item.tipoCambio;
                         comprobante.Estado = item.estado;
                         comprobante.TipoComprobante = item.tipoComprobante;
-                        comprobante.IdEmpresa = item.idUsuario;
-                        comprobante.IdUsuario = item.idEmpresa;
+                        comprobante.IdEmpresa = item.idEmpresa;
+                        comprobante.IdUsuario = item.idUsuario;
                         comprobante.IdMoneda = item.idMoneda;
                         comprobante.Moneda = item.moneda.nombre;
                        
@@ -94,8 +94,8 @@ namespace Logica
                         }else if (consulta.tipoComprobante == 5){
                             comprobante.TipoComprobanteStr = "Ajuste";
                         }
-                        comprobante.IdEmpresa = consulta.idUsuario;
-                        comprobante.IdUsuario = consulta.idEmpresa;
+                        comprobante.IdEmpresa = consulta.idEmpresa;
+                        comprobante.IdUsuario = consulta.idUsuario;
                         comprobante.IdMoneda = consulta.idMoneda;
                         comprobante.Moneda = consulta.moneda.nombre;                                        
 
