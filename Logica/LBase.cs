@@ -26,6 +26,7 @@ namespace Logica
         private LEmpresaMoneda lEmpresaMoneda;
         private LComprobante lComprobante;
         private LReporte lReporte;
+        private LBalanceInicial lBalanceInicial;
 
         public static LBase<E> Instancia
         {
@@ -130,6 +131,17 @@ namespace Logica
                     lReporte = new LReporte();
                 }
                 return lReporte;
+            }
+        }
+        public LBalanceInicial LBalanceInicial
+        {
+            get
+            {
+                if (lBalanceInicial == null)
+                {
+                    lBalanceInicial = new LBalanceInicial();
+                }
+                return lBalanceInicial;
             }
         }
     }

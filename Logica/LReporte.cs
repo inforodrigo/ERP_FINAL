@@ -12,7 +12,7 @@ namespace Logica
 {
     public class LReporte : LBase<comprobante>
     {
-        public List<ERDatosBasicoSumasSaldos> ReporteDatosBasicos(string usuario, string empresa, string gestion)
+        public List<ERDatosBasicoSumasSaldos> ReporteDatosBasicos(string usuario, string empresa, string gestion, string moneda)
         {
             try
             {
@@ -21,6 +21,7 @@ namespace Logica
                 eRDatosBasico.Usuario = usuario;
                 eRDatosBasico.NombreEmpresa = empresa;
                 eRDatosBasico.Gestion = gestion;
+                eRDatosBasico.Moneda = moneda;
                 eRDatosBasico.FechaActual = DateTime.Now.ToString("dd/MM/yyyy");
 
                 basicos.Add(eRDatosBasico);
@@ -108,87 +109,6 @@ namespace Logica
             catch (Exception ex)
             {
                 throw new BussinessException("Error no se puede obtener el reporte de Comprobacion de Sumas y Saldos");
-            }
-        }
-
-        public List<ERDatosBasicoBalanceInicial> ReporteDatosBasicosBalanceInicial(string usuario, string empresa, string gestion, string fechagestion, string moneda)
-        {
-            try
-            {
-                List<ERDatosBasicoBalanceInicial> basicos = new List<ERDatosBasicoBalanceInicial>();
-                ERDatosBasicoBalanceInicial eRDatosBasico = new ERDatosBasicoBalanceInicial();
-                eRDatosBasico.Usuario = usuario;
-                eRDatosBasico.NombreEmpresa = empresa;
-                eRDatosBasico.Gestion = gestion + " - " + fechagestion;
-                eRDatosBasico.Moneda = moneda;
-                eRDatosBasico.FechaActual = DateTime.Now.ToString("dd/MM/yyyy");
-
-                basicos.Add(eRDatosBasico);
-
-                return basicos;
-            }
-            catch (Exception ex)
-            {
-                throw new BussinessException("Ha ocurrido un error.");
-            }
-        }
-
-        public List<ERBalanceInicialActivo> ReporteBalanceInicialCabezera1(int idGestion, int idMoneda)
-        {
-            List<ERBalanceInicialActivo> reporte = new List<ERBalanceInicialActivo>();
-            try
-            {
-                using (var esquema = GetEsquema())
-                {
-                    var gestion = (from x in esquema.gestion
-                                   where x.id == idGestion
-                                   select x).FirstOrDefault();
-
-                    var moneda = (from x in esquema.empresaMoneda
-                                  where x.idEmpresa == gestion.idEmpresa
-                                  && x.activo == 1
-                                  select x).FirstOrDefault();
-
-                    var cuentas = (from x in esquema.cuenta
-                                        where x.idEmpresa == gestion.idEmpresa
-                                        select x).Take(1);
-
-                    var comprobante = (from x in esquema.comprobante
-                                       where x.idEmpresa == gestion.idEmpresa
-                                       && x.fecha >= gestion.fechainicio
-                                       && x.fecha <= gestion.fechafin
-                                       && x.estado != (int)EstadosComprobante.Anulado
-                                       && x.tipoComprobante == (int)ETipoComprobante.Apertura
-                                       select x).FirstOrDefault();
-
-                    var detallecomprobante = (from x in esquema.detalleComprobante
-                                              where x.idComprobante == comprobante.id
-                                              select x).ToList();
-
-                    ERBalanceInicialActivo eRBalance = new ERBalanceInicialActivo();                   
-                    foreach(var c in cuentas)
-                    {
-                        eRBalance.CuentaCabezera = c.codigo + " - " + c.nombre;
-                        foreach (var d in detallecomprobante)
-                        {
-                            /*var cuentas = (from x in esquema.cuenta
-                                           where x.idEmpresa == gestion.idEmpresa
-                                           && x.idCuentaPadre == c.id
-                                           select x).ToList();*/
-                        }
-                    }
-
-                    
-                    
-                    
-
-                    
-                }
-                return reporte;
-            }
-            catch (Exception ex)
-            {
-                throw new BussinessException("Error no se puede obtener el reporte de Balance Inicial");
             }
         }
 
@@ -417,6 +337,7 @@ namespace Logica
                             foreach (var de in detallecomprobantes)
                             {
                                 ERLibroMayor rLibroMayor = new ERLibroMayor();
+                                rLibroMayor.IdCuenta = cu.id;
                                 rLibroMayor.Cuenta = cu.codigo + " - " + cu.nombre;
                                 rLibroMayor.Fecha = de.comprobante.fecha.ToString("dd/MM/yyyy");
                                 rLibroMayor.NroComprobante = de.comprobante.serie;
@@ -491,105 +412,98 @@ namespace Logica
                         }
                     }
                     else
-                    {
-                        var periodo = (from x in esquema.periodo
-                                       where x.idGestion == gestion.id
-                                       select x).ToList();
-
-                        foreach (var pe in periodo)
-                        {
-                            var cuentas = (from x in esquema.cuenta
+                    {                       
+                        var ges = (from x in esquema.gestion
+                                       where x.id == gestion.id
+                                       select x).FirstOrDefault();
+                       
+                        var cuentas = (from x in esquema.cuenta
                                            where x.idEmpresa == gestion.idEmpresa
                                            && x.tipocuenta == 2
                                            select x).ToList();                           
 
-                            foreach (var cu in cuentas)
-                            {                               
-                                var detallecomprobantes = (from x in esquema.detalleComprobante
-                                                           where x.idCuenta == cu.id
-                                                           && x.comprobante.fecha >= pe.fechainicio
-                                                           && x.comprobante.fecha <= pe.fechafin
-                                                           && x.comprobante.estado != (int)EstadosComprobante.Anulado
-                                                           select x).ToList();
-                                var contador = 0;
-                                double saldo = 0;
+                        foreach (var cu in cuentas)
+                        {                               
+                            var detallecomprobantes = (from x in esquema.detalleComprobante
+                                                        where x.idCuenta == cu.id
+                                                        && x.comprobante.fecha >= ges.fechainicio
+                                                        && x.comprobante.fecha <= ges.fechafin
+                                                        && x.comprobante.estado != (int)EstadosComprobante.Anulado
+                                                        select x).ToList();                              
+                            double saldo = 0;
 
-                                foreach (var de in detallecomprobantes)
+                            foreach (var de in detallecomprobantes)
+                            {
+                                ERLibroMayor rLibroMayor = new ERLibroMayor();
+                                rLibroMayor.IdCuenta = cu.id;
+                                rLibroMayor.Cuenta = cu.codigo + " - " + cu.nombre;
+                                rLibroMayor.Fecha = de.comprobante.fecha.ToString("dd/MM/yyyy");
+                                rLibroMayor.NroComprobante = de.comprobante.serie;
+                                rLibroMayor.Tipo = ObtenerTipoComprobante(de.comprobante.tipoComprobante);
+                                rLibroMayor.Glosa = de.comprobante.glosa;
+
+                                if (moneda.idMonedaPrincipal == idMoneda)
                                 {
-                                    ERLibroMayor rLibroMayor = new ERLibroMayor();
-                                    rLibroMayor.Cuenta = cu.codigo + " - " + cu.nombre;
-                                    rLibroMayor.Fecha = de.comprobante.fecha.ToString("dd/MM/yyyy");
-                                    rLibroMayor.NroComprobante = de.comprobante.serie;
-                                    rLibroMayor.Tipo = ObtenerTipoComprobante(de.comprobante.tipoComprobante);
-                                    rLibroMayor.Glosa = de.comprobante.glosa;
-
-                                    if (moneda.idMonedaPrincipal == idMoneda)
+                                    rLibroMayor.Debe = de.montoDebe;
+                                    rLibroMayor.Haber = de.montoHaber;                                      
+                                    if (rLibroMayor.Debe > 0)
                                     {
-                                        rLibroMayor.Debe = de.montoDebe;
-                                        rLibroMayor.Haber = de.montoHaber;
-                                        if (contador == 0)
+                                        saldo = saldo + rLibroMayor.Debe;
+                                        if(saldo >= 0)
                                         {
-                                            if (de.montoDebe > 0)
-                                            {
-                                                rLibroMayor.Saldo = de.montoDebe;
-                                                saldo = de.montoDebe;
-                                            }
-                                            else
-                                            {
-                                                rLibroMayor.Saldo = de.montoHaber;
-                                                saldo = de.montoHaber;
-                                            }
+                                            rLibroMayor.Saldo = saldo;
                                         }
                                         else
                                         {
-                                            if (de.montoDebe > 0)
-                                            {
-                                                saldo = saldo + de.montoDebe;
-                                                rLibroMayor.Saldo = saldo;
-                                            }
-                                            else
-                                            {
-                                                saldo = saldo - de.montoHaber;
-                                                rLibroMayor.Saldo = saldo;
-                                            }
+                                            rLibroMayor.Saldo = saldo * -1;
+                                        }                                           
+                                    }
+                                    else
+                                    {
+                                        saldo = saldo - rLibroMayor.Haber;
+                                        if(saldo >= 0)
+                                        {
+                                            rLibroMayor.Saldo = saldo;
+                                        }
+                                        else
+                                        {
+                                            rLibroMayor.Saldo = saldo * -1;
+                                        }                                           
+                                    }                                      
+                                }
+                                else
+                                {
+                                    rLibroMayor.Debe = Math.Round((de.montoDebeAlt), 2);
+                                    rLibroMayor.Haber = Math.Round((de.montoHaberAlt), 2);                                       
+                                    if (rLibroMayor.Debe > 0)
+                                    {
+                                        saldo = saldo + rLibroMayor.Debe;
+                                        if(saldo >= 0)
+                                        {
+                                            rLibroMayor.Saldo = saldo;
+                                        }
+                                        else
+                                        {
+                                            rLibroMayor.Saldo = saldo * -1;
                                         }
                                     }
                                     else
                                     {
-                                        rLibroMayor.Debe = Math.Round((de.montoDebeAlt), 2);
-                                        rLibroMayor.Haber = Math.Round((de.montoHaberAlt), 2);
-                                        if (contador == 0)
+                                        saldo = saldo - rLibroMayor.Haber;
+
+                                        if (saldo >= 0)
                                         {
-                                            if (de.montoDebeAlt > 0)
-                                            {
-                                                rLibroMayor.Saldo = de.montoDebeAlt;
-                                                saldo = de.montoDebeAlt;
-                                            }
-                                            else
-                                            {
-                                                rLibroMayor.Saldo = de.montoHaberAlt;
-                                                saldo = de.montoHaberAlt;
-                                            }
+                                            rLibroMayor.Saldo = saldo;
                                         }
                                         else
                                         {
-                                            if (de.montoDebeAlt > 0)
-                                            {
-                                                saldo = saldo + de.montoDebeAlt;
-                                                rLibroMayor.Saldo = saldo;
-                                            }
-                                            else
-                                            {
-                                                saldo = saldo - de.montoHaberAlt;
-                                                rLibroMayor.Saldo = saldo;
-                                            }
+                                            rLibroMayor.Saldo = saldo * -1;
                                         }
-                                    }
-                                    reporte.Add(rLibroMayor);
-                                    contador++;
+                                    }                                                                                                               
                                 }
+                                reporte.Add(rLibroMayor);                                   
                             }
-                        }
+                        }                      
                     }
                 }
                 return reporte;

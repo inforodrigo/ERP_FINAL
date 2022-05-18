@@ -229,8 +229,8 @@
                             idPadre: idPadre
 
                 }, success: function () {
-                            idCuenta = 0;
-                            idPadre = 1;
+                            //idCuenta = 0;
+                            //idPadre = 1;
                 }
             });
         }
@@ -274,7 +274,7 @@
 
                     }, success: function (result) {
 
-                        var mesjModalEliminar = "¿Esta seguro que deseas eliminar la cuenta" + result.Nombre + " ?";
+                        var mesjModalEliminar = "¿Esta seguro que deseas eliminar la cuenta " + result.Nombre + " ?";
                         $("#texto").html(mesjModalEliminar);
                         $("#modalEliminar").modal('show');
                     }

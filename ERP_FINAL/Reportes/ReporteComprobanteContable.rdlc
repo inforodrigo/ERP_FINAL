@@ -2,87 +2,6 @@
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Body>
     <ReportItems>
-      <Textbox Name="Textbox9">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Reporte de Comprobante Contable</Value>
-                <Style>
-                  <FontSize>16pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <Color>DarkBlue</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox9</rd:DefaultName>
-        <Top>0.50243cm</Top>
-        <Left>0.89862cm</Left>
-        <Height>0.75875cm</Height>
-        <Width>14.66524cm</Width>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="NombreEmpresa">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Empresa</Value>
-                <Style>
-                  <FontWeight>Bold</FontWeight>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value>: </Value>
-                <Style />
-              </TextRun>
-              <TextRun>
-                <Value>=First(Fields!NombreEmpresa.Value, "DSReporteBasicoComprobante")</Value>
-                <Style />
-              </TextRun>
-              <TextRun>
-                <Value xml:space="preserve"> </Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>NombreEmpresa</rd:DefaultName>
-        <Top>1.43757cm</Top>
-        <Left>0.89862cm</Left>
-        <Height>0.65292cm</Height>
-        <Width>14.66524cm</Width>
-        <ZIndex>1</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
       <Textbox Name="FechaActual">
         <CanGrow>true</CanGrow>
         <KeepTogether>true</KeepTogether>
@@ -112,11 +31,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>FechaActual</rd:DefaultName>
-        <Top>2.7824cm</Top>
-        <Left>8.20748cm</Left>
+        <Top>0.40115cm</Top>
+        <Left>8.20749cm</Left>
         <Height>0.6cm</Height>
         <Width>7.35638cm</Width>
-        <ZIndex>2</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -154,11 +72,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Usuario</rd:DefaultName>
-        <Top>3.55879cm</Top>
-        <Left>8.20748cm</Left>
+        <Top>1.17754cm</Top>
+        <Left>8.20749cm</Left>
         <Height>0.6cm</Height>
         <Width>7.35638cm</Width>
-        <ZIndex>3</ZIndex>
+        <ZIndex>1</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -198,11 +116,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>FechaActual</rd:DefaultName>
-        <Top>4.66094cm</Top>
-        <Left>0.89862cm</Left>
+        <Top>2.22514cm</Top>
+        <Left>0.89863cm</Left>
         <Height>0.6cm</Height>
         <Width>2.37339cm</Width>
-        <ZIndex>4</ZIndex>
+        <ZIndex>2</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -242,11 +160,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>FechaActual</rd:DefaultName>
-        <Top>4.66094cm</Top>
-        <Left>3.4484cm</Left>
+        <Top>2.22514cm</Top>
+        <Left>3.44841cm</Left>
         <Height>0.6cm</Height>
         <Width>2.94419cm</Width>
-        <ZIndex>5</ZIndex>
+        <ZIndex>3</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -286,11 +204,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>FechaActual</rd:DefaultName>
-        <Top>4.66094cm</Top>
-        <Left>10.41471cm</Left>
+        <Top>2.22514cm</Top>
+        <Left>10.41472cm</Left>
         <Height>0.6cm</Height>
         <Width>5.14915cm</Width>
-        <ZIndex>6</ZIndex>
+        <ZIndex>4</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -330,11 +248,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>FechaActual</rd:DefaultName>
-        <Top>5.43733cm</Top>
-        <Left>0.89862cm</Left>
+        <Top>3.00153cm</Top>
+        <Left>0.89863cm</Left>
         <Height>0.6cm</Height>
         <Width>4.52297cm</Width>
-        <ZIndex>7</ZIndex>
+        <ZIndex>5</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -374,11 +292,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>FechaActual</rd:DefaultName>
-        <Top>5.43733cm</Top>
-        <Left>5.5981cm</Left>
+        <Top>3.00153cm</Top>
+        <Left>5.59811cm</Left>
         <Height>0.6cm</Height>
         <Width>7.30299cm</Width>
-        <ZIndex>8</ZIndex>
+        <ZIndex>6</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -418,11 +336,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>FechaActual</rd:DefaultName>
-        <Top>6.21372cm</Top>
-        <Left>0.89862cm</Left>
+        <Top>3.77792cm</Top>
+        <Left>0.89863cm</Left>
         <Height>0.6cm</Height>
         <Width>14.66524cm</Width>
-        <ZIndex>9</ZIndex>
+        <ZIndex>7</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -453,11 +371,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox9</rd:DefaultName>
-        <Top>7.43162cm</Top>
-        <Left>0.89862cm</Left>
+        <Top>4.99582cm</Top>
+        <Left>0.89863cm</Left>
         <Height>0.75875cm</Height>
         <Width>14.66524cm</Width>
-        <ZIndex>10</ZIndex>
+        <ZIndex>8</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -514,6 +432,7 @@
                           <Color>LightGrey</Color>
                           <Style>Solid</Style>
                         </Border>
+                        <BackgroundColor>Silver</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -548,6 +467,7 @@
                           <Color>LightGrey</Color>
                           <Style>Solid</Style>
                         </Border>
+                        <BackgroundColor>Silver</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -582,6 +502,7 @@
                           <Color>LightGrey</Color>
                           <Style>Solid</Style>
                         </Border>
+                        <BackgroundColor>Silver</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -616,6 +537,7 @@
                           <Color>LightGrey</Color>
                           <Style>Solid</Style>
                         </Border>
+                        <BackgroundColor>Silver</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -780,11 +702,11 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>DSReporteDetalleComprobanteContable</DataSetName>
-        <Top>8.64952cm</Top>
-        <Left>0.89862cm</Left>
+        <Top>6.21372cm</Top>
+        <Left>0.89863cm</Left>
         <Height>1.62334cm</Height>
         <Width>14.66525cm</Width>
-        <ZIndex>11</ZIndex>
+        <ZIndex>9</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -810,15 +732,16 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>FechaActual</rd:DefaultName>
-        <Top>10.74717cm</Top>
-        <Left>10.23833cm</Left>
+        <Top>8.31137cm</Top>
+        <Left>10.23834cm</Left>
         <Height>0.6cm</Height>
         <Width>2.66277cm</Width>
-        <ZIndex>12</ZIndex>
+        <ZIndex>10</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
           </Border>
+          <BackgroundColor>Silver</BackgroundColor>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
@@ -844,15 +767,16 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>FechaActual</rd:DefaultName>
-        <Top>10.74717cm</Top>
-        <Left>12.90109cm</Left>
+        <Top>8.31137cm</Top>
+        <Left>12.9011cm</Left>
         <Height>0.6cm</Height>
         <Width>2.66277cm</Width>
-        <ZIndex>13</ZIndex>
+        <ZIndex>11</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
           </Border>
+          <BackgroundColor>Silver</BackgroundColor>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
@@ -888,11 +812,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>FechaActual</rd:DefaultName>
-        <Top>4.66094cm</Top>
-        <Left>6.56898cm</Left>
+        <Top>2.22514cm</Top>
+        <Left>6.56899cm</Left>
         <Height>0.6cm</Height>
         <Width>3.66935cm</Width>
-        <ZIndex>14</ZIndex>
+        <ZIndex>12</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -926,15 +850,16 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>FechaActual</rd:DefaultName>
-        <Top>10.74717cm</Top>
-        <Left>5.7579cm</Left>
+        <Top>8.31137cm</Top>
+        <Left>5.75791cm</Left>
         <Height>0.6cm</Height>
         <Width>4.48043cm</Width>
-        <ZIndex>15</ZIndex>
+        <ZIndex>13</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
           </Border>
+          <BackgroundColor>Silver</BackgroundColor>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
@@ -942,11 +867,104 @@
         </Style>
       </Textbox>
     </ReportItems>
-    <Height>4.74832in</Height>
+    <Height>4.10249in</Height>
     <Style />
   </Body>
   <Width>6.5in</Width>
   <Page>
+    <PageHeader>
+      <Height>2.46062cm</Height>
+      <PrintOnFirstPage>true</PrintOnFirstPage>
+      <PrintOnLastPage>true</PrintOnLastPage>
+      <ReportItems>
+        <Textbox Name="Textbox9">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Reporte de Comprobante Contable</Value>
+                  <Style>
+                    <FontSize>16pt</FontSize>
+                    <FontWeight>Bold</FontWeight>
+                    <Color>DarkBlue</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Center</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>Textbox9</rd:DefaultName>
+          <Top>0.41396cm</Top>
+          <Left>0.89862cm</Left>
+          <Height>0.75875cm</Height>
+          <Width>14.66524cm</Width>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="NombreEmpresa">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Empresa</Value>
+                  <Style>
+                    <FontWeight>Bold</FontWeight>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value>: </Value>
+                  <Style />
+                </TextRun>
+                <TextRun>
+                  <Value>=First(Fields!NombreEmpresa.Value, "DSReporteBasicoComprobante")</Value>
+                  <Style />
+                </TextRun>
+                <TextRun>
+                  <Value xml:space="preserve"> </Value>
+                  <Style />
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Center</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>NombreEmpresa</rd:DefaultName>
+          <Top>1.3491cm</Top>
+          <Left>0.89862cm</Left>
+          <Height>0.65292cm</Height>
+          <Width>14.66524cm</Width>
+          <ZIndex>1</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+      </ReportItems>
+      <Style>
+        <Border>
+          <Style>None</Style>
+        </Border>
+      </Style>
+    </PageHeader>
     <PageFooter>
       <Height>1.87854cm</Height>
       <PrintOnFirstPage>true</PrintOnFirstPage>
@@ -960,7 +978,9 @@
               <TextRuns>
                 <TextRun>
                   <Value>=Globals!PageNumber</Value>
-                  <Style />
+                  <Style>
+                    <FontWeight>Bold</FontWeight>
+                  </Style>
                 </TextRun>
               </TextRuns>
               <Style>

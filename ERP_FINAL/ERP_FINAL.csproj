@@ -2567,6 +2567,11 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Reportes\ReporteBalanceInicial.rdlc" />
+    <EmbeddedResource Include="Reportes\ReporteBalanceInicialNivel4.rdlc" />
+    <EmbeddedResource Include="Reportes\ReporteBalanceInicialNivel5.rdlc" />
+    <EmbeddedResource Include="Reportes\ReporteBalanceInicialNivel6.rdlc" />
+    <EmbeddedResource Include="Reportes\ReporteBalanceInicialNivel7.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteComprobanteContable.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteGestion.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteLibroDiario.rdlc" />

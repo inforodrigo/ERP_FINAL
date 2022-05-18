@@ -8,6 +8,7 @@ namespace Entidad.EReportes
 {
     public class ERLibroMayor
     {
+        public int IdCuenta { get; set; }
         public string Cuenta { get; set; }
         public string Fecha { get; set; }
         public int NroComprobante { get; set; }

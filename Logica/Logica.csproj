@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LBalanceInicial.cs" />
     <Compile Include="LBase.cs" />
     <Compile Include="LBaseBase.cs" />
     <Compile Include="LComprobante.cs" />

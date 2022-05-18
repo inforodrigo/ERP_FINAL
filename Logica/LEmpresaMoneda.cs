@@ -102,7 +102,44 @@ namespace Logica
             }
         }
 
-        public List<EMoneda> ObtenerMonedasAlternativas(int usu, int mon)
+        public int VerificarTieneComprobantes(int idempresa, int idmoneda)
+        {
+            using (var esquema = GetEsquema())
+            {
+                var verificarcompro = (from x in esquema.comprobante
+                                       where x.idEmpresa == idempresa &&
+                                       (x.estado == (int)EstadosComprobante.Abierto || x.estado == (int)EstadosComprobante.Anulado)
+                                       select x).ToList();
+                var result = 0;
+                if(verificarcompro.Count > 0)
+                {
+                    var re = (from x in esquema.empresaMoneda
+                              where x.idEmpresa == idempresa
+                              && x.idMonedaPrincipal == idmoneda
+                              && x.idMonedaAlternativa != null
+                              select x).FirstOrDefault();
+
+                    if(re != null)
+                    {
+                        //Tiene comprobantes y cambios con moneda alternativa
+                        result = 1;
+                    }
+                    else
+                    {
+                        //Tiene comprobantes pero no tiene cambios con moneda alternativa
+                        result = 2;
+                    }
+                }
+                else
+                {
+                    //No tiene comprobantes
+                    result = 3;
+                }
+                return result;
+            }
+        }
+
+        public List<EMoneda> ObtenerMonedasAlternativas(int usu, int mon, int idempresa)
         {
             try
             {
@@ -110,20 +147,83 @@ namespace Logica
                 {
                     List<EMoneda> monedas = new List<EMoneda>();
 
-                    var resultado = (from x in esquema.moneda
-                                     where x.idUsuario == usu &&
-                                     x.id != mon
-                                     select x).ToList();
+                    var verificarcompro = (from x in esquema.comprobante
+                                           where x.idEmpresa == idempresa && 
+                                           (x.estado == (int)EstadosComprobante.Abierto || x.estado == (int)EstadosComprobante.Anulado)
+                                           select x).ToList();
 
-                    foreach (var item in resultado)
+                    var re = (from x in esquema.empresaMoneda
+                              where x.idEmpresa == idempresa
+                              && x.idMonedaPrincipal == mon
+                              && x.idMonedaAlternativa != null
+                              select x).FirstOrDefault();
+
+                    if (verificarcompro.Count > 0 && re != null)
                     {
+                        var ve = (from x in esquema.empresaMoneda
+                                  where x.idEmpresa == idempresa
+                                  && x.idMonedaPrincipal == mon
+                                  && x.idMonedaAlternativa != null
+                                  select x).FirstOrDefault();
+
+                        var monealt = (from x in esquema.moneda
+                                    where x.id == re.idMonedaAlternativa                                   
+                                    select x).FirstOrDefault();
+
                         EMoneda mone = new EMoneda();
-                        mone.Id = item.id;
-                        mone.Nombre = item.nombre;
+                        mone.Id = monealt.id;
+                        mone.Nombre = monealt.nombre;
                         monedas.Add(mone);
                     }
+                    else
+                    {
+                        var resultado = (from x in esquema.moneda
+                                         where x.idUsuario == usu &&
+                                         x.id != mon
+                                         select x).ToList();
+
+                        foreach (var item in resultado)
+                        {
+                            EMoneda mone = new EMoneda();
+                            mone.Id = item.id;
+                            mone.Nombre = item.nombre;
+                            monedas.Add(mone);
+                        }
+                    }                                   
 
                     return monedas;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public EEmpresaMoneda ObtenerCambioActivo(int idempresa)
+        {
+            try
+            {
+                using (var esquema = GetEsquema())
+                {                   
+                    var resultado = (from x in esquema.empresaMoneda
+                                     where x.idEmpresa == idempresa &&
+                                     x.activo == 1
+                                     select x).First();
+                  
+                    EEmpresaMoneda mone = new EEmpresaMoneda();
+                    mone.Id = resultado.id;
+                    if(resultado.cambio == null)
+                    {
+                        mone.Cambio = 0;
+                    }
+                    else
+                    {
+                        mone.Cambio = (double)resultado.cambio;
+                    }
+                                
+
+                    return mone;
                 }
             }
             catch (Exception ex)
@@ -151,7 +251,7 @@ namespace Logica
                         }    
                     }
 
-                    var verificarcompro = (from x in esquema.comprobante
+                    /*var verificarcompro = (from x in esquema.comprobante
                                            where x.idEmpresa == objEmpresaMoneda.idEmpresa
                                            && x.estado == (int)EstadosComprobante.Abierto
                                            select x).ToList();
@@ -159,7 +259,7 @@ namespace Logica
                     if (verificarcompro.Count > 0)
                     {
                         throw new BussinessException("Error ya se han generado comprobantes contables, ya no se puede modificar la moneda alternativa.");
-                    }
+                    }*/
 
                     CambiarEstado(objEmpresaMoneda.idEmpresa);
 

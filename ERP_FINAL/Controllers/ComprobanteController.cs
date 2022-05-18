@@ -50,7 +50,15 @@ namespace ERP_FINAL.Controllers
                 comprobante.Serie = serie;
                 comprobante.Glosa = glosa;
                 comprobante.Fecha = Convert.ToDateTime(fecha);
-                comprobante.TipoCambio = Convert.ToDouble(tipocambio);
+                if(tipocambio == "")
+                {
+                    comprobante.TipoCambio = 0;
+                }
+                else
+                {
+                    comprobante.TipoCambio = Convert.ToDouble(tipocambio);
+                }
+                
                 comprobante.Estado = 1;
                 comprobante.TipoComprobante = Convert.ToInt32(tipodecomprobante);
                 comprobante.IdEmpresa = sEmpresa.Id;
@@ -70,9 +78,10 @@ namespace ERP_FINAL.Controllers
                     detalles.Add(deta);
                 }
 
-                lLogica.AgregarComprobante(comprobante, detalles);
+                EComprobante respuesta = new EComprobante();
+                respuesta = lLogica.AgregarComprobante(comprobante, detalles);
 
-                return JavaScript("redireccionar('" + Url.Action("Index", "Comprobante") + "');");
+                return JavaScript("redireccionar('" + Url.Action("Details", "Comprobante", new { id = respuesta.Id }) + "');");
             }
             catch (BussinessException ex)
             {
@@ -119,7 +128,7 @@ namespace ERP_FINAL.Controllers
             try
             {
                 lLogica.AnularComprobante(idComprobante);
-                return JavaScript("MostrarMensajeEliminacion('Eliminación Exitosa');");
+                return JavaScript("MostrarMensajeEliminacion('Anulacion Exitosa');");
             }
             catch (BussinessException ex)
             {
@@ -176,6 +185,7 @@ namespace ERP_FINAL.Controllers
             return Json(new
             {
                 serie = c.Serie,
+                estadoi = c.Estado,
                 estado = c.EstadoStr,
                 fecha = c.Fechas,
                 moneda = c.Moneda,
@@ -214,6 +224,7 @@ namespace ERP_FINAL.Controllers
 
                 viewer.LocalReport.Refresh();
                 ViewBag.ReporteComprobante = viewer;
+                ViewBag.idComprobante = id;
 
                 return View("ReporteComprobante");
 

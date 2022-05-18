@@ -123,11 +123,11 @@
                     </div>
                     <div class="col-2">
                         <label for="debe" class="form-label">Debe</label>
-                        <input type="text" class="form-control" id="debe" name="debe" style="text-align: right;">
+                        <input type="number" class="form-control" id="debe" name="debe" style="text-align: right;">
                     </div>
                     <div class="col-2">
                         <label for="haber" class="form-label">Haber</label>
-                        <input type="text" class="form-control" id="haber" name="haber" style="text-align: right;">
+                        <input type="number" class="form-control" id="haber" name="haber" style="text-align: right;">
                     </div>
                 </div>
             </div>
@@ -158,11 +158,11 @@
                     </div>
                     <div class="col-2">
                         <label for="debe" class="form-label">Debe</label>
-                        <input type="text" class="form-control" id="debeedit" name="debeedit" style="text-align: right;">
+                        <input type="number" class="form-control" id="debeedit" name="debeedit" style="text-align: right;">
                     </div>
                     <div class="col-2">
                         <label for="haber" class="form-label">Haber</label>
-                        <input type="text" class="form-control" id="haberedit" name="haberedit" style="text-align: right;">
+                        <input type="number" class="form-control" id="haberedit" name="haberedit" style="text-align: right;">
                     </div>
                     <input type="hidden" class="form-control" id="seleccionadoedit" name="seleccionadoedit">
                 </div>
@@ -308,11 +308,11 @@
             var debe = $('#debe').val();
             var haber = $('#haber').val();
             if (debe.length > haber.length) {
-                if (debe == 0) {
+                if (debe <= 0) {
                     return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
                 }
             } else {
-                if (haber == 0) {
+                if (haber <= 0) {
                     return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
                 }
             }

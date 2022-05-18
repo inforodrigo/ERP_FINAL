@@ -91,9 +91,17 @@
                 }
             </td>
             <td>
-                <a class="btn btn-outline btn-circle btn-sm purple" href="@Url.Action("Details", "Comprobante" , new { id = item.Id })"><i class="fa fa-eye"></i></a>
-                <a class="btn btn-outline btn-circle btn-sm purple" href="@Url.Action("ReporteComprobante", "Comprobante" , new { id = item.Id })"><i class="fa fa-file"></i></a>
-                <a class="btn btn-outline btn-circle btn-sm purple" onclick="AnularComprobante('@item.Id')"><i class="fa fa-trash"></i></a>
+                @if (item.Estado == 1)
+                {
+                    <a class="btn btn-outline btn-circle btn-sm purple" href="@Url.Action("Details", "Comprobante", new { id = item.Id })"><i class="fa fa-eye"></i></a>
+                    <a class="btn btn-outline btn-circle btn-sm purple" href="@Url.Action("ReporteComprobante", "Comprobante", new { id = item.Id })"><i class="fa fa-file"></i></a>
+                    <a class="btn btn-outline btn-circle btn-sm purple" onclick="AnularComprobante('@item.Id')"><i class="fa fa-trash"></i></a>
+                }
+                else
+                {
+                    <a class="btn btn-outline btn-circle btn-sm purple" href="@Url.Action("Details", "Comprobante", new { id = item.Id })"><i class="fa fa-eye"></i></a>
+                    <a class="btn btn-outline btn-circle btn-sm purple" href="@Url.Action("ReporteComprobante", "Comprobante", new { id = item.Id })"><i class="fa fa-file"></i></a>
+                }
             </td>
         </tr>
     }

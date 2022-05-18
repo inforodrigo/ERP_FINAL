@@ -18,6 +18,7 @@ namespace ERP_FINAL.Controllers
         private LComprobante lLogicacomprobante = LComprobante.Instancia.LComprobante;
         private LReporte lLogicareporte = LReporte.Instancia.LReporte;
         private LPeriodo lLogicaperiodo = LPeriodo.Instancia.LPeriodo;
+        private LBalanceInicial lLogicabalanceinicial = LBalanceInicial.Instancia.LBalanceInicial;
         // GET: Reporte
         public ActionResult Index()
         {
@@ -56,10 +57,12 @@ namespace ERP_FINAL.Controllers
                 EUsuario sUsuario = (EUsuario)Session["Usuario"];
                 EEmpresa sEmpresa = (EEmpresa)Session["Empresa"];
                 EGestion gestion = new EGestion();
-                gestion = lLogicagestion.ObtenerPorid(idgestion);
+                EMoneda moneda = new EMoneda();
+                gestion = lLogicagestion.ObtenerPorid(idgestion);                             
+                moneda = lLogicaEmpresamoneda.ObtenerMonedaPorId(idmoneda);
 
                 List<ERDatosBasicoSumasSaldos> datosBasico = new List<ERDatosBasicoSumasSaldos>();
-                datosBasico = lLogicareporte.ReporteDatosBasicos(sUsuario.Nombre, sEmpresa.Nombre, gestion.Nombre);
+                datosBasico = lLogicareporte.ReporteDatosBasicos(sUsuario.Nombre, sEmpresa.Nombre, gestion.Nombre, moneda.Nombre);
 
                 List<ERSumasSaldos> detalleComprobantes = new List<ERSumasSaldos>();
                 detalleComprobantes = lLogicareporte.ReporteDeSumasySaldos(idgestion, idmoneda);     
@@ -131,13 +134,198 @@ namespace ERP_FINAL.Controllers
                 EMoneda moneda = new EMoneda();
                 gestion = lLogicagestion.ObtenerPorid(idgestion);
                 var fechagestion = "Del " + gestion.fechaIni + " Al " + gestion.fechaFi;
-                moneda = lLogicaEmpresamoneda.ObtenerMonedaPorId(idmoneda);
+                moneda = lLogicaEmpresamoneda.ObtenerMonedaPorId(idmoneda);              
 
-                List<ERDatosBasicoBalanceInicial> datosBasico = new List<ERDatosBasicoBalanceInicial>();
-                datosBasico = lLogicareporte.ReporteDatosBasicosBalanceInicial(sUsuario.Nombre, sEmpresa.Nombre, gestion.Nombre, fechagestion, moneda.Nombre);
+                if (sEmpresa.Niveles == 3)
+                {
+                    List<ERDatosBasicoBalanceInicial> datosBasico = new List<ERDatosBasicoBalanceInicial>();
+                    datosBasico = lLogicabalanceinicial.ReporteDatosBasicosBalanceInicial(sUsuario.Nombre, sEmpresa.Nombre, gestion.Nombre, fechagestion, moneda.Nombre);
 
-                List<ERBalanceInicialActivo> datosBalanceActivo = new List<ERBalanceInicialActivo>();
-                datosBalanceActivo = lLogicareporte.ReporteBalanceInicialCabezera1(idgestion, idmoneda);
+                    List<ERCabeceraActivo> cabeceraactivo = new List<ERCabeceraActivo>();
+                    cabeceraactivo = lLogicabalanceinicial.cabeceraactivos(idgestion, sEmpresa.Id, idmoneda);
+
+                    List<ERCabeceraPasivoPatrimonio> cabecerapasivopatrimonio = new List<ERCabeceraPasivoPatrimonio>();
+                    cabecerapasivopatrimonio = lLogicabalanceinicial.cabecerapasivopatrimonios(idgestion, sEmpresa.Id, idmoneda);
+
+                    List<ERBalanceInicialActivo> detallecomprobantesactivo = new List<ERBalanceInicialActivo>();
+                    detallecomprobantesactivo = lLogicabalanceinicial.reporteBalanceInicialActivo(idgestion, sEmpresa.Id, idmoneda);
+
+                    List<ERBalanceInicialPasivoPatrimonio> detallecomprobantepasivopatrimonio = new List<ERBalanceInicialPasivoPatrimonio>();
+                    detallecomprobantepasivopatrimonio = lLogicabalanceinicial.reporteBalanceInicialPasivoPatrimonio(idgestion, sEmpresa.Id, idmoneda);          
+
+                    ReportViewer viewer = new ReportViewer();
+                    viewer.AsyncRendering = false;
+                    viewer.SizeToReportContent = true;
+
+                    ReportDataSource rb = new ReportDataSource("DSReporteDatosBasico", datosBasico);
+                    ReportDataSource rcdetalleactivo = new ReportDataSource("DSReporteBalanceInicialActivo", detallecomprobantesactivo);
+                    ReportDataSource rcdetallepasivopatrimonio = new ReportDataSource("DSReporteBalanceInicialPasivoPatrimonio", detallecomprobantepasivopatrimonio);
+                    ReportDataSource rccabeceraactivo = new ReportDataSource("DSCabecera1", cabeceraactivo);
+                    ReportDataSource rccabecerapasivopatrimonio = new ReportDataSource("DSCabecera2", cabecerapasivopatrimonio);
+
+                    viewer.LocalReport.ReportPath = Server.MapPath("~/Reportes/ReporteBalanceInicial.rdlc");
+                    viewer.LocalReport.DataSources.Clear();
+                    viewer.LocalReport.DataSources.Add(rb);
+                    viewer.LocalReport.DataSources.Add(rcdetalleactivo);
+                    viewer.LocalReport.DataSources.Add(rcdetallepasivopatrimonio);
+                    viewer.LocalReport.DataSources.Add(rccabeceraactivo);
+                    viewer.LocalReport.DataSources.Add(rccabecerapasivopatrimonio);
+                    viewer.LocalReport.Refresh();
+
+                    ViewBag.ReporteBalanceInicial = viewer;
+                }
+                else if (sEmpresa.Niveles == 4)
+                {
+                    List<ERDatosBasicoBalanceInicial> datosBasico = new List<ERDatosBasicoBalanceInicial>();
+                    datosBasico = lLogicabalanceinicial.ReporteDatosBasicosBalanceInicial(sUsuario.Nombre, sEmpresa.Nombre, gestion.Nombre, fechagestion, moneda.Nombre);
+
+                    List<ERCabeceraActivo> cabeceraactivo = new List<ERCabeceraActivo>();
+                    cabeceraactivo = lLogicabalanceinicial.cabeceraactivos(idgestion, sEmpresa.Id, idmoneda);
+
+                    List<ERCabeceraPasivoPatrimonio> cabecerapasivopatrimonio = new List<ERCabeceraPasivoPatrimonio>();
+                    cabecerapasivopatrimonio = lLogicabalanceinicial.cabecerapasivopatrimonios(idgestion, sEmpresa.Id, idmoneda);
+
+                    List<ERBalanceInicialActivo> detallecomprobantesactivo = new List<ERBalanceInicialActivo>();
+                    detallecomprobantesactivo = lLogicabalanceinicial.reporteBalanceInicialActivo(idgestion, sEmpresa.Id, idmoneda);
+
+                    List<ERBalanceInicialPasivoPatrimonio> detallecomprobantepasivopatrimonio = new List<ERBalanceInicialPasivoPatrimonio>();
+                    detallecomprobantepasivopatrimonio = lLogicabalanceinicial.reporteBalanceInicialPasivoPatrimonio(idgestion, sEmpresa.Id, idmoneda);
+
+                    ReportViewer viewer = new ReportViewer();
+                    viewer.AsyncRendering = false;
+                    viewer.SizeToReportContent = true;
+
+                    ReportDataSource rb = new ReportDataSource("DSReporteDatosBasico", datosBasico);
+                    ReportDataSource rcdetalleactivo = new ReportDataSource("DSReporteBalanceInicialActivo", detallecomprobantesactivo);
+                    ReportDataSource rcdetallepasivopatrimonio = new ReportDataSource("DSReporteBalanceInicialPasivoPatrimonio", detallecomprobantepasivopatrimonio);
+                    ReportDataSource rccabeceraactivo = new ReportDataSource("DSCabecera1", cabeceraactivo);
+                    ReportDataSource rccabecerapasivopatrimonio = new ReportDataSource("DSCabecera2", cabecerapasivopatrimonio);
+
+                    viewer.LocalReport.ReportPath = Server.MapPath("~/Reportes/ReporteBalanceInicialNivel4.rdlc");
+                    viewer.LocalReport.DataSources.Clear();
+                    viewer.LocalReport.DataSources.Add(rb);
+                    viewer.LocalReport.DataSources.Add(rcdetalleactivo);
+                    viewer.LocalReport.DataSources.Add(rcdetallepasivopatrimonio);
+                    viewer.LocalReport.DataSources.Add(rccabeceraactivo);
+                    viewer.LocalReport.DataSources.Add(rccabecerapasivopatrimonio);
+                    viewer.LocalReport.Refresh();
+
+                    ViewBag.ReporteBalanceInicial = viewer;
+                }
+                else if (sEmpresa.Niveles == 5)
+                {
+                    List<ERDatosBasicoBalanceInicial> datosBasico = new List<ERDatosBasicoBalanceInicial>();
+                    datosBasico = lLogicabalanceinicial.ReporteDatosBasicosBalanceInicial(sUsuario.Nombre, sEmpresa.Nombre, gestion.Nombre, fechagestion, moneda.Nombre);
+
+                    List<ERCabeceraActivo> cabeceraactivo = new List<ERCabeceraActivo>();
+                    cabeceraactivo = lLogicabalanceinicial.cabeceraactivos(idgestion, sEmpresa.Id, idmoneda);
+
+                    List<ERCabeceraPasivoPatrimonio> cabecerapasivopatrimonio = new List<ERCabeceraPasivoPatrimonio>();
+                    cabecerapasivopatrimonio = lLogicabalanceinicial.cabecerapasivopatrimonios(idgestion, sEmpresa.Id, idmoneda);
+
+                    List<ERBalanceInicialActivo> detallecomprobantesactivo = new List<ERBalanceInicialActivo>();
+                    detallecomprobantesactivo = lLogicabalanceinicial.reporteBalanceInicialActivo(idgestion, sEmpresa.Id, idmoneda);
+
+                    List<ERBalanceInicialPasivoPatrimonio> detallecomprobantepasivopatrimonio = new List<ERBalanceInicialPasivoPatrimonio>();
+                    detallecomprobantepasivopatrimonio = lLogicabalanceinicial.reporteBalanceInicialPasivoPatrimonio(idgestion, sEmpresa.Id, idmoneda);
+
+                    ReportViewer viewer = new ReportViewer();
+                    viewer.AsyncRendering = false;
+                    viewer.SizeToReportContent = true;
+
+                    ReportDataSource rb = new ReportDataSource("DSReporteDatosBasico", datosBasico);
+                    ReportDataSource rcdetalleactivo = new ReportDataSource("DSReporteBalanceInicialActivo", detallecomprobantesactivo);
+                    ReportDataSource rcdetallepasivopatrimonio = new ReportDataSource("DSReporteBalanceInicialPasivoPatrimonio", detallecomprobantepasivopatrimonio);
+                    ReportDataSource rccabeceraactivo = new ReportDataSource("DSCabecera1", cabeceraactivo);
+                    ReportDataSource rccabecerapasivopatrimonio = new ReportDataSource("DSCabecera2", cabecerapasivopatrimonio);
+
+                    viewer.LocalReport.ReportPath = Server.MapPath("~/Reportes/ReporteBalanceInicialNivel5.rdlc");
+                    viewer.LocalReport.DataSources.Clear();
+                    viewer.LocalReport.DataSources.Add(rb);
+                    viewer.LocalReport.DataSources.Add(rcdetalleactivo);
+                    viewer.LocalReport.DataSources.Add(rcdetallepasivopatrimonio);
+                    viewer.LocalReport.DataSources.Add(rccabeceraactivo);
+                    viewer.LocalReport.DataSources.Add(rccabecerapasivopatrimonio);
+                    viewer.LocalReport.Refresh();
+
+                    ViewBag.ReporteBalanceInicial = viewer;
+                }
+                else if (sEmpresa.Niveles == 6)
+                {
+                    List<ERDatosBasicoBalanceInicial> datosBasico = new List<ERDatosBasicoBalanceInicial>();
+                    datosBasico = lLogicabalanceinicial.ReporteDatosBasicosBalanceInicial(sUsuario.Nombre, sEmpresa.Nombre, gestion.Nombre, fechagestion, moneda.Nombre);
+
+                    List<ERCabeceraActivo> cabeceraactivo = new List<ERCabeceraActivo>();
+                    cabeceraactivo = lLogicabalanceinicial.cabeceraactivos(idgestion, sEmpresa.Id, idmoneda);
+
+                    List<ERCabeceraPasivoPatrimonio> cabecerapasivopatrimonio = new List<ERCabeceraPasivoPatrimonio>();
+                    cabecerapasivopatrimonio = lLogicabalanceinicial.cabecerapasivopatrimonios(idgestion, sEmpresa.Id, idmoneda);
+
+                    List<ERBalanceInicialActivo> detallecomprobantesactivo = new List<ERBalanceInicialActivo>();
+                    detallecomprobantesactivo = lLogicabalanceinicial.reporteBalanceInicialActivo(idgestion, sEmpresa.Id, idmoneda);
+
+                    List<ERBalanceInicialPasivoPatrimonio> detallecomprobantepasivopatrimonio = new List<ERBalanceInicialPasivoPatrimonio>();
+                    detallecomprobantepasivopatrimonio = lLogicabalanceinicial.reporteBalanceInicialPasivoPatrimonio(idgestion, sEmpresa.Id, idmoneda);
+
+                    ReportViewer viewer = new ReportViewer();
+                    viewer.AsyncRendering = false;
+                    viewer.SizeToReportContent = true;
+
+                    ReportDataSource rb = new ReportDataSource("DSReporteDatosBasico", datosBasico);
+                    ReportDataSource rcdetalleactivo = new ReportDataSource("DSReporteBalanceInicialActivo", detallecomprobantesactivo);
+                    ReportDataSource rcdetallepasivopatrimonio = new ReportDataSource("DSReporteBalanceInicialPasivoPatrimonio", detallecomprobantepasivopatrimonio);
+                    ReportDataSource rccabeceraactivo = new ReportDataSource("DSCabecera1", cabeceraactivo);
+                    ReportDataSource rccabecerapasivopatrimonio = new ReportDataSource("DSCabecera2", cabecerapasivopatrimonio);
+
+                    viewer.LocalReport.ReportPath = Server.MapPath("~/Reportes/ReporteBalanceInicialNivel6.rdlc");
+                    viewer.LocalReport.DataSources.Clear();
+                    viewer.LocalReport.DataSources.Add(rb);
+                    viewer.LocalReport.DataSources.Add(rcdetalleactivo);
+                    viewer.LocalReport.DataSources.Add(rcdetallepasivopatrimonio);
+                    viewer.LocalReport.DataSources.Add(rccabeceraactivo);
+                    viewer.LocalReport.DataSources.Add(rccabecerapasivopatrimonio);
+                    viewer.LocalReport.Refresh();
+
+                    ViewBag.ReporteBalanceInicial = viewer;
+                }
+                else if (sEmpresa.Niveles == 7)
+                {
+                    List<ERDatosBasicoBalanceInicial> datosBasico = new List<ERDatosBasicoBalanceInicial>();
+                    datosBasico = lLogicabalanceinicial.ReporteDatosBasicosBalanceInicial(sUsuario.Nombre, sEmpresa.Nombre, gestion.Nombre, fechagestion, moneda.Nombre);
+
+                    List<ERCabeceraActivo> cabeceraactivo = new List<ERCabeceraActivo>();
+                    cabeceraactivo = lLogicabalanceinicial.cabeceraactivos(idgestion, sEmpresa.Id, idmoneda);
+
+                    List<ERCabeceraPasivoPatrimonio> cabecerapasivopatrimonio = new List<ERCabeceraPasivoPatrimonio>();
+                    cabecerapasivopatrimonio = lLogicabalanceinicial.cabecerapasivopatrimonios(idgestion, sEmpresa.Id, idmoneda);
+
+                    List<ERBalanceInicialActivo> detallecomprobantesactivo = new List<ERBalanceInicialActivo>();
+                    detallecomprobantesactivo = lLogicabalanceinicial.reporteBalanceInicialActivo(idgestion, sEmpresa.Id, idmoneda);
+
+                    List<ERBalanceInicialPasivoPatrimonio> detallecomprobantepasivopatrimonio = new List<ERBalanceInicialPasivoPatrimonio>();
+                    detallecomprobantepasivopatrimonio = lLogicabalanceinicial.reporteBalanceInicialPasivoPatrimonio(idgestion, sEmpresa.Id, idmoneda);
+
+                    ReportViewer viewer = new ReportViewer();
+                    viewer.AsyncRendering = false;
+                    viewer.SizeToReportContent = true;
+
+                    ReportDataSource rb = new ReportDataSource("DSReporteDatosBasico", datosBasico);
+                    ReportDataSource rcdetalleactivo = new ReportDataSource("DSReporteBalanceInicialActivo", detallecomprobantesactivo);
+                    ReportDataSource rcdetallepasivopatrimonio = new ReportDataSource("DSReporteBalanceInicialPasivoPatrimonio", detallecomprobantepasivopatrimonio);
+                    ReportDataSource rccabeceraactivo = new ReportDataSource("DSCabecera1", cabeceraactivo);
+                    ReportDataSource rccabecerapasivopatrimonio = new ReportDataSource("DSCabecera2", cabecerapasivopatrimonio);
+
+                    viewer.LocalReport.ReportPath = Server.MapPath("~/Reportes/ReporteBalanceInicialNivel7.rdlc");
+                    viewer.LocalReport.DataSources.Clear();
+                    viewer.LocalReport.DataSources.Add(rb);
+                    viewer.LocalReport.DataSources.Add(rcdetalleactivo);
+                    viewer.LocalReport.DataSources.Add(rcdetallepasivopatrimonio);
+                    viewer.LocalReport.DataSources.Add(rccabeceraactivo);
+                    viewer.LocalReport.DataSources.Add(rccabecerapasivopatrimonio);
+                    viewer.LocalReport.Refresh();
+
+                    ViewBag.ReporteBalanceInicial = viewer;
+                }
 
                 return PartialView("ReporteBalanceInicialParcial");
 

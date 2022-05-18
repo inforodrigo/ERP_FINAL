@@ -20,8 +20,7 @@ namespace Logica
                 try
                 {
                     var consulta = (from x in esquema.comprobante
-                                      where x.estado != (int)EstadosComprobante.Anulado 
-                                      && x.idEmpresa == idempresa       
+                                      where x.idEmpresa == idempresa       
                                       && x.idUsuario == idusuario
                                       select x).OrderByDescending(x => x.id).ToList();
 
@@ -80,8 +79,10 @@ namespace Logica
                             comprobante.EstadoStr = "Cerrado";
                         }else if(comprobante.Estado == 1){
                             comprobante.EstadoStr = "Abierto";
+                        }else if (comprobante.Estado == 2){
+                            comprobante.EstadoStr = "Anulado";
                         }
-                        comprobante.TipoComprobante = consulta.tipoComprobante;
+                    comprobante.TipoComprobante = consulta.tipoComprobante;
                         if(consulta.tipoComprobante == 1){
                             comprobante.TipoComprobanteStr = "Ingreso";
                         }else if(consulta.tipoComprobante == 2){
@@ -303,9 +304,19 @@ namespace Logica
                         comprobante.Serie = consultarserie.serie + 1;
                     }
 
+                    var verificargestion = (from x in esquema.gestion
+                                       where x.idEmpresa == comprobante.IdEmpresa
+                                       && (comprobante.Fecha >= x.fechainicio) && (comprobante.Fecha <= x.fechafin)
+                                       select x).ToList();
+
+                    if(verificargestion.Count == 0)
+                    {
+                        throw new BussinessException("Error la fecha no pertenece a ninguna gestion activa.");
+                    }
+
                     var obtenergestion = (from x in esquema.gestion
                                    where x.idEmpresa == comprobante.IdEmpresa
-                                   && x.estado == (int)Estado.Habilitado || x.estado == (int)Estado.Asignado
+                                   && (x.estado == (int)Estado.Habilitado || x.estado == (int)Estado.Asignado)
                                    select x).OrderBy(x => x.fechainicio).ToList();
 
                     //Verificar Si esta dentro de un periodo
@@ -316,8 +327,8 @@ namespace Logica
                                                 where x.idGestion == itemg.id
                                                 && (comprobante.Fecha >= x.fechainicio) && (comprobante.Fecha <= x.fechafin)
                                                 select x).ToList();
-
-                        countperiodo = countperiodo + verificarperiodo.Count;
+                       
+                        countperiodo = countperiodo + verificarperiodo.Count;                                             
                     }
 
                     if(countperiodo == 0)
@@ -407,6 +418,8 @@ namespace Logica
                         {
                             if(comprobante.TipoCambio == 0)
                             {
+                                d.montoDebe = det.montoDebe;
+                                d.montoHaber = det.montoHaber;
                                 d.montoDebeAlt = 0;
                                 d.montoHaberAlt = 0;
                             }
@@ -431,8 +444,10 @@ namespace Logica
                         esquema.detalleComprobante.Add(d);
                         esquema.SaveChanges();
                     }
+                    EComprobante data = new EComprobante();
+                    data.Id = idcomprobante.id;
 
-                    return comprobante;
+                    return data;
                 }
                 catch (BussinessException ex)
                 {

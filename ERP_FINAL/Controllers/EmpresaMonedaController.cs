@@ -140,15 +140,17 @@ namespace ERP_FINAL.Controllers
         {
             try
             {
-                EUsuario oUsuario = (EUsuario)Session["Usuario"];
-               
+                EUsuario sUsuario = (EUsuario)Session["Usuario"];
+                EEmpresa sEmpresa = (EEmpresa)Session["Empresa"];
+
                 List<EMoneda> monedas = new List<EMoneda>();
-                monedas = lLogica.ObtenerMonedasAlternativas(oUsuario.Id, moneda);
+                var tipo = lLogica.VerificarTieneComprobantes(sEmpresa.Id, moneda);
+                monedas = lLogica.ObtenerMonedasAlternativas(sUsuario.Id, moneda, sEmpresa.Id);               
 
                 return Json(new
                 {
-                    monedas = monedas
-
+                    monedas = monedas,
+                    tipo = tipo
                 });
 
             }
@@ -163,6 +165,34 @@ namespace ERP_FINAL.Controllers
                 return JavaScript("MostrarMensaje('Ha ocurrido un error');");
             }
 
+        }
+
+        [HttpPost]
+        public ActionResult ObtenerCambioActivo(int moneda)
+        {
+            try
+            {             
+                EEmpresa sEmpresa = (EEmpresa)Session["Empresa"];
+
+                EEmpresaMoneda cambio = new EEmpresaMoneda();
+                cambio = lLogica.ObtenerCambioActivo(sEmpresa.Id);
+
+                return Json(new
+                {
+                    cambio = cambio.Cambio
+                });
+
+            }
+            catch (BussinessException ex)
+            {
+                string mensaje = ex.Message.Replace("'", "");
+                ViewBag.Mensaje = mensaje;
+                return JavaScript("MostrarMensaje('" + mensaje + "');");
+            }
+            catch (Exception ex)
+            {
+                return JavaScript("MostrarMensaje('Ha ocurrido un error');");
+            }
         }
     }
 }

@@ -36,10 +36,11 @@
                                 <div class="form-group">
                                     <label>Gestion</label>
                                     <select class="form-control select2" style="width: 100%;" id="select_gestion">
+                                        <option value="0">Seleccione una Gestion</option>
                                         @{ 
                                             foreach (var i in gestiones)
                                             {
-                                                <option value="@i.Id">@i.Nombre</option> 
+                                                <option value="@i.Id">@i.Nombre</option>    
                                             } 
                                         }
                                     </select>
@@ -123,6 +124,10 @@
             var IdGestion = $("#select_gestion").val();
             var IdMoneda = $("#select_moneda").val();
             var IdPeriodo = $("#select_periodo").val();
+
+            if (IdGestion == 0) {
+                return MostrarMensaje('Error debe Seleccionar una Gestion');
+            }
 
             $.ajax({
                 url: "@Url.Action("ReporteDeLibroDiario", "Reporte")",
