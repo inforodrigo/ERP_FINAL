@@ -10,6 +10,7 @@
     <div class="col-8">
         <h2>Detalle de Comprobante</h2>
         <input type="hidden" class="form-control" id="idComprobante" value="@ViewBag.idComprobante">
+        <input type="hidden" class="form-control" id="creado" value="@ViewBag.Creado">
         <input type="hidden" class="form-control" id="estadoi">
     </div>
     <div class="col-4">
@@ -130,6 +131,10 @@
                 "ordering": false,
             });
             CargarComprobante();
+            var Creado = $("#creado").val();
+            if (Creado == 1) {
+                MostrarMensajeExitoso("Comprobante Creado Correctamente");
+            }
         });
 
         function CargarComprobante() {
@@ -224,6 +229,17 @@
                 body: msj
             });
         }
+
+        function MostrarMensajeExitoso(msj) {
+            $(document).Toasts('create', {
+                class: 'bg-success',
+                title: "Alerta",
+                autohide: true,
+                delay: 10000,
+                body: msj
+            });
+        }
+
     </script>
 }
 

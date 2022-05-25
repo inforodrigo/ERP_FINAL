@@ -51,6 +51,7 @@
     <Compile Include="LBalanceInicial.cs" />
     <Compile Include="LBase.cs" />
     <Compile Include="LBaseBase.cs" />
+    <Compile Include="LCategoria.cs" />
     <Compile Include="LComprobante.cs" />
     <Compile Include="LCuenta.cs" />
     <Compile Include="LEmpresa.cs" />

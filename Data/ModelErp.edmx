@@ -5,6 +5,45 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="dbErpModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="articulo">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="500" />
+          <Property Name="cantidad" Type="int" />
+          <Property Name="precioVenta" Type="float" Nullable="false" />
+          <Property Name="idEmpresa" Type="int" Nullable="false" />
+          <Property Name="idUsuario" Type="int" Nullable="false" />
+          <Property Name="demandaDiaria" Type="int" />
+          <Property Name="tiempoEsperaDiario" Type="varchar" MaxLength="500" />
+          <Property Name="tiempoEsperaMaxDiario" Type="varchar" MaxLength="500" />
+          <Property Name="costoOrden" Type="float" />
+          <Property Name="costoInventario" Type="float" />
+          <Property Name="puntoNuevoPedido" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="articuloCategoria">
+          <Key>
+            <PropertyRef Name="idArticulo" />
+            <PropertyRef Name="idCategoria" />
+          </Key>
+          <Property Name="idArticulo" Type="int" Nullable="false" />
+          <Property Name="idCategoria" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="categoria">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="500" />
+          <Property Name="idEmpresa" Type="int" Nullable="false" />
+          <Property Name="idUsuario" Type="int" Nullable="false" />
+          <Property Name="idCategoriaPadre" Type="int" />
+        </EntityType>
         <EntityType Name="comprobante">
           <Key>
             <PropertyRef Name="id" />
@@ -122,6 +161,90 @@
           <Property Name="tipo" Type="int" Nullable="false" />
           <Property Name="estado" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK__articulo__idEmpr__671F4F74">
+          <End Role="empresa" Type="Self.empresa" Multiplicity="1" />
+          <End Role="articulo" Type="Self.articulo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="empresa">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="articulo">
+              <PropertyRef Name="idEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__articulo__idUsua__681373AD">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="articulo" Type="Self.articulo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="articulo">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__articuloC__idArt__69FBBC1F">
+          <End Role="articulo" Type="Self.articulo" Multiplicity="1" />
+          <End Role="articuloCategoria" Type="Self.articuloCategoria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="articulo">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="articuloCategoria">
+              <PropertyRef Name="idArticulo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__articuloC__idCat__6AEFE058">
+          <End Role="categoria" Type="Self.categoria" Multiplicity="1" />
+          <End Role="articuloCategoria" Type="Self.articuloCategoria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="categoria">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="articuloCategoria">
+              <PropertyRef Name="idCategoria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__categoria__idCat__6442E2C9">
+          <End Role="categoria" Type="Self.categoria" Multiplicity="0..1" />
+          <End Role="categoria1" Type="Self.categoria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="categoria">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="categoria1">
+              <PropertyRef Name="idCategoriaPadre" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__categoria__idEmp__625A9A57">
+          <End Role="empresa" Type="Self.empresa" Multiplicity="1" />
+          <End Role="categoria" Type="Self.categoria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="empresa">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="categoria">
+              <PropertyRef Name="idEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__categoria__idUsu__634EBE90">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="categoria" Type="Self.categoria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="categoria">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__comproban__idEmp__4F47C5E3">
           <End Role="empresa" Type="Self.empresa" Multiplicity="1" />
           <End Role="comprobante" Type="Self.comprobante" Multiplicity="*" />
@@ -351,6 +474,8 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="dbErpModelStoreContainer">
+          <EntitySet Name="articulo" EntityType="Self.articulo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="categoria" EntityType="Self.categoria" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="comprobante" EntityType="Self.comprobante" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="cuenta" EntityType="Self.cuenta" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="detalleComprobante" EntityType="Self.detalleComprobante" Schema="dbo" store:Type="Tables" />
@@ -360,6 +485,40 @@
           <EntitySet Name="moneda" EntityType="Self.moneda" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="periodo" EntityType="Self.periodo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="usuario" EntityType="Self.usuario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="articuloCategoria" EntityType="Self.articuloCategoria" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [articuloCategoria].[idArticulo] AS [idArticulo], 
+    [articuloCategoria].[idCategoria] AS [idCategoria]
+    FROM [dbo].[articuloCategoria] AS [articuloCategoria]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__articulo__idEmpr__671F4F74" Association="Self.FK__articulo__idEmpr__671F4F74">
+            <End Role="empresa" EntitySet="empresa" />
+            <End Role="articulo" EntitySet="articulo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__articulo__idUsua__681373AD" Association="Self.FK__articulo__idUsua__681373AD">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="articulo" EntitySet="articulo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__articuloC__idArt__69FBBC1F" Association="Self.FK__articuloC__idArt__69FBBC1F">
+            <End Role="articulo" EntitySet="articulo" />
+            <End Role="articuloCategoria" EntitySet="articuloCategoria" />
+          </AssociationSet>
+          <AssociationSet Name="FK__articuloC__idCat__6AEFE058" Association="Self.FK__articuloC__idCat__6AEFE058">
+            <End Role="categoria" EntitySet="categoria" />
+            <End Role="articuloCategoria" EntitySet="articuloCategoria" />
+          </AssociationSet>
+          <AssociationSet Name="FK__categoria__idCat__6442E2C9" Association="Self.FK__categoria__idCat__6442E2C9">
+            <End Role="categoria" EntitySet="categoria" />
+            <End Role="categoria1" EntitySet="categoria" />
+          </AssociationSet>
+          <AssociationSet Name="FK__categoria__idEmp__625A9A57" Association="Self.FK__categoria__idEmp__625A9A57">
+            <End Role="empresa" EntitySet="empresa" />
+            <End Role="categoria" EntitySet="categoria" />
+          </AssociationSet>
+          <AssociationSet Name="FK__categoria__idUsu__634EBE90" Association="Self.FK__categoria__idUsu__634EBE90">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="categoria" EntitySet="categoria" />
+          </AssociationSet>
           <AssociationSet Name="FK__comproban__idEmp__4F47C5E3" Association="Self.FK__comproban__idEmp__4F47C5E3">
             <End Role="empresa" EntitySet="empresa" />
             <End Role="comprobante" EntitySet="comprobante" />
@@ -460,6 +619,8 @@
           <NavigationProperty Name="cuenta" Relationship="dbErpModel.FK__cuenta__idEmpres__1BC821DD" FromRole="empresa" ToRole="cuenta" />
           <NavigationProperty Name="empresaMoneda" Relationship="dbErpModel.FK__empresaMo__idEmp__42E1EEFE" FromRole="empresa" ToRole="empresaMoneda" />
           <NavigationProperty Name="comprobante" Relationship="dbErpModel.FK__comproban__idEmp__4F47C5E3" FromRole="empresa" ToRole="comprobante" />
+          <NavigationProperty Name="articulo" Relationship="dbErpModel.FK__articulo__idEmpr__671F4F74" FromRole="empresa" ToRole="articulo" />
+          <NavigationProperty Name="categoria" Relationship="dbErpModel.FK__categoria__idEmp__625A9A57" FromRole="empresa" ToRole="categoria" />
         </EntityType>
         <EntityType Name="gestion">
           <Key>
@@ -494,6 +655,8 @@
           <NavigationProperty Name="detalleComprobante" Relationship="dbErpModel.FK__detalleCo__idUsu__367C1819" FromRole="usuario" ToRole="detalleComprobante" />
           <NavigationProperty Name="moneda" Relationship="dbErpModel.FK__moneda__idUsuari__29221CFB" FromRole="usuario" ToRole="moneda" />
           <NavigationProperty Name="empresaMoneda" Relationship="dbErpModel.FK__empresaMo__idUsu__41EDCAC5" FromRole="usuario" ToRole="empresaMoneda" />
+          <NavigationProperty Name="articulo" Relationship="dbErpModel.FK__articulo__idUsua__681373AD" FromRole="usuario" ToRole="articulo" />
+          <NavigationProperty Name="categoria" Relationship="dbErpModel.FK__categoria__idUsu__634EBE90" FromRole="usuario" ToRole="categoria" />
         </EntityType>
         <Association Name="FK__empresa__idUsuar__2B3F6F97">
           <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
@@ -616,6 +779,32 @@
           <AssociationSet Name="FK__comproban__idEmp__4F47C5E3" Association="dbErpModel.FK__comproban__idEmp__4F47C5E3">
             <End Role="empresa" EntitySet="empresa" />
             <End Role="comprobante" EntitySet="comprobante" />
+          </AssociationSet>
+          <EntitySet Name="articulo" EntityType="dbErpModel.articulo" />
+          <EntitySet Name="categoria" EntityType="dbErpModel.categoria" />
+          <AssociationSet Name="FK__articulo__idEmpr__671F4F74" Association="dbErpModel.FK__articulo__idEmpr__671F4F74">
+            <End Role="empresa" EntitySet="empresa" />
+            <End Role="articulo" EntitySet="articulo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__articulo__idUsua__681373AD" Association="dbErpModel.FK__articulo__idUsua__681373AD">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="articulo" EntitySet="articulo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__categoria__idCat__6442E2C9" Association="dbErpModel.FK__categoria__idCat__6442E2C9">
+            <End Role="categoria" EntitySet="categoria" />
+            <End Role="categoria1" EntitySet="categoria" />
+          </AssociationSet>
+          <AssociationSet Name="FK__categoria__idEmp__625A9A57" Association="dbErpModel.FK__categoria__idEmp__625A9A57">
+            <End Role="empresa" EntitySet="empresa" />
+            <End Role="categoria" EntitySet="categoria" />
+          </AssociationSet>
+          <AssociationSet Name="FK__categoria__idUsu__634EBE90" Association="dbErpModel.FK__categoria__idUsu__634EBE90">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="categoria" EntitySet="categoria" />
+          </AssociationSet>
+          <AssociationSet Name="articuloCategoria" Association="dbErpModel.articuloCategoria">
+            <End Role="articulo" EntitySet="articulo" />
+            <End Role="categoria" EntitySet="categoria" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="periodo">
@@ -911,6 +1100,107 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="articulo">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="cantidad" Type="Int32" />
+          <Property Name="precioVenta" Type="Double" Nullable="false" />
+          <Property Name="idEmpresa" Type="Int32" Nullable="false" />
+          <Property Name="idUsuario" Type="Int32" Nullable="false" />
+          <Property Name="demandaDiaria" Type="Int32" />
+          <Property Name="tiempoEsperaDiario" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="tiempoEsperaMaxDiario" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="costoOrden" Type="Double" />
+          <Property Name="costoInventario" Type="Double" />
+          <Property Name="puntoNuevoPedido" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="empresa" Relationship="dbErpModel.FK__articulo__idEmpr__671F4F74" FromRole="articulo" ToRole="empresa" />
+          <NavigationProperty Name="usuario" Relationship="dbErpModel.FK__articulo__idUsua__681373AD" FromRole="articulo" ToRole="usuario" />
+          <NavigationProperty Name="categoria" Relationship="dbErpModel.articuloCategoria" FromRole="articulo" ToRole="categoria" />
+        </EntityType>
+        <EntityType Name="categoria">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="idEmpresa" Type="Int32" Nullable="false" />
+          <Property Name="idUsuario" Type="Int32" Nullable="false" />
+          <Property Name="idCategoriaPadre" Type="Int32" />
+          <NavigationProperty Name="categoria1" Relationship="dbErpModel.FK__categoria__idCat__6442E2C9" FromRole="categoria" ToRole="categoria1" />
+          <NavigationProperty Name="categoria2" Relationship="dbErpModel.FK__categoria__idCat__6442E2C9" FromRole="categoria1" ToRole="categoria" />
+          <NavigationProperty Name="empresa" Relationship="dbErpModel.FK__categoria__idEmp__625A9A57" FromRole="categoria" ToRole="empresa" />
+          <NavigationProperty Name="usuario" Relationship="dbErpModel.FK__categoria__idUsu__634EBE90" FromRole="categoria" ToRole="usuario" />
+          <NavigationProperty Name="articulo" Relationship="dbErpModel.articuloCategoria" FromRole="categoria" ToRole="articulo" />
+        </EntityType>
+        <Association Name="FK__articulo__idEmpr__671F4F74">
+          <End Type="dbErpModel.empresa" Role="empresa" Multiplicity="1" />
+          <End Type="dbErpModel.articulo" Role="articulo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="empresa">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="articulo">
+              <PropertyRef Name="idEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__articulo__idUsua__681373AD">
+          <End Type="dbErpModel.usuario" Role="usuario" Multiplicity="1" />
+          <End Type="dbErpModel.articulo" Role="articulo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="articulo">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__categoria__idCat__6442E2C9">
+          <End Type="dbErpModel.categoria" Role="categoria" Multiplicity="0..1" />
+          <End Type="dbErpModel.categoria" Role="categoria1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="categoria">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="categoria1">
+              <PropertyRef Name="idCategoriaPadre" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__categoria__idEmp__625A9A57">
+          <End Type="dbErpModel.empresa" Role="empresa" Multiplicity="1" />
+          <End Type="dbErpModel.categoria" Role="categoria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="empresa">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="categoria">
+              <PropertyRef Name="idEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__categoria__idUsu__634EBE90">
+          <End Type="dbErpModel.usuario" Role="usuario" Multiplicity="1" />
+          <End Type="dbErpModel.categoria" Role="categoria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="categoria">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="articuloCategoria">
+          <End Type="dbErpModel.articulo" Role="articulo" Multiplicity="*" />
+          <End Type="dbErpModel.categoria" Role="categoria" Multiplicity="*" />
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1043,6 +1333,45 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="articulo">
+            <EntityTypeMapping TypeName="dbErpModel.articulo">
+              <MappingFragment StoreEntitySet="articulo">
+                <ScalarProperty Name="puntoNuevoPedido" ColumnName="puntoNuevoPedido" />
+                <ScalarProperty Name="costoInventario" ColumnName="costoInventario" />
+                <ScalarProperty Name="costoOrden" ColumnName="costoOrden" />
+                <ScalarProperty Name="tiempoEsperaMaxDiario" ColumnName="tiempoEsperaMaxDiario" />
+                <ScalarProperty Name="tiempoEsperaDiario" ColumnName="tiempoEsperaDiario" />
+                <ScalarProperty Name="demandaDiaria" ColumnName="demandaDiaria" />
+                <ScalarProperty Name="idUsuario" ColumnName="idUsuario" />
+                <ScalarProperty Name="idEmpresa" ColumnName="idEmpresa" />
+                <ScalarProperty Name="precioVenta" ColumnName="precioVenta" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="categoria">
+            <EntityTypeMapping TypeName="dbErpModel.categoria">
+              <MappingFragment StoreEntitySet="categoria">
+                <ScalarProperty Name="idCategoriaPadre" ColumnName="idCategoriaPadre" />
+                <ScalarProperty Name="idUsuario" ColumnName="idUsuario" />
+                <ScalarProperty Name="idEmpresa" ColumnName="idEmpresa" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="articuloCategoria" TypeName="dbErpModel.articuloCategoria" StoreEntitySet="articuloCategoria">
+            <EndProperty Name="categoria">
+              <ScalarProperty Name="id" ColumnName="idCategoria" />
+            </EndProperty>
+            <EndProperty Name="articulo">
+              <ScalarProperty Name="id" ColumnName="idArticulo" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -426,9 +426,7 @@
                           <TextRuns>
                             <TextRun>
                               <Value>=Fields!SaldosHaber.Value</Value>
-                              <Style>
-                                <Format>0.00;(0.00)</Format>
-                              </Style>
+                              <Style />
                             </TextRun>
                           </TextRuns>
                           <Style>
@@ -631,9 +629,7 @@
             <TextRuns>
               <TextRun>
                 <Value>=Sum(Fields!SaldosHaber.Value, "DSReporteSumasSaldos")</Value>
-                <Style>
-                  <Format>0.00;(0.00);''</Format>
-                </Style>
+                <Style />
               </TextRun>
             </TextRuns>
             <Style>

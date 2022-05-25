@@ -24,9 +24,10 @@ namespace ERP_FINAL.Controllers
         }
 
         // GET: Comprobante/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int id, int creado)
         {
             ViewBag.idComprobante = id;
+            ViewBag.Creado = creado;
             return View();
         }
 
@@ -81,7 +82,7 @@ namespace ERP_FINAL.Controllers
                 EComprobante respuesta = new EComprobante();
                 respuesta = lLogica.AgregarComprobante(comprobante, detalles);
 
-                return JavaScript("redireccionar('" + Url.Action("Details", "Comprobante", new { id = respuesta.Id }) + "');");
+                return JavaScript("redireccionar('" + Url.Action("Details", "Comprobante", new { id = respuesta.Id, creado = 1 }) + "');");
             }
             catch (BussinessException ex)
             {

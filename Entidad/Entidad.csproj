@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BussinessException.cs" />
+    <Compile Include="ECategoria.cs" />
     <Compile Include="EComprobante.cs" />
     <Compile Include="ECuenta.cs" />
     <Compile Include="EDetalleComprobante.cs" />

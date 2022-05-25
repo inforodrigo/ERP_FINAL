@@ -98,7 +98,7 @@ namespace Logica
                             }
                             else
                             {
-                                sumasSaldos.SaldosHaber = saldoTotal;
+                                sumasSaldos.SaldosHaber = saldoTotal * -1;
                             }
                             reporte.Add(sumasSaldos);
                         }
@@ -171,7 +171,7 @@ namespace Logica
                         {
                             ERLibroDiario libroDiario = new ERLibroDiario();
                             libroDiario.Fecha = com.fecha.ToString("dd/MM/yyyy");
-                            libroDiario.Cuenta = com.glosa;
+                            libroDiario.Cuenta = com.glosa;                           
                             reporte.Add(libroDiario);
 
                             var detallecomprobantes = (from x in esquema.detalleComprobante
@@ -357,8 +357,8 @@ namespace Logica
                                         }
                                         else
                                         {
-                                            rLibroMayor.Saldo = de.montoHaber;
-                                            saldo = de.montoHaber;
+                                            rLibroMayor.Saldo = de.montoHaber * -1;
+                                            saldo = de.montoHaber * -1;
                                         }                                      
                                     }
                                     else
@@ -388,8 +388,8 @@ namespace Logica
                                         }
                                         else
                                         {
-                                            rLibroMayor.Saldo = Math.Round((de.montoHaberAlt), 2);
-                                            saldo = Math.Round((de.montoHaberAlt), 2);
+                                            rLibroMayor.Saldo = Math.Round((de.montoHaberAlt), 2) * -1;
+                                            saldo = Math.Round((de.montoHaberAlt), 2) * -1;
                                         }
                                     }
                                     else
@@ -455,7 +455,7 @@ namespace Logica
                                         }
                                         else
                                         {
-                                            rLibroMayor.Saldo = saldo * -1;
+                                            rLibroMayor.Saldo = saldo; //* -1;
                                         }                                           
                                     }
                                     else
@@ -467,7 +467,7 @@ namespace Logica
                                         }
                                         else
                                         {
-                                            rLibroMayor.Saldo = saldo * -1;
+                                            rLibroMayor.Saldo = saldo; //* -1;
                                         }                                           
                                     }                                      
                                 }

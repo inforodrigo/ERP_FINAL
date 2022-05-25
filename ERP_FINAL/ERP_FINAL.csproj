@@ -197,6 +197,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CategoriaController.cs" />
     <Compile Include="Controllers\ComprobanteController.cs" />
     <Compile Include="Controllers\CuentaController.cs" />
     <Compile Include="Controllers\EmpresaController.cs" />
@@ -2537,6 +2538,7 @@
     <Content Include="Views\Reporte\ReporteLibroDiarioParcial.cshtml" />
     <Content Include="Views\Reporte\ReporteLibroMayor.cshtml" />
     <Content Include="Views\Reporte\ReporteLibroMayorParcial.cshtml" />
+    <Content Include="Views\Categoria\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

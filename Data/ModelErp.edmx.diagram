@@ -33,6 +33,14 @@
         <AssociationConnector Association="dbErpModel.FK__empresaMo__idMon__44CA3770" />
         <AssociationConnector Association="dbErpModel.FK__empresaMo__idUsu__41EDCAC5" />
         <AssociationConnector Association="dbErpModel.FK__comproban__idEmp__4F47C5E3" />
+        <EntityTypeShape EntityType="dbErpModel.articulo" Width="1.5" PointX="5.25" PointY="0.75" />
+        <EntityTypeShape EntityType="dbErpModel.categoria" Width="1.5" PointX="7.5" PointY="1.75" />
+        <AssociationConnector Association="dbErpModel.FK__articulo__idEmpr__671F4F74" />
+        <AssociationConnector Association="dbErpModel.FK__articulo__idUsua__681373AD" />
+        <AssociationConnector Association="dbErpModel.FK__categoria__idCat__6442E2C9" />
+        <AssociationConnector Association="dbErpModel.FK__categoria__idEmp__625A9A57" />
+        <AssociationConnector Association="dbErpModel.FK__categoria__idUsu__634EBE90" />
+        <AssociationConnector Association="dbErpModel.articuloCategoria" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

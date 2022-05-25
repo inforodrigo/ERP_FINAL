@@ -50,6 +50,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="articulo.cs">
+      <DependentUpon>ModelErp.tt</DependentUpon>
+    </Compile>
+    <Compile Include="categoria.cs">
+      <DependentUpon>ModelErp.tt</DependentUpon>
+    </Compile>
     <Compile Include="comprobante.cs">
       <DependentUpon>ModelErp.tt</DependentUpon>
     </Compile>
