@@ -1,9 +1,10 @@
 ﻿@using ReportViewerForMvc;
 @using Entidad;
 
-@{ 
-    if (ViewBag.ReporteLibroMayor != null)
+@{ if (ViewBag.ReporteLibroMayor != null)
     {
-        @Html.ReportViewer(ViewBag.ReporteLibroMayor as Microsoft.Reporting.WebForms.ReportViewer, new { style = "width: 900px; height:900px;" }) 
-    } 
+        <div style="overflow: scroll; width: 900px; height: 900px;">
+            @Html.ReportViewer(ViewBag.ReporteLibroMayor as Microsoft.Reporting.WebForms.ReportViewer, new { style = "width: 900px; height:900px;" })
+        </div>
+    }
 }

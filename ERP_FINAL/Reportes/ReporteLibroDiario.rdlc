@@ -327,7 +327,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!Debe.Value</Value>
+                              <Value>=IIf(Fields!Debe.Value=0.00 And Fields!Haber.Value=0.00,"",Fields!Debe.Value)</Value>
                               <Style>
                                 <Format>0.00</Format>
                               </Style>
@@ -361,7 +361,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!Haber.Value</Value>
+                              <Value>=IIf(Fields!Debe.Value=0.00 And Fields!Haber.Value=0.00,"",Fields!Haber.Value)</Value>
                               <Style>
                                 <Format>0.00</Format>
                               </Style>
