@@ -197,6 +197,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ArticuloController.cs" />
     <Compile Include="Controllers\CategoriaController.cs" />
     <Compile Include="Controllers\ComprobanteController.cs" />
     <Compile Include="Controllers\CuentaController.cs" />
@@ -206,6 +207,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\NotaCompraController.cs" />
+    <Compile Include="Controllers\NotaVentaController.cs" />
     <Compile Include="Controllers\ReporteController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -249,6 +252,23 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Multi-Select-Plugin-jQuery-MagicSuggest\.gitignore" />
+    <Content Include="Content\Multi-Select-Plugin-jQuery-MagicSuggest\index.html" />
+    <Content Include="Content\Multi-Select-Plugin-jQuery-MagicSuggest\magicsuggest.css" />
+    <Content Include="Content\Multi-Select-Plugin-jQuery-MagicSuggest\magicsuggest.js" />
+    <Content Include="Content\popup-multi-select\.gitignore" />
+    <Content Include="Content\popup-multi-select\dist\javascripts\popup-multiselect.min.js" />
+    <Content Include="Content\popup-multi-select\dist\stylesheets\popup-multiselect.css" />
+    <Content Include="Content\popup-multi-select\dist\stylesheets\popup-multiselect.min.css" />
+    <Content Include="Content\popup-multi-select\examples\index.html" />
+    <Content Include="Content\popup-multi-select\Gruntfile.js" />
+    <Content Include="Content\popup-multi-select\images\1_on_init.png" />
+    <Content Include="Content\popup-multi-select\images\2_on_open.png" />
+    <Content Include="Content\popup-multi-select\images\3_on_select.png" />
+    <Content Include="Content\popup-multi-select\images\4_on_select_complete.png" />
+    <Content Include="Content\popup-multi-select\images\5_selected_options.png" />
+    <Content Include="Content\popup-multi-select\index.html" />
+    <Content Include="Content\popup-multi-select\src\javascripts\popup-multiselect.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Front\build\config\postcss.config.js" />
@@ -2443,6 +2463,19 @@
     <Content Include="Content\arbol\fonts\gijgo-material.eot" />
     <Content Include="Content\arbol\fonts\gijgo-material.ttf" />
     <Content Include="Content\arbol\fonts\gijgo-material.woff" />
+    <Content Include="Content\popup-multi-select\dist\stylesheets\popup-multiselect.css.map" />
+    <Content Include="Content\popup-multi-select\jshint.json" />
+    <Content Include="Content\popup-multi-select\LICENSE" />
+    <Content Include="Content\popup-multi-select\package.json" />
+    <Content Include="Content\popup-multi-select\README.md" />
+    <Content Include="Content\popup-multi-select\src\stylesheets\popup-multiselect.scss" />
+    <Content Include="Content\popup-multi-select\yarn.lock" />
+    <Content Include="Content\Multi-Select-Plugin-jQuery-MagicSuggest\.npmignore" />
+    <Content Include="Content\Multi-Select-Plugin-jQuery-MagicSuggest\bower.json" />
+    <Content Include="Content\Multi-Select-Plugin-jQuery-MagicSuggest\composer.json" />
+    <Content Include="Content\Multi-Select-Plugin-jQuery-MagicSuggest\magicsuggest.jquery.json" />
+    <Content Include="Content\Multi-Select-Plugin-jQuery-MagicSuggest\package.json" />
+    <Content Include="Content\Multi-Select-Plugin-jQuery-MagicSuggest\README.md" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -2539,6 +2572,11 @@
     <Content Include="Views\Reporte\ReporteLibroMayor.cshtml" />
     <Content Include="Views\Reporte\ReporteLibroMayorParcial.cshtml" />
     <Content Include="Views\Categoria\Index.cshtml" />
+    <Content Include="Views\Articulo\Index.cshtml" />
+    <Content Include="Views\NotaCompra\Index.cshtml" />
+    <Content Include="Views\NotaCompra\Create.cshtml" />
+    <Content Include="Views\NotaVenta\Index.cshtml" />
+    <Content Include="Views\NotaVenta\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

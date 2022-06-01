@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LArticulo.cs" />
     <Compile Include="LBalanceInicial.cs" />
     <Compile Include="LBase.cs" />
     <Compile Include="LBaseBase.cs" />
@@ -58,6 +59,8 @@
     <Compile Include="LEmpresaMoneda.cs" />
     <Compile Include="LGestion.cs" />
     <Compile Include="LLogin.cs" />
+    <Compile Include="LNotaCompra.cs" />
+    <Compile Include="LNotaVenta.cs" />
     <Compile Include="LPeriodo.cs" />
     <Compile Include="LReporte.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

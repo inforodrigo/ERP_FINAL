@@ -53,6 +53,9 @@
     <Compile Include="articulo.cs">
       <DependentUpon>ModelErp.tt</DependentUpon>
     </Compile>
+    <Compile Include="articuloCategoria.cs">
+      <DependentUpon>ModelErp.tt</DependentUpon>
+    </Compile>
     <Compile Include="categoria.cs">
       <DependentUpon>ModelErp.tt</DependentUpon>
     </Compile>
@@ -65,6 +68,9 @@
     <Compile Include="detalleComprobante.cs">
       <DependentUpon>ModelErp.tt</DependentUpon>
     </Compile>
+    <Compile Include="detalleNota.cs">
+      <DependentUpon>ModelErp.tt</DependentUpon>
+    </Compile>
     <Compile Include="empresa.cs">
       <DependentUpon>ModelErp.tt</DependentUpon>
     </Compile>
@@ -72,6 +78,9 @@
       <DependentUpon>ModelErp.tt</DependentUpon>
     </Compile>
     <Compile Include="gestion.cs">
+      <DependentUpon>ModelErp.tt</DependentUpon>
+    </Compile>
+    <Compile Include="lote.cs">
       <DependentUpon>ModelErp.tt</DependentUpon>
     </Compile>
     <Compile Include="ModelErp.Context.cs">
@@ -90,6 +99,9 @@
       <DependentUpon>ModelErp.edmx</DependentUpon>
     </Compile>
     <Compile Include="moneda.cs">
+      <DependentUpon>ModelErp.tt</DependentUpon>
+    </Compile>
+    <Compile Include="nota.cs">
       <DependentUpon>ModelErp.tt</DependentUpon>
     </Compile>
     <Compile Include="periodo.cs">

@@ -28,6 +28,9 @@ namespace Logica
         private LReporte lReporte;
         private LBalanceInicial lBalanceInicial;
         private LCategoria lCategoria;
+        private LArticulo lArticulo;
+        private LNotaCompra lNotaCompra;
+        private LNotaVenta lNotaVenta;
 
         public static LBase<E> Instancia
         {
@@ -155,6 +158,42 @@ namespace Logica
                     lCategoria = new LCategoria();
                 }
                 return lCategoria;
+            }
+        }
+        
+        public LArticulo LArticulo
+        {
+            get
+            {
+                if(lArticulo == null)
+                {
+                    lArticulo = new LArticulo();
+                }
+                return lArticulo;
+            }
+        }
+
+        public LNotaCompra LNotaCompra
+        {
+            get
+            {
+                if (lNotaCompra == null)
+                {
+                    lNotaCompra = new LNotaCompra();
+                }
+                return lNotaCompra;
+            }
+        }
+
+        public LNotaVenta LNotaVenta
+        {
+            get
+            {
+                if (lNotaVenta == null)
+                {
+                    lNotaVenta = new LNotaVenta();
+                }
+                return lNotaVenta;
             }
         }
     }

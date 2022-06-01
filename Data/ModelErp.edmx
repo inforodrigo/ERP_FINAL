@@ -16,15 +16,7 @@
           <Property Name="precioVenta" Type="float" Nullable="false" />
           <Property Name="idEmpresa" Type="int" Nullable="false" />
           <Property Name="idUsuario" Type="int" Nullable="false" />
-          <Property Name="demandaDiaria" Type="int" />
-          <Property Name="tiempoEsperaDiario" Type="varchar" MaxLength="500" />
-          <Property Name="tiempoEsperaMaxDiario" Type="varchar" MaxLength="500" />
-          <Property Name="costoOrden" Type="float" />
-          <Property Name="costoInventario" Type="float" />
-          <Property Name="puntoNuevoPedido" Type="varchar" MaxLength="500" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="articuloCategoria">
           <Key>
             <PropertyRef Name="idArticulo" />
@@ -32,6 +24,7 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
           </Key>
           <Property Name="idArticulo" Type="int" Nullable="false" />
           <Property Name="idCategoria" Type="int" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="categoria">
           <Key>
@@ -88,6 +81,18 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
           <Property Name="idComprobante" Type="int" Nullable="false" />
           <Property Name="idCuenta" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="detalleNota">
+          <Key>
+            <PropertyRef Name="idArticulo" />
+            <PropertyRef Name="nroLote" />
+            <PropertyRef Name="idNota" />
+          </Key>
+          <Property Name="idArticulo" Type="int" Nullable="false" />
+          <Property Name="nroLote" Type="int" Nullable="false" />
+          <Property Name="idNota" Type="int" Nullable="false" />
+          <Property Name="cantidad" Type="int" Nullable="false" />
+          <Property Name="precioVenta" Type="float" Nullable="false" />
+        </EntityType>
         <EntityType Name="empresa">
           <Key>
             <PropertyRef Name="id" />
@@ -128,6 +133,21 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
           <Property Name="idEmpresa" Type="int" Nullable="false" />
           <Property Name="estado" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="lote">
+          <Key>
+            <PropertyRef Name="idArticulo" />
+            <PropertyRef Name="nroLote" />
+          </Key>
+          <Property Name="idArticulo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nroLote" Type="int" Nullable="false" />
+          <Property Name="fechaIngreso" Type="datetime" Nullable="false" />
+          <Property Name="fechaVencimiento" Type="datetime" />
+          <Property Name="cantidad" Type="int" Nullable="false" />
+          <Property Name="precioCompra" Type="float" Nullable="false" />
+          <Property Name="stock" Type="int" />
+          <Property Name="idNota" Type="int" Nullable="false" />
+          <Property Name="estado" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="moneda">
           <Key>
             <PropertyRef Name="id" />
@@ -137,6 +157,21 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
           <Property Name="descripcion" Type="varchar" MaxLength="500" />
           <Property Name="abreviatura" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="idUsuario" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="nota">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nroNota" Type="int" Nullable="false" />
+          <Property Name="fecha" Type="datetime" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="500" />
+          <Property Name="total" Type="float" Nullable="false" />
+          <Property Name="tipo" Type="int" Nullable="false" />
+          <Property Name="idEmpresa" Type="int" Nullable="false" />
+          <Property Name="idUsuario" Type="int" Nullable="false" />
+          <Property Name="idComprobante" Type="int" />
+          <Property Name="estado" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="periodo">
           <Key>
@@ -161,7 +196,7 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
           <Property Name="tipo" Type="int" Nullable="false" />
           <Property Name="estado" Type="int" Nullable="false" />
         </EntityType>
-        <Association Name="FK__articulo__idEmpr__671F4F74">
+        <Association Name="FK__articulo__idEmpr__0A688BB1">
           <End Role="empresa" Type="Self.empresa" Multiplicity="1" />
           <End Role="articulo" Type="Self.articulo" Multiplicity="*" />
           <ReferentialConstraint>
@@ -173,7 +208,7 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__articulo__idUsua__681373AD">
+        <Association Name="FK__articulo__idUsua__0B5CAFEA">
           <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
           <End Role="articulo" Type="Self.articulo" Multiplicity="*" />
           <ReferentialConstraint>
@@ -185,7 +220,7 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__articuloC__idArt__69FBBC1F">
+        <Association Name="FK__articuloC__idArt__0E391C95">
           <End Role="articulo" Type="Self.articulo" Multiplicity="1" />
           <End Role="articuloCategoria" Type="Self.articuloCategoria" Multiplicity="*" />
           <ReferentialConstraint>
@@ -197,7 +232,7 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__articuloC__idCat__6AEFE058">
+        <Association Name="FK__articuloC__idCat__0F2D40CE">
           <End Role="categoria" Type="Self.categoria" Multiplicity="1" />
           <End Role="articuloCategoria" Type="Self.articuloCategoria" Multiplicity="*" />
           <ReferentialConstraint>
@@ -209,7 +244,7 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__categoria__idCat__6442E2C9">
+        <Association Name="FK__categoria__idCat__7FEAFD3E">
           <End Role="categoria" Type="Self.categoria" Multiplicity="0..1" />
           <End Role="categoria1" Type="Self.categoria" Multiplicity="*" />
           <ReferentialConstraint>
@@ -221,7 +256,7 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__categoria__idEmp__625A9A57">
+        <Association Name="FK__categoria__idEmp__7E02B4CC">
           <End Role="empresa" Type="Self.empresa" Multiplicity="1" />
           <End Role="categoria" Type="Self.categoria" Multiplicity="*" />
           <ReferentialConstraint>
@@ -233,7 +268,7 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__categoria__idUsu__634EBE90">
+        <Association Name="FK__categoria__idUsu__7EF6D905">
           <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
           <End Role="categoria" Type="Self.categoria" Multiplicity="*" />
           <ReferentialConstraint>
@@ -353,6 +388,42 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__detalleNo__idArt__1D7B6025">
+          <End Role="articulo" Type="Self.articulo" Multiplicity="1" />
+          <End Role="detalleNota" Type="Self.detalleNota" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="articulo">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="detalleNota">
+              <PropertyRef Name="idArticulo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__detalleNo__idNot__1E6F845E">
+          <End Role="nota" Type="Self.nota" Multiplicity="1" />
+          <End Role="detalleNota" Type="Self.detalleNota" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="nota">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="detalleNota">
+              <PropertyRef Name="idNota" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__detalleNo__idNot__27F8EE98">
+          <End Role="nota" Type="Self.nota" Multiplicity="1" />
+          <End Role="detalleNota" Type="Self.detalleNota" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="nota">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="detalleNota">
+              <PropertyRef Name="idNota" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__empresa__idUsuar__2B3F6F97">
           <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
           <End Role="empresa" Type="Self.empresa" Multiplicity="*" />
@@ -437,6 +508,30 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__lote__idArticulo__15DA3E5D">
+          <End Role="articulo" Type="Self.articulo" Multiplicity="1" />
+          <End Role="lote" Type="Self.lote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="articulo">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="lote">
+              <PropertyRef Name="idArticulo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__lote__idNota__16CE6296">
+          <End Role="nota" Type="Self.nota" Multiplicity="1" />
+          <End Role="lote" Type="Self.lote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="nota">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="lote">
+              <PropertyRef Name="idNota" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__moneda__idUsuari__29221CFB">
           <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
           <End Role="moneda" Type="Self.moneda" Multiplicity="*" />
@@ -445,6 +540,30 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="moneda">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__nota__idEmpresa__1209AD79">
+          <End Role="empresa" Type="Self.empresa" Multiplicity="1" />
+          <End Role="nota" Type="Self.nota" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="empresa">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="nota">
+              <PropertyRef Name="idEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__nota__idUsuario__12FDD1B2">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="nota" Type="Self.nota" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="nota">
               <PropertyRef Name="idUsuario" />
             </Dependent>
           </ReferentialConstraint>
@@ -475,47 +594,45 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
         </Association>
         <EntityContainer Name="dbErpModelStoreContainer">
           <EntitySet Name="articulo" EntityType="Self.articulo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="articuloCategoria" EntityType="Self.articuloCategoria" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="categoria" EntityType="Self.categoria" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="comprobante" EntityType="Self.comprobante" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="cuenta" EntityType="Self.cuenta" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="detalleComprobante" EntityType="Self.detalleComprobante" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="detalleNota" EntityType="Self.detalleNota" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="empresa" EntityType="Self.empresa" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="empresaMoneda" EntityType="Self.empresaMoneda" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="gestion" EntityType="Self.gestion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="lote" EntityType="Self.lote" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="moneda" EntityType="Self.moneda" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="nota" EntityType="Self.nota" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="periodo" EntityType="Self.periodo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="usuario" EntityType="Self.usuario" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="articuloCategoria" EntityType="Self.articuloCategoria" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [articuloCategoria].[idArticulo] AS [idArticulo], 
-    [articuloCategoria].[idCategoria] AS [idCategoria]
-    FROM [dbo].[articuloCategoria] AS [articuloCategoria]</DefiningQuery>
-          </EntitySet>
-          <AssociationSet Name="FK__articulo__idEmpr__671F4F74" Association="Self.FK__articulo__idEmpr__671F4F74">
+          <AssociationSet Name="FK__articulo__idEmpr__0A688BB1" Association="Self.FK__articulo__idEmpr__0A688BB1">
             <End Role="empresa" EntitySet="empresa" />
             <End Role="articulo" EntitySet="articulo" />
           </AssociationSet>
-          <AssociationSet Name="FK__articulo__idUsua__681373AD" Association="Self.FK__articulo__idUsua__681373AD">
+          <AssociationSet Name="FK__articulo__idUsua__0B5CAFEA" Association="Self.FK__articulo__idUsua__0B5CAFEA">
             <End Role="usuario" EntitySet="usuario" />
             <End Role="articulo" EntitySet="articulo" />
           </AssociationSet>
-          <AssociationSet Name="FK__articuloC__idArt__69FBBC1F" Association="Self.FK__articuloC__idArt__69FBBC1F">
+          <AssociationSet Name="FK__articuloC__idArt__0E391C95" Association="Self.FK__articuloC__idArt__0E391C95">
             <End Role="articulo" EntitySet="articulo" />
             <End Role="articuloCategoria" EntitySet="articuloCategoria" />
           </AssociationSet>
-          <AssociationSet Name="FK__articuloC__idCat__6AEFE058" Association="Self.FK__articuloC__idCat__6AEFE058">
+          <AssociationSet Name="FK__articuloC__idCat__0F2D40CE" Association="Self.FK__articuloC__idCat__0F2D40CE">
             <End Role="categoria" EntitySet="categoria" />
             <End Role="articuloCategoria" EntitySet="articuloCategoria" />
           </AssociationSet>
-          <AssociationSet Name="FK__categoria__idCat__6442E2C9" Association="Self.FK__categoria__idCat__6442E2C9">
+          <AssociationSet Name="FK__categoria__idCat__7FEAFD3E" Association="Self.FK__categoria__idCat__7FEAFD3E">
             <End Role="categoria" EntitySet="categoria" />
             <End Role="categoria1" EntitySet="categoria" />
           </AssociationSet>
-          <AssociationSet Name="FK__categoria__idEmp__625A9A57" Association="Self.FK__categoria__idEmp__625A9A57">
+          <AssociationSet Name="FK__categoria__idEmp__7E02B4CC" Association="Self.FK__categoria__idEmp__7E02B4CC">
             <End Role="empresa" EntitySet="empresa" />
             <End Role="categoria" EntitySet="categoria" />
           </AssociationSet>
-          <AssociationSet Name="FK__categoria__idUsu__634EBE90" Association="Self.FK__categoria__idUsu__634EBE90">
+          <AssociationSet Name="FK__categoria__idUsu__7EF6D905" Association="Self.FK__categoria__idUsu__7EF6D905">
             <End Role="usuario" EntitySet="usuario" />
             <End Role="categoria" EntitySet="categoria" />
           </AssociationSet>
@@ -555,6 +672,18 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
             <End Role="usuario" EntitySet="usuario" />
             <End Role="detalleComprobante" EntitySet="detalleComprobante" />
           </AssociationSet>
+          <AssociationSet Name="FK__detalleNo__idArt__1D7B6025" Association="Self.FK__detalleNo__idArt__1D7B6025">
+            <End Role="articulo" EntitySet="articulo" />
+            <End Role="detalleNota" EntitySet="detalleNota" />
+          </AssociationSet>
+          <AssociationSet Name="FK__detalleNo__idNot__1E6F845E" Association="Self.FK__detalleNo__idNot__1E6F845E">
+            <End Role="nota" EntitySet="nota" />
+            <End Role="detalleNota" EntitySet="detalleNota" />
+          </AssociationSet>
+          <AssociationSet Name="FK__detalleNo__idNot__27F8EE98" Association="Self.FK__detalleNo__idNot__27F8EE98">
+            <End Role="nota" EntitySet="nota" />
+            <End Role="detalleNota" EntitySet="detalleNota" />
+          </AssociationSet>
           <AssociationSet Name="FK__empresa__idUsuar__2B3F6F97" Association="Self.FK__empresa__idUsuar__2B3F6F97">
             <End Role="usuario" EntitySet="usuario" />
             <End Role="empresa" EntitySet="empresa" />
@@ -583,9 +712,25 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
             <End Role="usuario" EntitySet="usuario" />
             <End Role="gestion" EntitySet="gestion" />
           </AssociationSet>
+          <AssociationSet Name="FK__lote__idArticulo__15DA3E5D" Association="Self.FK__lote__idArticulo__15DA3E5D">
+            <End Role="articulo" EntitySet="articulo" />
+            <End Role="lote" EntitySet="lote" />
+          </AssociationSet>
+          <AssociationSet Name="FK__lote__idNota__16CE6296" Association="Self.FK__lote__idNota__16CE6296">
+            <End Role="nota" EntitySet="nota" />
+            <End Role="lote" EntitySet="lote" />
+          </AssociationSet>
           <AssociationSet Name="FK__moneda__idUsuari__29221CFB" Association="Self.FK__moneda__idUsuari__29221CFB">
             <End Role="usuario" EntitySet="usuario" />
             <End Role="moneda" EntitySet="moneda" />
+          </AssociationSet>
+          <AssociationSet Name="FK__nota__idEmpresa__1209AD79" Association="Self.FK__nota__idEmpresa__1209AD79">
+            <End Role="empresa" EntitySet="empresa" />
+            <End Role="nota" EntitySet="nota" />
+          </AssociationSet>
+          <AssociationSet Name="FK__nota__idUsuario__12FDD1B2" Association="Self.FK__nota__idUsuario__12FDD1B2">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="nota" EntitySet="nota" />
           </AssociationSet>
           <AssociationSet Name="FK__periodo__idGesti__36B12243" Association="Self.FK__periodo__idGesti__36B12243">
             <End Role="gestion" EntitySet="gestion" />
@@ -619,9 +764,10 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
           <NavigationProperty Name="cuenta" Relationship="dbErpModel.FK__cuenta__idEmpres__1BC821DD" FromRole="empresa" ToRole="cuenta" />
           <NavigationProperty Name="empresaMoneda" Relationship="dbErpModel.FK__empresaMo__idEmp__42E1EEFE" FromRole="empresa" ToRole="empresaMoneda" />
           <NavigationProperty Name="comprobante" Relationship="dbErpModel.FK__comproban__idEmp__4F47C5E3" FromRole="empresa" ToRole="comprobante" />
-          <NavigationProperty Name="articulo" Relationship="dbErpModel.FK__articulo__idEmpr__671F4F74" FromRole="empresa" ToRole="articulo" />
-          <NavigationProperty Name="categoria" Relationship="dbErpModel.FK__categoria__idEmp__625A9A57" FromRole="empresa" ToRole="categoria" />
-        </EntityType>
+          <NavigationProperty Name="categoria" Relationship="dbErpModel.FK__categoria__idEmp__7E02B4CC" FromRole="empresa" ToRole="categoria" />
+          <NavigationProperty Name="articulo" Relationship="dbErpModel.FK__articulo__idEmpr__0A688BB1" FromRole="empresa" ToRole="articulo" />
+          <NavigationProperty Name="nota" Relationship="dbErpModel.FK__nota__idEmpresa__1209AD79" FromRole="empresa" ToRole="nota" />
+          </EntityType>
         <EntityType Name="gestion">
           <Key>
             <PropertyRef Name="id" />
@@ -655,9 +801,10 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
           <NavigationProperty Name="detalleComprobante" Relationship="dbErpModel.FK__detalleCo__idUsu__367C1819" FromRole="usuario" ToRole="detalleComprobante" />
           <NavigationProperty Name="moneda" Relationship="dbErpModel.FK__moneda__idUsuari__29221CFB" FromRole="usuario" ToRole="moneda" />
           <NavigationProperty Name="empresaMoneda" Relationship="dbErpModel.FK__empresaMo__idUsu__41EDCAC5" FromRole="usuario" ToRole="empresaMoneda" />
-          <NavigationProperty Name="articulo" Relationship="dbErpModel.FK__articulo__idUsua__681373AD" FromRole="usuario" ToRole="articulo" />
-          <NavigationProperty Name="categoria" Relationship="dbErpModel.FK__categoria__idUsu__634EBE90" FromRole="usuario" ToRole="categoria" />
-        </EntityType>
+          <NavigationProperty Name="categoria" Relationship="dbErpModel.FK__categoria__idUsu__7EF6D905" FromRole="usuario" ToRole="categoria" />
+          <NavigationProperty Name="articulo" Relationship="dbErpModel.FK__articulo__idUsua__0B5CAFEA" FromRole="usuario" ToRole="articulo" />
+          <NavigationProperty Name="nota" Relationship="dbErpModel.FK__nota__idUsuario__12FDD1B2" FromRole="usuario" ToRole="nota" />
+          </EntityType>
         <Association Name="FK__empresa__idUsuar__2B3F6F97">
           <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
           <End Role="empresa" Type="Self.empresa" Multiplicity="*" />
@@ -780,31 +927,67 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
             <End Role="empresa" EntitySet="empresa" />
             <End Role="comprobante" EntitySet="comprobante" />
           </AssociationSet>
-          <EntitySet Name="articulo" EntityType="dbErpModel.articulo" />
           <EntitySet Name="categoria" EntityType="dbErpModel.categoria" />
-          <AssociationSet Name="FK__articulo__idEmpr__671F4F74" Association="dbErpModel.FK__articulo__idEmpr__671F4F74">
-            <End Role="empresa" EntitySet="empresa" />
-            <End Role="articulo" EntitySet="articulo" />
-          </AssociationSet>
-          <AssociationSet Name="FK__articulo__idUsua__681373AD" Association="dbErpModel.FK__articulo__idUsua__681373AD">
-            <End Role="usuario" EntitySet="usuario" />
-            <End Role="articulo" EntitySet="articulo" />
-          </AssociationSet>
-          <AssociationSet Name="FK__categoria__idCat__6442E2C9" Association="dbErpModel.FK__categoria__idCat__6442E2C9">
+          <AssociationSet Name="FK__categoria__idCat__7FEAFD3E" Association="dbErpModel.FK__categoria__idCat__7FEAFD3E">
             <End Role="categoria" EntitySet="categoria" />
             <End Role="categoria1" EntitySet="categoria" />
           </AssociationSet>
-          <AssociationSet Name="FK__categoria__idEmp__625A9A57" Association="dbErpModel.FK__categoria__idEmp__625A9A57">
+          <AssociationSet Name="FK__categoria__idEmp__7E02B4CC" Association="dbErpModel.FK__categoria__idEmp__7E02B4CC">
             <End Role="empresa" EntitySet="empresa" />
             <End Role="categoria" EntitySet="categoria" />
           </AssociationSet>
-          <AssociationSet Name="FK__categoria__idUsu__634EBE90" Association="dbErpModel.FK__categoria__idUsu__634EBE90">
+          <AssociationSet Name="FK__categoria__idUsu__7EF6D905" Association="dbErpModel.FK__categoria__idUsu__7EF6D905">
             <End Role="usuario" EntitySet="usuario" />
             <End Role="categoria" EntitySet="categoria" />
           </AssociationSet>
-          <AssociationSet Name="articuloCategoria" Association="dbErpModel.articuloCategoria">
+          <EntitySet Name="articulo" EntityType="dbErpModel.articulo" />
+          <EntitySet Name="articuloCategoria" EntityType="dbErpModel.articuloCategoria" />
+          <AssociationSet Name="FK__articulo__idEmpr__0A688BB1" Association="dbErpModel.FK__articulo__idEmpr__0A688BB1">
+            <End Role="empresa" EntitySet="empresa" />
             <End Role="articulo" EntitySet="articulo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__articulo__idUsua__0B5CAFEA" Association="dbErpModel.FK__articulo__idUsua__0B5CAFEA">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="articulo" EntitySet="articulo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__articuloC__idArt__0E391C95" Association="dbErpModel.FK__articuloC__idArt__0E391C95">
+            <End Role="articulo" EntitySet="articulo" />
+            <End Role="articuloCategoria" EntitySet="articuloCategoria" />
+          </AssociationSet>
+          <AssociationSet Name="FK__articuloC__idCat__0F2D40CE" Association="dbErpModel.FK__articuloC__idCat__0F2D40CE">
             <End Role="categoria" EntitySet="categoria" />
+            <End Role="articuloCategoria" EntitySet="articuloCategoria" />
+          </AssociationSet>
+          <EntitySet Name="detalleNota" EntityType="dbErpModel.detalleNota" />
+          <EntitySet Name="lote" EntityType="dbErpModel.lote" />
+          <EntitySet Name="nota" EntityType="dbErpModel.nota" />
+          <AssociationSet Name="FK__detalleNo__idArt__1D7B6025" Association="dbErpModel.FK__detalleNo__idArt__1D7B6025">
+            <End Role="articulo" EntitySet="articulo" />
+            <End Role="detalleNota" EntitySet="detalleNota" />
+          </AssociationSet>
+          <AssociationSet Name="FK__lote__idArticulo__15DA3E5D" Association="dbErpModel.FK__lote__idArticulo__15DA3E5D">
+            <End Role="articulo" EntitySet="articulo" />
+            <End Role="lote" EntitySet="lote" />
+          </AssociationSet>
+          <AssociationSet Name="FK__detalleNo__idNot__1E6F845E" Association="dbErpModel.FK__detalleNo__idNot__1E6F845E">
+            <End Role="nota" EntitySet="nota" />
+            <End Role="detalleNota" EntitySet="detalleNota" />
+          </AssociationSet>
+          <AssociationSet Name="FK__detalleNo__idNot__27F8EE98" Association="dbErpModel.FK__detalleNo__idNot__27F8EE98">
+            <End Role="nota" EntitySet="nota" />
+            <End Role="detalleNota" EntitySet="detalleNota" />
+          </AssociationSet>
+          <AssociationSet Name="FK__nota__idEmpresa__1209AD79" Association="dbErpModel.FK__nota__idEmpresa__1209AD79">
+            <End Role="empresa" EntitySet="empresa" />
+            <End Role="nota" EntitySet="nota" />
+          </AssociationSet>
+          <AssociationSet Name="FK__lote__idNota__16CE6296" Association="dbErpModel.FK__lote__idNota__16CE6296">
+            <End Role="nota" EntitySet="nota" />
+            <End Role="lote" EntitySet="lote" />
+          </AssociationSet>
+          <AssociationSet Name="FK__nota__idUsuario__12FDD1B2" Association="dbErpModel.FK__nota__idUsuario__12FDD1B2">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="nota" EntitySet="nota" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="periodo">
@@ -1100,27 +1283,6 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="articulo">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="nombre" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
-          <Property Name="descripcion" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="cantidad" Type="Int32" />
-          <Property Name="precioVenta" Type="Double" Nullable="false" />
-          <Property Name="idEmpresa" Type="Int32" Nullable="false" />
-          <Property Name="idUsuario" Type="Int32" Nullable="false" />
-          <Property Name="demandaDiaria" Type="Int32" />
-          <Property Name="tiempoEsperaDiario" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="tiempoEsperaMaxDiario" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="costoOrden" Type="Double" />
-          <Property Name="costoInventario" Type="Double" />
-          <Property Name="puntoNuevoPedido" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="empresa" Relationship="dbErpModel.FK__articulo__idEmpr__671F4F74" FromRole="articulo" ToRole="empresa" />
-          <NavigationProperty Name="usuario" Relationship="dbErpModel.FK__articulo__idUsua__681373AD" FromRole="articulo" ToRole="usuario" />
-          <NavigationProperty Name="categoria" Relationship="dbErpModel.articuloCategoria" FromRole="articulo" ToRole="categoria" />
-        </EntityType>
         <EntityType Name="categoria">
           <Key>
             <PropertyRef Name="id" />
@@ -1131,37 +1293,13 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
           <Property Name="idEmpresa" Type="Int32" Nullable="false" />
           <Property Name="idUsuario" Type="Int32" Nullable="false" />
           <Property Name="idCategoriaPadre" Type="Int32" />
-          <NavigationProperty Name="categoria1" Relationship="dbErpModel.FK__categoria__idCat__6442E2C9" FromRole="categoria" ToRole="categoria1" />
-          <NavigationProperty Name="categoria2" Relationship="dbErpModel.FK__categoria__idCat__6442E2C9" FromRole="categoria1" ToRole="categoria" />
-          <NavigationProperty Name="empresa" Relationship="dbErpModel.FK__categoria__idEmp__625A9A57" FromRole="categoria" ToRole="empresa" />
-          <NavigationProperty Name="usuario" Relationship="dbErpModel.FK__categoria__idUsu__634EBE90" FromRole="categoria" ToRole="usuario" />
-          <NavigationProperty Name="articulo" Relationship="dbErpModel.articuloCategoria" FromRole="categoria" ToRole="articulo" />
+          <NavigationProperty Name="categoria1" Relationship="dbErpModel.FK__categoria__idCat__7FEAFD3E" FromRole="categoria" ToRole="categoria1" />
+          <NavigationProperty Name="categoria2" Relationship="dbErpModel.FK__categoria__idCat__7FEAFD3E" FromRole="categoria1" ToRole="categoria" />
+          <NavigationProperty Name="empresa" Relationship="dbErpModel.FK__categoria__idEmp__7E02B4CC" FromRole="categoria" ToRole="empresa" />
+          <NavigationProperty Name="usuario" Relationship="dbErpModel.FK__categoria__idUsu__7EF6D905" FromRole="categoria" ToRole="usuario" />
+          <NavigationProperty Name="articuloCategoria" Relationship="dbErpModel.FK__articuloC__idCat__0F2D40CE" FromRole="categoria" ToRole="articuloCategoria" />
         </EntityType>
-        <Association Name="FK__articulo__idEmpr__671F4F74">
-          <End Type="dbErpModel.empresa" Role="empresa" Multiplicity="1" />
-          <End Type="dbErpModel.articulo" Role="articulo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="empresa">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="articulo">
-              <PropertyRef Name="idEmpresa" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__articulo__idUsua__681373AD">
-          <End Type="dbErpModel.usuario" Role="usuario" Multiplicity="1" />
-          <End Type="dbErpModel.articulo" Role="articulo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="usuario">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="articulo">
-              <PropertyRef Name="idUsuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__categoria__idCat__6442E2C9">
+        <Association Name="FK__categoria__idCat__7FEAFD3E">
           <End Type="dbErpModel.categoria" Role="categoria" Multiplicity="0..1" />
           <End Type="dbErpModel.categoria" Role="categoria1" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1173,7 +1311,7 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__categoria__idEmp__625A9A57">
+        <Association Name="FK__categoria__idEmp__7E02B4CC">
           <End Type="dbErpModel.empresa" Role="empresa" Multiplicity="1" />
           <End Type="dbErpModel.categoria" Role="categoria" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1185,7 +1323,7 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__categoria__idUsu__634EBE90">
+        <Association Name="FK__categoria__idUsu__7EF6D905">
           <End Type="dbErpModel.usuario" Role="usuario" Multiplicity="1" />
           <End Type="dbErpModel.categoria" Role="categoria" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1197,9 +1335,217 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="articuloCategoria">
+        <EntityType Name="articulo">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="cantidad" Type="Int32" />
+          <Property Name="precioVenta" Type="Double" Nullable="false" />
+          <Property Name="idEmpresa" Type="Int32" Nullable="false" />
+          <Property Name="idUsuario" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="empresa" Relationship="dbErpModel.FK__articulo__idEmpr__0A688BB1" FromRole="articulo" ToRole="empresa" />
+          <NavigationProperty Name="usuario" Relationship="dbErpModel.FK__articulo__idUsua__0B5CAFEA" FromRole="articulo" ToRole="usuario" />
+          <NavigationProperty Name="articuloCategoria" Relationship="dbErpModel.FK__articuloC__idArt__0E391C95" FromRole="articulo" ToRole="articuloCategoria" />
+          <NavigationProperty Name="detalleNota" Relationship="dbErpModel.FK__detalleNo__idArt__1D7B6025" FromRole="articulo" ToRole="detalleNota" />
+          <NavigationProperty Name="lote" Relationship="dbErpModel.FK__lote__idArticulo__15DA3E5D" FromRole="articulo" ToRole="lote" />
+        </EntityType>
+        <EntityType Name="articuloCategoria">
+          <Key>
+            <PropertyRef Name="idArticulo" />
+            <PropertyRef Name="idCategoria" />
+          </Key>
+          <Property Name="idArticulo" Type="Int32" Nullable="false" />
+          <Property Name="idCategoria" Type="Int32" Nullable="false" />
+          <Property Name="descripcion" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="articulo" Relationship="dbErpModel.FK__articuloC__idArt__0E391C95" FromRole="articuloCategoria" ToRole="articulo" />
+          <NavigationProperty Name="categoria" Relationship="dbErpModel.FK__articuloC__idCat__0F2D40CE" FromRole="articuloCategoria" ToRole="categoria" />
+        </EntityType>
+        <Association Name="FK__articulo__idEmpr__0A688BB1">
+          <End Type="dbErpModel.empresa" Role="empresa" Multiplicity="1" />
           <End Type="dbErpModel.articulo" Role="articulo" Multiplicity="*" />
-          <End Type="dbErpModel.categoria" Role="categoria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="empresa">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="articulo">
+              <PropertyRef Name="idEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__articulo__idUsua__0B5CAFEA">
+          <End Type="dbErpModel.usuario" Role="usuario" Multiplicity="1" />
+          <End Type="dbErpModel.articulo" Role="articulo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="articulo">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__articuloC__idArt__0E391C95">
+          <End Type="dbErpModel.articulo" Role="articulo" Multiplicity="1" />
+          <End Type="dbErpModel.articuloCategoria" Role="articuloCategoria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="articulo">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="articuloCategoria">
+              <PropertyRef Name="idArticulo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__articuloC__idCat__0F2D40CE">
+          <End Type="dbErpModel.categoria" Role="categoria" Multiplicity="1" />
+          <End Type="dbErpModel.articuloCategoria" Role="articuloCategoria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="categoria">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="articuloCategoria">
+              <PropertyRef Name="idCategoria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="detalleNota">
+          <Key>
+            <PropertyRef Name="idArticulo" />
+            <PropertyRef Name="nroLote" />
+            <PropertyRef Name="idNota" />
+          </Key>
+          <Property Name="idArticulo" Type="Int32" Nullable="false" />
+          <Property Name="nroLote" Type="Int32" Nullable="false" />
+          <Property Name="idNota" Type="Int32" Nullable="false" />
+          <Property Name="cantidad" Type="Int32" Nullable="false" />
+          <Property Name="precioVenta" Type="Double" Nullable="false" />
+          <NavigationProperty Name="articulo" Relationship="dbErpModel.FK__detalleNo__idArt__1D7B6025" FromRole="detalleNota" ToRole="articulo" />
+          <NavigationProperty Name="nota" Relationship="dbErpModel.FK__detalleNo__idNot__1E6F845E" FromRole="detalleNota" ToRole="nota" />
+          <NavigationProperty Name="nota1" Relationship="dbErpModel.FK__detalleNo__idNot__27F8EE98" FromRole="detalleNota" ToRole="nota" />
+        </EntityType>
+        <EntityType Name="lote">
+          <Key>
+            <PropertyRef Name="idArticulo" />
+            <PropertyRef Name="nroLote" />
+          </Key>
+          <Property Name="idArticulo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nroLote" Type="Int32" Nullable="false" />
+          <Property Name="fechaIngreso" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="fechaVencimiento" Type="DateTime" Precision="3" />
+          <Property Name="cantidad" Type="Int32" Nullable="false" />
+          <Property Name="precioCompra" Type="Double" Nullable="false" />
+          <Property Name="stock" Type="Int32" />
+          <Property Name="idNota" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="articulo" Relationship="dbErpModel.FK__lote__idArticulo__15DA3E5D" FromRole="lote" ToRole="articulo" />
+          <NavigationProperty Name="nota" Relationship="dbErpModel.FK__lote__idNota__16CE6296" FromRole="lote" ToRole="nota" />
+          <Property Name="estado" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="nota">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nroNota" Type="Int32" Nullable="false" />
+          <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="descripcion" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="total" Type="Double" Nullable="false" />
+          <Property Name="tipo" Type="Int32" Nullable="false" />
+          <Property Name="idEmpresa" Type="Int32" Nullable="false" />
+          <Property Name="idUsuario" Type="Int32" Nullable="false" />
+          <Property Name="idComprobante" Type="Int32" />
+          <NavigationProperty Name="detalleNota" Relationship="dbErpModel.FK__detalleNo__idNot__1E6F845E" FromRole="nota" ToRole="detalleNota" />
+          <NavigationProperty Name="detalleNota1" Relationship="dbErpModel.FK__detalleNo__idNot__27F8EE98" FromRole="nota" ToRole="detalleNota" />
+          <NavigationProperty Name="empresa" Relationship="dbErpModel.FK__nota__idEmpresa__1209AD79" FromRole="nota" ToRole="empresa" />
+          <NavigationProperty Name="lote" Relationship="dbErpModel.FK__lote__idNota__16CE6296" FromRole="nota" ToRole="lote" />
+          <NavigationProperty Name="usuario" Relationship="dbErpModel.FK__nota__idUsuario__12FDD1B2" FromRole="nota" ToRole="usuario" />
+          <Property Name="estado" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__detalleNo__idArt__1D7B6025">
+          <End Type="dbErpModel.articulo" Role="articulo" Multiplicity="1" />
+          <End Type="dbErpModel.detalleNota" Role="detalleNota" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="articulo">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="detalleNota">
+              <PropertyRef Name="idArticulo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__lote__idArticulo__15DA3E5D">
+          <End Type="dbErpModel.articulo" Role="articulo" Multiplicity="1" />
+          <End Type="dbErpModel.lote" Role="lote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="articulo">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="lote">
+              <PropertyRef Name="idArticulo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__detalleNo__idNot__1E6F845E">
+          <End Type="dbErpModel.nota" Role="nota" Multiplicity="1" />
+          <End Type="dbErpModel.detalleNota" Role="detalleNota" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="nota">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="detalleNota">
+              <PropertyRef Name="idNota" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__detalleNo__idNot__27F8EE98">
+          <End Type="dbErpModel.nota" Role="nota" Multiplicity="1" />
+          <End Type="dbErpModel.detalleNota" Role="detalleNota" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="nota">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="detalleNota">
+              <PropertyRef Name="idNota" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__nota__idEmpresa__1209AD79">
+          <End Type="dbErpModel.empresa" Role="empresa" Multiplicity="1" />
+          <End Type="dbErpModel.nota" Role="nota" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="empresa">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="nota">
+              <PropertyRef Name="idEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__lote__idNota__16CE6296">
+          <End Type="dbErpModel.nota" Role="nota" Multiplicity="1" />
+          <End Type="dbErpModel.lote" Role="lote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="nota">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="lote">
+              <PropertyRef Name="idNota" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__nota__idUsuario__12FDD1B2">
+          <End Type="dbErpModel.usuario" Role="usuario" Multiplicity="1" />
+          <End Type="dbErpModel.nota" Role="nota" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="nota">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -1333,25 +1679,6 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="articulo">
-            <EntityTypeMapping TypeName="dbErpModel.articulo">
-              <MappingFragment StoreEntitySet="articulo">
-                <ScalarProperty Name="puntoNuevoPedido" ColumnName="puntoNuevoPedido" />
-                <ScalarProperty Name="costoInventario" ColumnName="costoInventario" />
-                <ScalarProperty Name="costoOrden" ColumnName="costoOrden" />
-                <ScalarProperty Name="tiempoEsperaMaxDiario" ColumnName="tiempoEsperaMaxDiario" />
-                <ScalarProperty Name="tiempoEsperaDiario" ColumnName="tiempoEsperaDiario" />
-                <ScalarProperty Name="demandaDiaria" ColumnName="demandaDiaria" />
-                <ScalarProperty Name="idUsuario" ColumnName="idUsuario" />
-                <ScalarProperty Name="idEmpresa" ColumnName="idEmpresa" />
-                <ScalarProperty Name="precioVenta" ColumnName="precioVenta" />
-                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
-                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
-                <ScalarProperty Name="nombre" ColumnName="nombre" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="categoria">
             <EntityTypeMapping TypeName="dbErpModel.categoria">
               <MappingFragment StoreEntitySet="categoria">
@@ -1364,15 +1691,71 @@ advertencia 6002: La tabla o vista 'dbErp.dbo.articuloCategoria' no tiene defini
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="articuloCategoria" TypeName="dbErpModel.articuloCategoria" StoreEntitySet="articuloCategoria">
-            <EndProperty Name="categoria">
-              <ScalarProperty Name="id" ColumnName="idCategoria" />
-            </EndProperty>
-            <EndProperty Name="articulo">
-              <ScalarProperty Name="id" ColumnName="idArticulo" />
-            </EndProperty>
-          </AssociationSetMapping>
-        </EntityContainerMapping>
+          <EntitySetMapping Name="articulo">
+            <EntityTypeMapping TypeName="dbErpModel.articulo">
+              <MappingFragment StoreEntitySet="articulo">
+                <ScalarProperty Name="idUsuario" ColumnName="idUsuario" />
+                <ScalarProperty Name="idEmpresa" ColumnName="idEmpresa" />
+                <ScalarProperty Name="precioVenta" ColumnName="precioVenta" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="articuloCategoria">
+            <EntityTypeMapping TypeName="dbErpModel.articuloCategoria">
+              <MappingFragment StoreEntitySet="articuloCategoria">
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="idCategoria" ColumnName="idCategoria" />
+                <ScalarProperty Name="idArticulo" ColumnName="idArticulo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="detalleNota">
+            <EntityTypeMapping TypeName="dbErpModel.detalleNota">
+              <MappingFragment StoreEntitySet="detalleNota">
+                <ScalarProperty Name="precioVenta" ColumnName="precioVenta" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+                <ScalarProperty Name="idNota" ColumnName="idNota" />
+                <ScalarProperty Name="nroLote" ColumnName="nroLote" />
+                <ScalarProperty Name="idArticulo" ColumnName="idArticulo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="lote">
+            <EntityTypeMapping TypeName="dbErpModel.lote">
+              <MappingFragment StoreEntitySet="lote">
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="idNota" ColumnName="idNota" />
+                <ScalarProperty Name="stock" ColumnName="stock" />
+                <ScalarProperty Name="precioCompra" ColumnName="precioCompra" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+                <ScalarProperty Name="fechaVencimiento" ColumnName="fechaVencimiento" />
+                <ScalarProperty Name="fechaIngreso" ColumnName="fechaIngreso" />
+                <ScalarProperty Name="nroLote" ColumnName="nroLote" />
+                <ScalarProperty Name="idArticulo" ColumnName="idArticulo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="nota">
+            <EntityTypeMapping TypeName="dbErpModel.nota">
+              <MappingFragment StoreEntitySet="nota">
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="idComprobante" ColumnName="idComprobante" />
+                <ScalarProperty Name="idUsuario" ColumnName="idUsuario" />
+                <ScalarProperty Name="idEmpresa" ColumnName="idEmpresa" />
+                <ScalarProperty Name="tipo" ColumnName="tipo" />
+                <ScalarProperty Name="total" ColumnName="total" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="nroNota" ColumnName="nroNota" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

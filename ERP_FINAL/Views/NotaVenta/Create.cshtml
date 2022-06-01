@@ -1,0 +1,474 @@
+﻿@model Entidad.ENota
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="@Url.Content("~/Front/plugins/select2/css/select2.min.css")" rel="stylesheet" />
+<link href="@Url.Content("~/Front/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css")" rel="stylesheet" />
+
+<div class="row justify-content-between">
+    <div class="col-4">
+        <h2>Nueva Nota de Compra</h2>
+    </div>
+    <div class="col-4">
+        <div class="form-group">
+            <button class="btn btn-info" onclick="GuardarNota()" style="margin-right: 10px; margin-top: 10px;">Guardar</button>
+            <button class="btn btn-danger" onclick="$('#modalvolver').modal('show');" style="margin-right: 10px; margin-top: 10px;">Volver</button>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-2">
+
+            </div>
+            <div class="col-4">
+                <label>Nro nota</label>
+                <input type="text" class="form-control" id="nro">
+            </div>
+            <div class="col-4">
+                <label>Fecha</label>
+                <input type="text" class="form-control" id="fecha">
+            </div>
+            <div class="col-2">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+
+            </div>
+            <div class="col-8">
+                <label>Descripcion</label>
+                <input type="text" class="form-control" id="descripcion">
+            </div>
+            <div class="col-2">
+                <button class="btn btn-info" onclick="CargarDatosDetalle()" style="margin-top:30px;"> <i class="fas fa-plus"></i></button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12" style="padding-top: 20px;">
+                <table id="detallenota" class="table table-bordered table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th class="th-sm">
+                                Producto
+                            </th>
+                            <th class="th-sm">
+                                Lote
+                            </th>
+                            <th class="th-sm">
+                                Cantidad
+                            </th>
+                            <th class="th-sm">
+                                Precio
+                            </th>
+                            <th class="th-sm">
+                                SubTotal
+                            </th>
+                            <th class="th-sm">
+                                Opciones
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="datosdetallenota">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row justify-content-end">
+            <div class="col-2">
+                <label>TOTAL:</label>
+            </div>
+            <div class="col-3">
+                <input type="text" class="form-control" id="total" disabled style="text-align: right;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal" id="modaldetalle" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Agregar detalle</h5>
+            </div>
+            <div class="alert alert-danger" style="display:none" role="alert" id="mensajeError"></div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-3">
+                        <label for="articulodetalle" class="form-label">Producto</label>
+                        <select class="form-control" id="articulodetalle"></select>
+                    </div>
+                    <div class="col-3">
+                        <label for="lotedetalle" class="form-label">Lote</label>
+                        <input type="text" class="form-control" id="lotedetalle" style="text-align: right;">
+                    </div>
+                    <div class="col-2">
+                        <label for="cantidaddetalle" class="form-label">Cantidad</label>
+                        <input type="number" class="form-control" id="cantidaddetalle" style="text-align: right;">
+                    </div>
+                    <div class="col-2">
+                        <label for="preciodetalle" class="form-label">Precio</label>
+                        <input type="text" class="form-control" id="preciodetalle" style="text-align: right;">
+                    </div>
+                    <div class="col-2">
+                        <label for="subtotaldetalle" class="form-label">SubTotal</label>
+                        <input type="text" class="form-control" id="subtotaldetalle" style="text-align: right;">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="GuardarDetalle()">Agregar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modaleditardetalle" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar detalle</h5>
+            </div>
+            <div class="alert alert-danger" style="display:none" role="alert" id="mensajeError"></div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-3">
+                        <label for="articulodeted" class="form-label">Producto</label>
+                        <select class="form-control" id="articulodeted"></select>
+                    </div>
+                    <div class="col-3">
+                        <label for="lotedeted" class="form-label">Lote</label>
+                        <input type="date" class="form-control" id="lotedeted">
+                    </div>
+                    <div class="col-2">
+                        <label for="cantidaddeted" class="form-label">Cantidad</label>
+                        <input type="number" class="form-control" id="cantidaddeted" style="text-align: right;">
+                    </div>
+                    <div class="col-2">
+                        <label for="preciodeted" class="form-label">Precio</label>
+                        <input type="text" class="form-control" id="preciodeted" style="text-align: right;">
+                    </div>
+                    <div class="col-2">
+                        <label for="subtotaldeted" class="form-label">SubTotal</label>
+                        <input type="text" class="form-control" id="subtotaldeted" style="text-align: right;">
+                    </div>
+                    <input type="hidden" class="form-control" id="seleccionadoedit" name="seleccionadoedit">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="EditDetalle()">Editar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modalvolver" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">ADVERTENCIA</h5>
+            </div>
+            <div class="modal-body">
+                <p>Si vuelve los cambios realizados se borraran, Esta Seguro que desea Volver?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                <button type="button" onclick="VolverAtras()" class="btn btn-primary">Si, Volver</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="//cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="~/Front/plugins/select2/js/select2.full.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#detallenota').DataTable({
+                "scrollY": "25vh",
+                "scrollCollapse": true,
+                "searching": false,
+                "paging": false,
+                "ordering": false,
+            });
+            CargarDatos();
+        });
+        var listadetalle = [];
+        var total = 0;
+
+        function CargarDatos() {
+            $.ajax({
+                url: "@Url.Action("CargarDatos", "NotaVenta")",
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: 0
+                }, success: function (result) {
+                    $("#nro").val(result.serie);
+                    $("#fecha").val(result.fecha);
+                }
+            });
+        }
+
+        function CargarDatosDetalle() {
+            $('#modaldetalle').modal('show');
+            $("#articulodetalle").empty();
+            $.ajax({
+                url: "@Url.Action("CargarArticulos", "NotaVenta")",
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: 0
+                }, success: function (result) {
+                    $.each(result.articulos, function (index, value) {
+                        $('#cuentadetalle').append('<option value=' + value.Id + ' > ' + value.Nombre + '</option>');
+                        $('#cuentadetalle').select2({
+                            theme: "classic"
+                        });
+                    });
+                }
+            });
+        }
+
+        function GuardarDetalle() {
+            var cantidad = $('#cantidaddetalle').val();
+            var precio = $('#preciodetalle').val();
+
+            if (cantidad <= 0) {
+                return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+            }
+
+            if (precio <= 0) {
+                return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+            }
+
+            for (var j = 0; j < listadetalle.length; j++) {
+                if ($('#articulodetalle').val() == listadetalle[j].idArticulo) {
+                    return MostrarMensaje('Error este articulo ya ha sido agregada al detalle');
+                }
+            }
+
+            const det = {
+                idArticulo: $('#articulodetalle').val(),
+                articulo: $('#articulodetalle option:selected').text(),
+                lote: $('#lotedetalle').val(),
+                cantidad: $('#cantidaddetalle').val(),
+                precio: $('#preciodetalle').val(),
+                subtotal: $('#subtotaldetalle').val()
+            };
+
+            total = parseFloat(total) + parseFloat($('#cantidaddetalle').val() * $('#preciodetalle').val());
+
+            listadetalle.push(det);
+            var tabladatos = $('#datosdetallenota');
+            $('#datosdetallenota').empty();
+
+            for (let i = 0; i < listadetalle.length; i++) {
+                row = "<tr>" +
+                    "<td>" + listadetalle[i].articulo + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].lote + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].cantidad + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].precio + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].subtotal + "</td>" +
+                    "<td><button value=" + listadetalle.indexOf(listadetalle[i]) + " class='btn btn-outline btn-circle btn-sm purple' onclick='EditarDetalle(this);'><i class='fa fa-edit'></i></button>"
+                    + "<button value=" + listadetalle.indexOf(listadetalle[i]) + " class='btn btn-outline btn-circle btn-sm purple' onclick='EliminarDetalle(this);'><i class='fa fa-trash'></i></button></td>" +
+                    "</tr>"
+                tabladatos.append(row);
+            }
+
+            $('#total').val(total);
+
+            $('#cantidaddetalle').val('');
+            $('#preciodetalle').val('');
+            $('#subtotaldetalle').val('');
+        }
+
+        function EditarDetalle(seleccionado) {
+            $('#lotedeted').val(listadetalle[seleccionado.value].lote);
+            $('#cantidaddeted').val(listadetalle[seleccionado.value].cantidad);
+            $('#preciodeted').val(listadetalle[seleccionado.value].precio);
+            $('#subtotaldeted').val(seleccionado.subtotal);
+            $("#articulodeted").empty();
+            $.ajax({
+                url: "@Url.Action("CargarArticulos", "NotaVenta")",
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: 0
+                }, success: function (result) {
+                    $.each(result.articulos, function (index, value) {
+                        $('#articulodeted').append('<option value=' + value.Id + ' > ' + value.Nombre + '</option>');
+                        $('#articulodeted').select2({
+                            theme: "classic"
+                        });
+                    });
+                }
+            });
+
+            $('#modaleditardetalle').modal('show');
+        }
+
+        function EditDetalle() {
+            var seleccionado = $('#seleccionadoedit').val();
+            var cantidad = $('#cantidaddeted').val();
+            var precio = $('#preciodeted').val();
+            if (cantidad <= 0) {
+                return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+            }
+
+            if (precio <= 0) {
+                return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+            }
+
+
+            for (let j = 0; j < listadetalle.length; j++) {
+                if (j != seleccionado) {
+                    if ($('#lotedeted').val() == listadetalle[j].lote) {
+                        return MostrarMensaje('Error este lote ya ha sido agregada al detalle');
+                    }
+                }
+            }
+
+            //Actualizamos el total debe y haber, primero eliminados el valor anterior
+            var cantidad = listadetalle[seleccionado].cantidad;
+            var precio = listadetalle[seleccionado].precio;
+
+            //restamos el valor anterior
+            total = total - cantidad * precio;
+
+            //Sumamos el nuevo valor
+            var subtotal = parseFloat($('#cantidaddeted').val() * $('#preciodeted').val())
+            total = parseFloat(total) + subtotal;
+
+            $('#total').val(total);
+
+            //Editamos la lista
+            listadetalle[seleccionado].idArticulo = $('#articulodeted').val();
+            listadetalle[seleccionado].articulo = $('#articulodeted option:selected').text();
+            listadetalle[seleccionado].lote = $('#lotedeted').val();
+            listadetalle[seleccionado].cantidad = $('#cantidaddeted').val();
+            listadetalle[seleccionado].precio = $('#preciodeted').val();
+            listadetalle[seleccionado].subtotal = $('#subtotaldeted').val();
+
+            //Actualizamos la tablas, la vaciamos y volvemos a cargar
+            var tabladatos = $('#datosdetallenota');
+            $('#datosdetallenota').empty();
+
+            for (let i = 0; i < listadetalle.length; i++) {
+                row = "<tr>" +
+                    "<td>" + listadetalle[i].articulo + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].lote + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].cantidad + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].precio + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].subtotal + "</td>" +
+                    "<td><button value=" + listadetalle.indexOf(listadetalle[i]) + " class='btn btn-outline btn-circle btn-sm purple' onclick='EditarDetalle(this);'><i class='fa fa-edit'></i></button>"
+                    + "<button value=" + listadetalle.indexOf(listadetalle[i]) + " class='btn btn-outline btn-circle btn-sm purple' onclick='EliminarDetalle(this);'><i class='fa fa-trash'></i></button></td>" +
+                    "</tr>"
+                tabladatos.append(row);
+            }
+
+            $('#cantidaddeted').val('');
+            $('#preciodeted').val('');
+            $('#subtotaldeted').val('');
+
+            $('#modaleditardetalle').modal('hide');
+            MostrarMensajeExitoso('Editado Correctamente')
+        }
+
+        function EliminarDetalle(seleccionado) {
+            //Primero Actualizamos el total debe y haber
+            var cantidad = listadetalle[seleccionado.value].cantidad;
+            var precio = listadetalle[seleccionado.value].precio;
+            var subtotal = cantidad * precio;
+
+            total = total - subtotal;
+
+            $('#total').val(total);
+
+            //Luego eliminamos el elemento y volvermos a cargar la tabla
+            listadetalle.splice(seleccionado.value, 1);
+
+            var tabladatos = $('#datosdetallenota');
+            $('#datosdetallenota').empty();
+
+            for (let i = 0; i < listadetalle.length; i++) {
+                row = "<tr>" +
+                    "<td>" + listadetalle[i].articulo + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].lote + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].cantidad + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].precio + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].subtotal + "</td>" +
+                    "<td><button value=" + listadetalle.indexOf(listadetalle[i]) + " class='btn btn-outline btn-circle btn-sm purple' onclick='EditarDetalle(this);'><i class='fa fa-edit'></i></button>"
+                    + "<button value=" + listadetalle.indexOf(listadetalle[i]) + " class='btn btn-outline btn-circle btn-sm purple' onclick='EliminarDetalle(this);'><i class='fa fa-trash'></i></button></td>" +
+                    "</tr>"
+                tabladatos.append(row);
+            }
+        }
+
+        function GuardarNota() {
+            if ($('#fecha').val() == '') {
+                return MostrarMensaje('Error seleccione una fecha');
+            }
+
+            if (listadetalle.length < 2) {
+                return MostrarMensaje('Error debe agregar almenos 2 detalles de nota de venta');
+            }
+
+            $.ajax({
+                url: "@Url.Action("Create", "NotaVenta")",
+                cache: false,
+                type: "POST",
+                dataType: "script",
+                data: {
+                    nro: $('#nro').val(), fecha: $('#fecha').val(), descripcion: $('#descripcion').val(), detalle: listadetalle,
+                    total: total
+                }
+            });
+        }
+
+        function VolverAtras() {
+            redireccionar("@Url.Action("Index", "NotaCompra")")
+        }
+
+        function MostrarMensajeExitoso(msj) {
+            $(document).Toasts('create', {
+                class: 'bg-success',
+                title: "Alerta",
+                autohide: true,
+                delay: 10000,
+                body: msj
+            });
+        }
+
+        function MostrarMensaje(msj) {
+            $(document).Toasts('create', {
+                class: ' bg-danger',
+                title: "Alerta",
+                autohide: true,
+                delay: 10000,
+                body: msj
+            });
+        }
+
+        function redireccionar(url) {
+            window.location = url;
+        }
+
+    </script>
+}

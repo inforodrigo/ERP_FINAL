@@ -43,19 +43,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BussinessException.cs" />
+    <Compile Include="EArticulo.cs" />
     <Compile Include="ECategoria.cs" />
     <Compile Include="EComprobante.cs" />
     <Compile Include="ECuenta.cs" />
     <Compile Include="EDetalleComprobante.cs" />
+    <Compile Include="EDetalleNota.cs" />
+    <Compile Include="EDetalleNotaAux.cs" />
     <Compile Include="EEmpresa.cs" />
     <Compile Include="EEmpresaMoneda.cs" />
     <Compile Include="EGestion.cs" />
     <Compile Include="ELogin.cs" />
+    <Compile Include="ELote.cs" />
     <Compile Include="EMoneda.cs" />
+    <Compile Include="ENota.cs" />
     <Compile Include="Enums\Estado.cs" />
     <Compile Include="Enums\EstadosComprobante.cs" />
     <Compile Include="Enums\ETipoComprobante.cs" />
     <Compile Include="Enums\ETipoCuentas.cs" />
+    <Compile Include="Enums\ETipoNota.cs" />
     <Compile Include="Enums\EUtils.cs" />
     <Compile Include="Enums\EValidaciones.cs" />
     <Compile Include="EPeriodo.cs" />

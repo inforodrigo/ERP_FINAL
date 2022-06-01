@@ -34,7 +34,11 @@ namespace Data
         public virtual DbSet<detalleComprobante> detalleComprobante { get; set; }
         public virtual DbSet<moneda> moneda { get; set; }
         public virtual DbSet<empresaMoneda> empresaMoneda { get; set; }
-        public virtual DbSet<articulo> articulo { get; set; }
         public virtual DbSet<categoria> categoria { get; set; }
+        public virtual DbSet<articulo> articulo { get; set; }
+        public virtual DbSet<articuloCategoria> articuloCategoria { get; set; }
+        public virtual DbSet<detalleNota> detalleNota { get; set; }
+        public virtual DbSet<lote> lote { get; set; }
+        public virtual DbSet<nota> nota { get; set; }      
     }
 }

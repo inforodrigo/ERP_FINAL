@@ -91,6 +91,45 @@ namespace Logica
             }
         }
 
+        public List<ECategoria> ObtenerPorIdEmpresa(int idempresa)
+        {
+            using (var esquema = GetEsquema())
+            {
+
+                try
+                {
+                    var linqcategoria = (from x in esquema.categoria
+                                         where x.idEmpresa == idempresa                                        
+                                         select x).ToList();
+
+                    List<ECategoria> categorias = new List<ECategoria>();
+
+                    foreach (var i in linqcategoria)
+                    {
+                        ECategoria categoria = new ECategoria();
+                        categoria.Id = i.id;
+                        categoria.IdCategoria = i.id;
+                        categoria.Nombre = i.nombre;
+                        categoria.text = i.nombre;
+                        categoria.Descripcion = i.descripcion;
+                        categoria.IdUsuario = (int)i.idUsuario;
+                        categoria.IdEmpresa = (int)i.idEmpresa;
+                        if (i.idCategoriaPadre != null)
+                        {
+                            categoria.IdCategoriaPadre = (int)i.idCategoriaPadre;
+                        }                       
+                        categorias.Add(categoria);
+                    }
+
+                    return categorias;
+                }
+                catch (Exception ex)
+                {
+                    throw new BussinessException("Error no se puedo obtener la lista de categorias");
+                }
+            }
+        }
+
         public ECategoria ObtenerCategoria(long idcategoria)
         {
 

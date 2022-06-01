@@ -25,8 +25,9 @@ namespace Data
             this.detalleComprobante = new HashSet<detalleComprobante>();
             this.moneda = new HashSet<moneda>();
             this.empresaMoneda = new HashSet<empresaMoneda>();
-            this.articulo = new HashSet<articulo>();
             this.categoria = new HashSet<categoria>();
+            this.articulo = new HashSet<articulo>();
+            this.nota = new HashSet<nota>();
         }
     
         public int id { get; set; }
@@ -53,8 +54,10 @@ namespace Data
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<empresaMoneda> empresaMoneda { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<categoria> categoria { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<articulo> articulo { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<categoria> categoria { get; set; }
+        public virtual ICollection<nota> nota { get; set; }
     }
 }

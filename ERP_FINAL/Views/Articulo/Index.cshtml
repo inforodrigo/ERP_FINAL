@@ -1,0 +1,375 @@
+﻿@model IEnumerable<Entidad.EArticulo>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@section EtiquetaHead
+{
+    <link href="@Url.Content("~/Content/popup-multi-select/dist/stylesheets/popup-multiselect.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/Multi-Select-Plugin-jQuery-MagicSuggest/magicsuggest.css")" rel="stylesheet" />
+}
+
+<h2>Articulos</h2>
+<div class="row justify-content-end">
+    <div class="form-group">
+        <button class="btn btn-info" onclick="$('#modalarticulo').modal('show');" style="margin-right:10px;">Nuevo Articulo</button>
+    </div>
+
+    <div class="form-group">
+        <a href="@Url.Action("ReporteGestion", "Gestion")" class="btn btn-primary" style="margin-right:10px;"> <i class=" fas fa-print"></i>  </a>
+    </div>
+</div>
+
+<table class="table table-striped table-bordered table-hover" id="table_articulo">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Cantidad)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PrecioVenta)
+        </th>
+        <th>opciones</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cantidad)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PrecioVenta)
+            </td>
+            <td>
+            </td>
+        </tr>
+    }
+
+</table>
+
+<!-- Modal Structure -->
+<div class="modal" id="modalarticulo" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registrar un Articulo</h5>
+            </div>
+            <div class="alert alert-danger" style="display:none" role="alert" id="mensajeError"></div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombre">
+                </div>
+                <div class="form-group">
+                    <label for="descripcion" class="form-label">Descripcion</label>
+                    <input type="text" class="form-control" id="descripcion">
+                </div>
+                <div class="form-group">
+                    <label for="precio" class="form-label">Precio</label>
+                    <input type="text" class="form-control" id="precio">
+                </div>
+                <div class="form-group">
+                    <label for="categorias" class="form-label">Categorias</label>
+                    <select multiple class="form-control" id="categorias" name="categorias"></select>                   
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="Registrar()">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Structure Edit -->
+<div class="modal" id="modalarticuloed" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar datos</h5>
+            </div>
+            <div class="alert alert-danger" style="display:none" role="alert" id="mensajeErrorEd"></div>
+            <div class="modal-body">
+                <input type="hidden" id="ided">
+                <div class="form-group">
+                    <label for="nombreed" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombreed">
+                </div>
+                <div class="form-group">
+                    <label for="descripcioned" class="form-label">Descripcion</label>
+                    <input type="text" class="form-control" id="descripcioned">
+                </div>
+                <div class="form-group">
+                    <label for="precioed" class="form-label">Precio</label>
+                    <input type="text" class="form-control" id="precioed">
+                </div>
+                <div class="form-group">
+                    <label for="categoriased" class="form-label">Categorias</label>
+                    <select class="form-control" id="categoriased" name="categoriased" multiple></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="Editar()">Actualizar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="~/Front/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/Content/popup-multi-select/dist/javascripts/popup-multiselect.min.js"></script>
+    <script src="~/Content/Multi-Select-Plugin-jQuery-MagicSuggest/magicsuggest.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        TableDatatablesRowreorder.init();
+        TraerCategorias();
+    });
+
+    function TraerCategorias() {
+        $('#categorias').empty();
+        $.ajax({
+                url: "@Url.Action("CargarCategorias", "Articulo")",
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: 0
+            }, success: function (result) {                                        
+                $.each(result.categorias, function (index, value) {
+                    $('#categorias').append('<option value=' + value.Id + ' > ' + value.Nombre + '</option>');                 
+                    /*$('#categorias').select2({
+                        theme: "classic",
+                        dropdownParent: $("#modalarticulo"),
+                        //theme: "bootstrap",
+                        //containerCssClass: "select2--small",
+                        //dropdownCssClass: "select2--small",
+                    });*/
+                });
+                }
+        });
+    }
+
+    function Validar() {
+        if ($("#nombre").val() == '') {
+            return MostrarMensaje('Error el nombre es obligatorio');
+            return false;
+        }
+        if ($("#precio").val() == '') {
+            return MostrarMensaje('Error el Precio es obligatorio');
+            return false;
+        }
+        return true;
+    }
+
+    function ValidarEditar() {
+        if ($("#nombreed").val() == '') {
+            return MostrarMensaje('Error el nombre es obligatorio');
+            return false;
+        }
+        if ($("#precioed").val() == '') {
+            return MostrarMensaje('Error el Precio es obligatorio');
+            return false;
+        }
+        return true;
+    }
+
+    function Registrar() {
+        var validate = Validar();
+        if (!validate) {
+            return;
+        }
+        var categorias = $("#categorias").val();
+        $.ajax({
+            url: "@Url.Action("Create", "Articulo")",
+            cache: false,
+            data: { nombre: $("#nombre").val(), descripcion: $("#descripcion").val(), precio: $("#precio").val(), categorias },
+            type: "POST",
+            dataType: "script"
+        });
+    }
+
+    function EditarArticulo(id) {
+        $.ajax({
+            url: "@Url.Action("Edit", "Articulo")",
+            cache: false,
+            data: {
+                id: id
+            },
+            type: "GET",
+            dataType: "script"
+        });
+    }
+
+    /*function datosGestion(id, nombre, fechainicio, fechafin) {
+        $("#ided").val(id);
+        $("#nombreed").val(nombre);
+        $("#fechainicioed").val(fechainicio);
+        $('#fechafined').val(fechafin);
+        $('#modalgestioned').modal('show');
+    }*/
+
+    function Editar() {
+        var validate = ValidarEditar();
+        if (!validate) {
+            return;
+        }
+
+        $.ajax({
+            url: "@Url.Action("Edit", "Gestion")",
+            cache: false,
+            data: { id: $("#ided").val(),  nombre: $("#nombreed").val(), fechainicio: $("#fechainicioed").val(), fechafin: $("#fechafined").val() },
+            type: "POST",
+            dataType: "script"
+        });
+    }
+
+    function EliminarGestion(id) {
+        swal.fire({
+            title: "ESTA SEGURO QUE DESEA ELIMINAR?",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si, eliminarlo!",
+            cancelButtonText: "No, cancelar!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "@Url.Action("Delete", "Gestion")",
+                    cache: false,
+                    data: {
+                        id: id
+                    },
+                    type: "GET",
+                    dataType: "script"
+                });
+            }
+
+        });
+        }
+
+        function MostrarMensajeExito(msj) {                   
+            var msjbody = "Se Registro los Datos Exitosamente";
+            $(document).Toasts('create', {
+                class: 'bg-success',
+                title: msj,
+                autohide: true,
+                delay: 10000,
+                body: msjbody
+            });
+
+            $("#nombre").val("");
+            $("#descripcion").val("");
+            $("#precio").val("");
+            $("#modalarticulo").modal('hide');
+        }
+
+    function MostrarMensaje(msj) {
+        $("#mensajeError").show();
+        $("#mensajeError").html(msj);
+    }
+
+    function MostrarMensajeEditar(msj) {
+        $("#mensajeErrorEd").show();
+        $("#mensajeErrorEd").html(msj);
+    }
+
+    function LimpiarMensaje() {
+        $("#mensajeError").hide();
+        $("#mensajeError").html('');
+    }
+
+    function redireccionar(url) {
+        window.location = url;
+    }
+
+    var TableDatatablesRowreorder = function () {
+        var initTable1 = function () {
+            var table = $('#table_articulo');
+
+            var oTable = table.dataTable({
+
+                // Internationalisation. For more info refer to http://datatables.net/manual/i18n
+                "language": {
+                    "aria": {
+                        "sortAscending": ": activate to sort column ascending",
+                        "sortDescending": ": activate to sort column descending"
+                    },
+                    "emptyTable": "No hay datos para mostrar",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Gestión",
+                    "infoEmpty": "No hay datos para mostrar",
+                    "infoFiltered": "(Filtrado de _MAX_ total Gestión)",
+                    "lengthMenu": "_MENU_ Gestión",
+                    "search": "Buscar:",
+                    "zeroRecords": "No se encontraron coincidencias"
+                },
+
+                // Or you can use remote translation file
+                //"language": {
+                //   url: '//cdn.datatables.net/plug-ins/3cfcc339e89/i18n/Portuguese.json'
+                //},
+
+                // setup buttons extentension: http://datatables.net/extensions/buttons/
+                buttons: [
+                    //{ extend: 'print', className: 'btn dark btn-outline', exportOptions: { columns: [0, 1, 2, 3] } },
+                    { extend: 'copy', className: 'btn purple btn-outline ', exportOptions: { columns: [0, 1] } },
+                    { extend: 'pdf', className: 'btn red btn-outline', exportOptions: { columns: [0, 1] } },
+                    { extend: 'csv', className: 'btn blue btn-outline ', exportOptions: { columns: [0, 1] } },
+                    { extend: 'excel', className: 'btn green btn-outline ', exportOptions: { columns: [0, 1] } }
+                ],
+                columnDefs: [
+                    { orderable: false, targets: [] }
+                ],
+                // setup rowreorder extension: http://datatables.net/extensions/rowreorder/
+
+                "order": [
+                    [0, 'asc']
+                ],
+
+                "lengthMenu": [
+                    [5, 10, 15, 20, -1],
+                    [5, 10, 15, 20, "Todos"] // change per page values here
+                ],
+                // set the initial value
+                "pageLength": 10,
+
+                "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
+
+                // Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
+                // setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js).
+                // So when dropdowns used the scrollable div should be removed.
+                //"dom": "<'row' <'col-md-12'T>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r>t<'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
+            });
+        }
+
+        return {
+
+            //main function to initiate the module
+            init: function () {
+
+                if (!$().dataTable) {
+                    return;
+                }
+
+                initTable1();
+            }
+
+        };
+
+    }();
+    </script>
+}

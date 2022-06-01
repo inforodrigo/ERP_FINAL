@@ -18,7 +18,7 @@ namespace Data
         public categoria()
         {
             this.categoria1 = new HashSet<categoria>();
-            this.articulo = new HashSet<articulo>();
+            this.articuloCategoria = new HashSet<articuloCategoria>();
         }
     
         public int id { get; set; }
@@ -34,6 +34,6 @@ namespace Data
         public virtual empresa empresa { get; set; }
         public virtual usuario usuario { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<articulo> articulo { get; set; }
+        public virtual ICollection<articuloCategoria> articuloCategoria { get; set; }
     }
 }

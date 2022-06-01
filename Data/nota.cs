@@ -12,31 +12,34 @@ namespace Data
     using System;
     using System.Collections.Generic;
     
-    public partial class articulo
+    public partial class nota
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public articulo()
+        public nota()
         {
-            this.articuloCategoria = new HashSet<articuloCategoria>();
             this.detalleNota = new HashSet<detalleNota>();
+            this.detalleNota1 = new HashSet<detalleNota>();
             this.lote = new HashSet<lote>();
         }
     
         public int id { get; set; }
-        public string nombre { get; set; }
+        public int nroNota { get; set; }
+        public System.DateTime fecha { get; set; }
         public string descripcion { get; set; }
-        public Nullable<int> cantidad { get; set; }
-        public double precioVenta { get; set; }
+        public double total { get; set; }
+        public int tipo { get; set; }
         public int idEmpresa { get; set; }
         public int idUsuario { get; set; }
+        public Nullable<int> idComprobante { get; set; }
+        public int estado { get; set; }
     
-        public virtual empresa empresa { get; set; }
-        public virtual usuario usuario { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<articuloCategoria> articuloCategoria { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<detalleNota> detalleNota { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<detalleNota> detalleNota1 { get; set; }
+        public virtual empresa empresa { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<lote> lote { get; set; }
+        public virtual usuario usuario { get; set; }
     }
 }
