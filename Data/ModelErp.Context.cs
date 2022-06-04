@@ -38,7 +38,7 @@ namespace Data
         public virtual DbSet<articulo> articulo { get; set; }
         public virtual DbSet<articuloCategoria> articuloCategoria { get; set; }
         public virtual DbSet<detalleNota> detalleNota { get; set; }
+        public virtual DbSet<nota> nota { get; set; }
         public virtual DbSet<lote> lote { get; set; }
-        public virtual DbSet<nota> nota { get; set; }      
     }
 }

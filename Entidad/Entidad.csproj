@@ -69,9 +69,13 @@
     <Compile Include="EReportes\ERComprobanteContable.cs" />
     <Compile Include="EReportes\ERDatosbasicos.cs" />
     <Compile Include="EReportes\ERDetalleComprobanteContable.cs" />
+    <Compile Include="EReportes\ERDetalleNotaCompra.cs" />
+    <Compile Include="EReportes\ERDetalleNotaVenta.cs" />
     <Compile Include="EReportes\ERGestion.cs" />
     <Compile Include="EReportes\ERLibroDiario.cs" />
     <Compile Include="EReportes\ERLibroMayor.cs" />
+    <Compile Include="EReportes\ERNotaCompra.cs" />
+    <Compile Include="EReportes\ERNotaVenta.cs" />
     <Compile Include="EReportes\ERSumasSaldos.cs" />
     <Compile Include="EUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

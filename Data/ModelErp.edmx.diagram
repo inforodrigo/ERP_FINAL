@@ -44,15 +44,15 @@
         <AssociationConnector Association="dbErpModel.FK__articuloC__idArt__0E391C95" />
         <AssociationConnector Association="dbErpModel.FK__articuloC__idCat__0F2D40CE" />
         <EntityTypeShape EntityType="dbErpModel.detalleNota" Width="1.5" PointX="17.5" PointY="5.125" />
-        <EntityTypeShape EntityType="dbErpModel.lote" Width="1.5" PointX="13.375" PointY="5.25" />
         <EntityTypeShape EntityType="dbErpModel.nota" Width="1.5" PointX="15.375" PointY="5.25" />
         <AssociationConnector Association="dbErpModel.FK__detalleNo__idArt__1D7B6025" />
-        <AssociationConnector Association="dbErpModel.FK__lote__idArticulo__15DA3E5D" />
         <AssociationConnector Association="dbErpModel.FK__detalleNo__idNot__1E6F845E" />
         <AssociationConnector Association="dbErpModel.FK__detalleNo__idNot__27F8EE98" />
         <AssociationConnector Association="dbErpModel.FK__nota__idEmpresa__1209AD79" />
-        <AssociationConnector Association="dbErpModel.FK__lote__idNota__16CE6296" />
         <AssociationConnector Association="dbErpModel.FK__nota__idUsuario__12FDD1B2" />
+        <EntityTypeShape EntityType="dbErpModel.lote" Width="1.5" PointX="13.125" PointY="5.25" />
+        <AssociationConnector Association="dbErpModel.FK__lote__idArticulo__36470DEF" />
+        <AssociationConnector Association="dbErpModel.FK__lote__idNota__373B3228" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

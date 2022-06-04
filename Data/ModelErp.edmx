@@ -138,7 +138,7 @@
             <PropertyRef Name="idArticulo" />
             <PropertyRef Name="nroLote" />
           </Key>
-          <Property Name="idArticulo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idArticulo" Type="int" Nullable="false" />
           <Property Name="nroLote" Type="int" Nullable="false" />
           <Property Name="fechaIngreso" Type="datetime" Nullable="false" />
           <Property Name="fechaVencimiento" Type="datetime" />
@@ -508,7 +508,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__lote__idArticulo__15DA3E5D">
+        <Association Name="FK__lote__idArticulo__36470DEF">
           <End Role="articulo" Type="Self.articulo" Multiplicity="1" />
           <End Role="lote" Type="Self.lote" Multiplicity="*" />
           <ReferentialConstraint>
@@ -520,7 +520,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__lote__idNota__16CE6296">
+        <Association Name="FK__lote__idNota__373B3228">
           <End Role="nota" Type="Self.nota" Multiplicity="1" />
           <End Role="lote" Type="Self.lote" Multiplicity="*" />
           <ReferentialConstraint>
@@ -712,11 +712,11 @@
             <End Role="usuario" EntitySet="usuario" />
             <End Role="gestion" EntitySet="gestion" />
           </AssociationSet>
-          <AssociationSet Name="FK__lote__idArticulo__15DA3E5D" Association="Self.FK__lote__idArticulo__15DA3E5D">
+          <AssociationSet Name="FK__lote__idArticulo__36470DEF" Association="Self.FK__lote__idArticulo__36470DEF">
             <End Role="articulo" EntitySet="articulo" />
             <End Role="lote" EntitySet="lote" />
           </AssociationSet>
-          <AssociationSet Name="FK__lote__idNota__16CE6296" Association="Self.FK__lote__idNota__16CE6296">
+          <AssociationSet Name="FK__lote__idNota__373B3228" Association="Self.FK__lote__idNota__373B3228">
             <End Role="nota" EntitySet="nota" />
             <End Role="lote" EntitySet="lote" />
           </AssociationSet>
@@ -959,15 +959,10 @@
             <End Role="articuloCategoria" EntitySet="articuloCategoria" />
           </AssociationSet>
           <EntitySet Name="detalleNota" EntityType="dbErpModel.detalleNota" />
-          <EntitySet Name="lote" EntityType="dbErpModel.lote" />
           <EntitySet Name="nota" EntityType="dbErpModel.nota" />
           <AssociationSet Name="FK__detalleNo__idArt__1D7B6025" Association="dbErpModel.FK__detalleNo__idArt__1D7B6025">
             <End Role="articulo" EntitySet="articulo" />
             <End Role="detalleNota" EntitySet="detalleNota" />
-          </AssociationSet>
-          <AssociationSet Name="FK__lote__idArticulo__15DA3E5D" Association="dbErpModel.FK__lote__idArticulo__15DA3E5D">
-            <End Role="articulo" EntitySet="articulo" />
-            <End Role="lote" EntitySet="lote" />
           </AssociationSet>
           <AssociationSet Name="FK__detalleNo__idNot__1E6F845E" Association="dbErpModel.FK__detalleNo__idNot__1E6F845E">
             <End Role="nota" EntitySet="nota" />
@@ -981,13 +976,18 @@
             <End Role="empresa" EntitySet="empresa" />
             <End Role="nota" EntitySet="nota" />
           </AssociationSet>
-          <AssociationSet Name="FK__lote__idNota__16CE6296" Association="dbErpModel.FK__lote__idNota__16CE6296">
-            <End Role="nota" EntitySet="nota" />
-            <End Role="lote" EntitySet="lote" />
-          </AssociationSet>
           <AssociationSet Name="FK__nota__idUsuario__12FDD1B2" Association="dbErpModel.FK__nota__idUsuario__12FDD1B2">
             <End Role="usuario" EntitySet="usuario" />
             <End Role="nota" EntitySet="nota" />
+          </AssociationSet>
+          <EntitySet Name="lote" EntityType="dbErpModel.lote" />
+          <AssociationSet Name="FK__lote__idArticulo__36470DEF" Association="dbErpModel.FK__lote__idArticulo__36470DEF">
+            <End Role="articulo" EntitySet="articulo" />
+            <End Role="lote" EntitySet="lote" />
+          </AssociationSet>
+          <AssociationSet Name="FK__lote__idNota__373B3228" Association="dbErpModel.FK__lote__idNota__373B3228">
+            <End Role="nota" EntitySet="nota" />
+            <End Role="lote" EntitySet="lote" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="periodo">
@@ -1350,7 +1350,7 @@
           <NavigationProperty Name="usuario" Relationship="dbErpModel.FK__articulo__idUsua__0B5CAFEA" FromRole="articulo" ToRole="usuario" />
           <NavigationProperty Name="articuloCategoria" Relationship="dbErpModel.FK__articuloC__idArt__0E391C95" FromRole="articulo" ToRole="articuloCategoria" />
           <NavigationProperty Name="detalleNota" Relationship="dbErpModel.FK__detalleNo__idArt__1D7B6025" FromRole="articulo" ToRole="detalleNota" />
-          <NavigationProperty Name="lote" Relationship="dbErpModel.FK__lote__idArticulo__15DA3E5D" FromRole="articulo" ToRole="lote" />
+          <NavigationProperty Name="lote" Relationship="dbErpModel.FK__lote__idArticulo__36470DEF" FromRole="articulo" ToRole="lote" />
         </EntityType>
         <EntityType Name="articuloCategoria">
           <Key>
@@ -1426,23 +1426,6 @@
           <NavigationProperty Name="nota" Relationship="dbErpModel.FK__detalleNo__idNot__1E6F845E" FromRole="detalleNota" ToRole="nota" />
           <NavigationProperty Name="nota1" Relationship="dbErpModel.FK__detalleNo__idNot__27F8EE98" FromRole="detalleNota" ToRole="nota" />
         </EntityType>
-        <EntityType Name="lote">
-          <Key>
-            <PropertyRef Name="idArticulo" />
-            <PropertyRef Name="nroLote" />
-          </Key>
-          <Property Name="idArticulo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="nroLote" Type="Int32" Nullable="false" />
-          <Property Name="fechaIngreso" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="fechaVencimiento" Type="DateTime" Precision="3" />
-          <Property Name="cantidad" Type="Int32" Nullable="false" />
-          <Property Name="precioCompra" Type="Double" Nullable="false" />
-          <Property Name="stock" Type="Int32" />
-          <Property Name="idNota" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="articulo" Relationship="dbErpModel.FK__lote__idArticulo__15DA3E5D" FromRole="lote" ToRole="articulo" />
-          <NavigationProperty Name="nota" Relationship="dbErpModel.FK__lote__idNota__16CE6296" FromRole="lote" ToRole="nota" />
-          <Property Name="estado" Type="Int32" Nullable="false" />
-        </EntityType>
         <EntityType Name="nota">
           <Key>
             <PropertyRef Name="id" />
@@ -1459,9 +1442,9 @@
           <NavigationProperty Name="detalleNota" Relationship="dbErpModel.FK__detalleNo__idNot__1E6F845E" FromRole="nota" ToRole="detalleNota" />
           <NavigationProperty Name="detalleNota1" Relationship="dbErpModel.FK__detalleNo__idNot__27F8EE98" FromRole="nota" ToRole="detalleNota" />
           <NavigationProperty Name="empresa" Relationship="dbErpModel.FK__nota__idEmpresa__1209AD79" FromRole="nota" ToRole="empresa" />
-          <NavigationProperty Name="lote" Relationship="dbErpModel.FK__lote__idNota__16CE6296" FromRole="nota" ToRole="lote" />
           <NavigationProperty Name="usuario" Relationship="dbErpModel.FK__nota__idUsuario__12FDD1B2" FromRole="nota" ToRole="usuario" />
           <Property Name="estado" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="lote" Relationship="dbErpModel.FK__lote__idNota__373B3228" FromRole="nota" ToRole="lote" />
         </EntityType>
         <Association Name="FK__detalleNo__idArt__1D7B6025">
           <End Type="dbErpModel.articulo" Role="articulo" Multiplicity="1" />
@@ -1471,18 +1454,6 @@
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="detalleNota">
-              <PropertyRef Name="idArticulo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__lote__idArticulo__15DA3E5D">
-          <End Type="dbErpModel.articulo" Role="articulo" Multiplicity="1" />
-          <End Type="dbErpModel.lote" Role="lote" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="articulo">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="lote">
               <PropertyRef Name="idArticulo" />
             </Dependent>
           </ReferentialConstraint>
@@ -1523,18 +1494,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__lote__idNota__16CE6296">
-          <End Type="dbErpModel.nota" Role="nota" Multiplicity="1" />
-          <End Type="dbErpModel.lote" Role="lote" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="nota">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="lote">
-              <PropertyRef Name="idNota" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__nota__idUsuario__12FDD1B2">
           <End Type="dbErpModel.usuario" Role="usuario" Multiplicity="1" />
           <End Type="dbErpModel.nota" Role="nota" Multiplicity="*" />
@@ -1544,6 +1503,47 @@
             </Principal>
             <Dependent Role="nota">
               <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="lote">
+          <Key>
+            <PropertyRef Name="idArticulo" />
+            <PropertyRef Name="nroLote" />
+          </Key>
+          <Property Name="idArticulo" Type="Int32" Nullable="false" />
+          <Property Name="nroLote" Type="Int32" Nullable="false" />
+          <Property Name="fechaIngreso" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="fechaVencimiento" Type="DateTime" Precision="3" />
+          <Property Name="cantidad" Type="Int32" Nullable="false" />
+          <Property Name="precioCompra" Type="Double" Nullable="false" />
+          <Property Name="stock" Type="Int32" />
+          <Property Name="idNota" Type="Int32" Nullable="false" />
+          <Property Name="estado" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="articulo" Relationship="dbErpModel.FK__lote__idArticulo__36470DEF" FromRole="lote" ToRole="articulo" />
+          <NavigationProperty Name="nota" Relationship="dbErpModel.FK__lote__idNota__373B3228" FromRole="lote" ToRole="nota" />
+        </EntityType>
+        <Association Name="FK__lote__idArticulo__36470DEF">
+          <End Type="dbErpModel.articulo" Role="articulo" Multiplicity="1" />
+          <End Type="dbErpModel.lote" Role="lote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="articulo">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="lote">
+              <PropertyRef Name="idArticulo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__lote__idNota__373B3228">
+          <End Type="dbErpModel.nota" Role="nota" Multiplicity="1" />
+          <End Type="dbErpModel.lote" Role="lote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="nota">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="lote">
+              <PropertyRef Name="idNota" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1724,21 +1724,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="lote">
-            <EntityTypeMapping TypeName="dbErpModel.lote">
-              <MappingFragment StoreEntitySet="lote">
-                <ScalarProperty Name="estado" ColumnName="estado" />
-                <ScalarProperty Name="idNota" ColumnName="idNota" />
-                <ScalarProperty Name="stock" ColumnName="stock" />
-                <ScalarProperty Name="precioCompra" ColumnName="precioCompra" />
-                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
-                <ScalarProperty Name="fechaVencimiento" ColumnName="fechaVencimiento" />
-                <ScalarProperty Name="fechaIngreso" ColumnName="fechaIngreso" />
-                <ScalarProperty Name="nroLote" ColumnName="nroLote" />
-                <ScalarProperty Name="idArticulo" ColumnName="idArticulo" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="nota">
             <EntityTypeMapping TypeName="dbErpModel.nota">
               <MappingFragment StoreEntitySet="nota">
@@ -1752,6 +1737,21 @@
                 <ScalarProperty Name="fecha" ColumnName="fecha" />
                 <ScalarProperty Name="nroNota" ColumnName="nroNota" />
                 <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="lote">
+            <EntityTypeMapping TypeName="dbErpModel.lote">
+              <MappingFragment StoreEntitySet="lote">
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="idNota" ColumnName="idNota" />
+                <ScalarProperty Name="stock" ColumnName="stock" />
+                <ScalarProperty Name="precioCompra" ColumnName="precioCompra" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+                <ScalarProperty Name="fechaVencimiento" ColumnName="fechaVencimiento" />
+                <ScalarProperty Name="fechaIngreso" ColumnName="fechaIngreso" />
+                <ScalarProperty Name="nroLote" ColumnName="nroLote" />
+                <ScalarProperty Name="idArticulo" ColumnName="idArticulo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -2577,6 +2577,10 @@
     <Content Include="Views\NotaCompra\Create.cshtml" />
     <Content Include="Views\NotaVenta\Index.cshtml" />
     <Content Include="Views\NotaVenta\Create.cshtml" />
+    <Content Include="Views\NotaCompra\Details.cshtml" />
+    <Content Include="Views\NotaCompra\ReporteNotaCompra.cshtml" />
+    <Content Include="Views\NotaVenta\Details.cshtml" />
+    <Content Include="Views\NotaVenta\ReporteNotaVenta.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2616,6 +2620,8 @@
     <EmbeddedResource Include="Reportes\ReporteGestion.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteLibroDiario.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteLibroMayor.rdlc" />
+    <EmbeddedResource Include="Reportes\ReporteNotaCompra.rdlc" />
+    <EmbeddedResource Include="Reportes\ReporteNotaVenta.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteSumasSaldos.rdlc" />
   </ItemGroup>
   <PropertyGroup>

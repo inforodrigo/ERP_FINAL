@@ -19,5 +19,6 @@ namespace Entidad
         public int IdUsuario { get; set; }
         public int IdComprobante { get; set; }
         public int Estado { get; set; }
+        public string EstadoStr { get; set; }
     }
 }

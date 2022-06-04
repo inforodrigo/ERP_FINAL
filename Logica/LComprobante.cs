@@ -502,6 +502,9 @@ namespace Logica
                             cc.Estado = "Cerrado";
                         }else if (compro.estado == 1){
                             cc.Estado = "Abierto";
+                        }else if (compro.estado == 2)
+                        {
+                            cc.Estado = "Anulado";
                         }
                         cc.Fecha = compro.fecha.ToString("dd/MM/yyyy");
                         cc.Moneda = compro.moneda.nombre + " - " + compro.moneda.abreviatura;
@@ -540,7 +543,7 @@ namespace Logica
             }
             catch (Exception ex)
             {
-                throw new BussinessException("Error no se puede obtener el reporte de gestiones");
+                throw new BussinessException("Error no se puede obtener el reporte de comprobante");
             }
 
             return comprobante;
@@ -572,7 +575,7 @@ namespace Logica
             }
             catch (Exception ex)
             {
-                throw new BussinessException("Error no se puede obtener el reporte de gestiones");
+                throw new BussinessException("Error no se puede obtener el reporte de detalle de comprobante");
             }
 
             return detalles;

@@ -38,8 +38,8 @@ namespace Data
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<detalleNota> detalleNota1 { get; set; }
         public virtual empresa empresa { get; set; }
+        public virtual usuario usuario { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<lote> lote { get; set; }
-        public virtual usuario usuario { get; set; }
     }
 }

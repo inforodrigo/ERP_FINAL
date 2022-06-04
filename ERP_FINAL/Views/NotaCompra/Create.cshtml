@@ -10,7 +10,7 @@
 <link href="@Url.Content("~/Front/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css")" rel="stylesheet" />
 
 <div class="row justify-content-between">
-    <div class="col-4">
+    <div class="col-8">
         <h2>Nueva Nota de Compra</h2>
     </div>
     <div class="col-4">
@@ -25,42 +25,29 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-2">
-
-            </div>
-            <div class="col-4">
                 <label>Nro</label>
-                <input type="text" class="form-control" id="nro">
+                <input type="text" class="form-control" id="nro" disabled style="text-align: right;">
             </div>
-            <div class="col-4">
+            <div class="col-2">
+                <label>Estado</label>
+                <input type="text" class="form-control" id="estado" value="Abierto" disabled>
+            </div>
+            <div class="col-2">
                 <label>Fecha</label>
                 <input type="text" class="form-control" id="fecha">
             </div>
-            <div class="col-2">
-
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-2">
-
-            </div>
-            <div class="col-8">
-                <label>Descripcion</label>
-                <input type="text" class="form-control" id="descripcion">
-            </div>
-            <div class="col-2">
-
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-2">
-
-            </div>
-            <div class="col-8">
+            <div class="col-6">
                 <label>Proveedor</label>
                 <input type="text" class="form-control" id="proveedor">
             </div>
-            <div class="col-2">               
-                <button class="btn btn-info" onclick="CargarDatosDetalle()" style="margin-top:30px;"> <i class="fas fa-plus"></i></button>      
+        </div>
+        <div class="row">          
+            <div class="col-11">
+                <label>Descripcion</label>
+                <input type="text" class="form-control" id="descripcion">
+            </div>
+            <div class="col-1">
+                <button class="btn btn-info" onclick="CargarDatosDetalle()" style="margin-top:30px;"> <i class="fas fa-plus"></i></button>
             </div>
         </div>
         <div class="row">
@@ -120,7 +107,7 @@
                     </div>
                     <div class="col-2">
                         <label for="cantidaddetalle" class="form-label">Cantidad</label>
-                        <input type="number" class="form-control" id="cantidaddetalle" style="text-align: right;">
+                        <input type="text" class="form-control" id="cantidaddetalle" style="text-align: right;">
                     </div>
                     <div class="col-2">
                         <label for="preciodetalle" class="form-label">Precio</label>
@@ -159,7 +146,7 @@
                     </div>
                     <div class="col-2">
                         <label for="cantidaddeted" class="form-label">Cantidad</label>
-                        <input type="number" class="form-control" id="cantidaddeted" style="text-align: right;">
+                        <input type="text" class="form-control" id="cantidaddeted" style="text-align: right;">
                     </div>
                     <div class="col-2">
                         <label for="preciodeted" class="form-label">Precio</label>
@@ -225,7 +212,7 @@
                 data: {
                     id: 0
                 }, success: function (result) {
-                    $("#nro").val(result.serie);
+                    $("#nro").val(result.nronota);
                     $("#fecha").val(result.fecha);
                 }
             });
@@ -248,6 +235,50 @@
                             theme: "classic"
                         });
                     });
+                }
+            });
+
+            $('#cantidaddetalle').keyup(function () {
+                var value = $(this).val();
+                var valueprecio = $('#preciodetalle').val();
+                if (value.length <= 0) {
+                    return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');                    
+                }
+                else {
+                    $('#subtotaldetalle').val(value * valueprecio);
+                }
+            });
+
+            $('#preciodetalle').keyup(function () {
+                var value = $(this).val();
+                var valuecantidad = $('#cantidaddetalle').val();
+                if (value.length <= 0) {
+                    return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');                   
+                }
+                else {
+                    $('#subtotaldetalle').val(value * valuecantidad);
+                }
+            });
+
+            $('#cantidaddeted').keyup(function () {
+                var value = $(this).val();
+                var valueprecio = $('#preciodeted').val();
+                if (value.length <= 0) {
+                    return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+                }
+                else {
+                    $('#subtotaldeted').val(value * valueprecio);
+                }
+            });
+
+            $('#preciodeted').keyup(function () {
+                var value = $(this).val();
+                var valuecantidad = $('#cantidaddeted').val();
+                if (value.length <= 0) {
+                    return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+                }
+                else {
+                    $('#subtotaldeted').val(value * valuecantidad);
                 }
             });
         }
@@ -309,7 +340,8 @@
             $('#fechavencimientodeted').val(listadetalle[seleccionado.value].fecha);
             $('#cantidaddeted').val(listadetalle[seleccionado.value].cantidad);
             $('#preciodeted').val(listadetalle[seleccionado.value].precio);
-            $('#subtotaldeted').val(seleccionado.subtotal);
+            $('#subtotaldeted').val(listadetalle[seleccionado.value].subtotal);
+            $('#seleccionadoedit').val(seleccionado.value);
             $("#articulodeted").empty();
             $.ajax({
                 url: "@Url.Action("CargarArticulos", "NotaCompra")",
@@ -333,13 +365,13 @@
 
         function EditDetalle() {
             var seleccionado = $('#seleccionadoedit').val();
-            var cantidad = $('#cantidaddeted').val();
-            var precio = $('#preciodeted').val();
-            if (cantidad <= 0) {
+            var cantidaddet = $('#cantidaddeted').val();
+            var preciodet = $('#preciodeted').val();
+            if (cantidaddet <= 0) {
                 return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
             }
 
-            if (precio <= 0) {
+            if (preciodet <= 0) {
                 return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
             }
 
@@ -352,8 +384,8 @@
                 }
             }
 
-            //Actualizamos el total debe y haber, primero eliminados el valor anterior
-            var cantidad = listadetalle[seleccionado].cantidad;
+            //Actualizamos el total , primero eliminados el valor anterior         
+            var cantidad = listadetalle[seleccionado].cantidad;        
             var precio = listadetalle[seleccionado].precio;
 
             //restamos el valor anterior
@@ -432,8 +464,8 @@
                 return MostrarMensaje('Error seleccione una fecha');
             }
 
-            if (listadetalle.length < 2) {
-                return MostrarMensaje('Error debe agregar almenos 2 detalles de nota de compra');
+            if (listadetalle.length < 1) {
+                return MostrarMensaje('Error debe agregar almenos 1 detalle de nota de compra');
             }
 
             $.ajax({

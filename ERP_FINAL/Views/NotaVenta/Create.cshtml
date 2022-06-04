@@ -10,8 +10,8 @@
 <link href="@Url.Content("~/Front/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css")" rel="stylesheet" />
 
 <div class="row justify-content-between">
-    <div class="col-4">
-        <h2>Nueva Nota de Compra</h2>
+    <div class="col-8">
+        <h2>Nueva Nota de Venta</h2>
     </div>
     <div class="col-4">
         <div class="form-group">
@@ -24,33 +24,26 @@
 <section class="content">
     <div class="container-fluid">
         <div class="row">
+            <div class="col-1">
+                <label>Nro</label>
+                <input type="text" class="form-control" id="nro" disabled>
+            </div>
             <div class="col-2">
-
+                <label>Estado</label>
+                <input type="text" class="form-control" id="estado" value="Abierto" disabled>
             </div>
-            <div class="col-4">
-                <label>Nro nota</label>
-                <input type="text" class="form-control" id="nro">
-            </div>
-            <div class="col-4">
+            <div class="col-2">
                 <label>Fecha</label>
                 <input type="text" class="form-control" id="fecha">
             </div>
-            <div class="col-2">
-
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-2">
-
-            </div>
-            <div class="col-8">
+            <div class="col-6">
                 <label>Descripcion</label>
                 <input type="text" class="form-control" id="descripcion">
             </div>
-            <div class="col-2">
+            <div class="col-1">
                 <button class="btn btn-info" onclick="CargarDatosDetalle()" style="margin-top:30px;"> <i class="fas fa-plus"></i></button>
             </div>
-        </div>
+        </div>       
         <div class="row">
             <div class="col-12" style="padding-top: 20px;">
                 <table id="detallenota" class="table table-bordered table-striped mb-0">
@@ -107,11 +100,13 @@
                     </div>
                     <div class="col-3">
                         <label for="lotedetalle" class="form-label">Lote</label>
-                        <input type="text" class="form-control" id="lotedetalle" style="text-align: right;">
+                        <select class="form-control select2" style="width: 100%; text-align: right;" id="lotedetalle">
+                            <option value="">Seleccione un Producto</option>
+                        </select>
                     </div>
                     <div class="col-2">
                         <label for="cantidaddetalle" class="form-label">Cantidad</label>
-                        <input type="number" class="form-control" id="cantidaddetalle" style="text-align: right;">
+                        <input type="text" class="form-control" id="cantidaddetalle" style="text-align: right;">
                     </div>
                     <div class="col-2">
                         <label for="preciodetalle" class="form-label">Precio</label>
@@ -146,11 +141,13 @@
                     </div>
                     <div class="col-3">
                         <label for="lotedeted" class="form-label">Lote</label>
-                        <input type="date" class="form-control" id="lotedeted">
+                        <select class="form-control select2" style="width: 100%; text-align: right;" id="lotedeted">
+                            <option value="">Seleccione un Producto</option>
+                        </select>
                     </div>
                     <div class="col-2">
                         <label for="cantidaddeted" class="form-label">Cantidad</label>
-                        <input type="number" class="form-control" id="cantidaddeted" style="text-align: right;">
+                        <input type="text" class="form-control" id="cantidaddeted" style="text-align: right;">
                     </div>
                     <div class="col-2">
                         <label for="preciodeted" class="form-label">Precio</label>
@@ -218,7 +215,7 @@
                 data: {
                     id: 0
                 }, success: function (result) {
-                    $("#nro").val(result.serie);
+                    $("#nro").val(result.nronota);
                     $("#fecha").val(result.fecha);
                 }
             });
@@ -236,18 +233,102 @@
                     id: 0
                 }, success: function (result) {
                     $.each(result.articulos, function (index, value) {
-                        $('#cuentadetalle').append('<option value=' + value.Id + ' > ' + value.Nombre + '</option>');
-                        $('#cuentadetalle').select2({
+                        $('#articulodetalle').append('<option value=' + value.Id + ' > ' + value.Nombre + '</option>');
+                        $('#articulodetalle').select2({
                             theme: "classic"
                         });
+                    });
+                    CargarLotes(1);
+                }
+            });
+            
+        }
+
+        function CargarLotes(tipo) {
+            var idAr;
+            if (tipo == 1) {
+                $("#lotedetalle").empty();
+                idAr = $("#articulodetalle").val();
+            } else {
+                $("#lotedeted").empty();
+                idAr = $("#articulodeted").val();
+            }
+            
+            $.ajax({
+                url: "@Url.Action("CargarLotesArticulo", "NotaVenta")",
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: {
+                    idArticulo: idAr
+                }, success: function (result) {                   
+                    $.each(result.lotes, function (index, value) {
+                        if (tipo == 1) {
+                            $('#lotedetalle').append('<option value=' + value.NroLote + ' > ' + value.NroLote + '</option>');
+                        } else {                           
+                            $('#lotedeted').append('<option value=' + value.NroLote + ' > ' + value.NroLote + '</option>');                            
+                        }                      
                     });
                 }
             });
         }
 
+        $('#articulodetalle').change(function () {
+            CargarLotes(1);
+        });
+
+        $('#articulodeted').change(function () {
+            CargarLotes(2);
+        });
+
+        $('#cantidaddetalle').keyup(function () {
+            var value = $(this).val();
+            var valueprecio = $('#preciodetalle').val();
+            if (value.length <= 0) {
+                return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+            }
+            else {
+                $('#subtotaldetalle').val(value * valueprecio);
+            }
+        });
+
+        $('#preciodetalle').keyup(function () {
+            var value = $(this).val();
+            var valuecantidad = $('#cantidaddetalle').val();
+            if (value.length <= 0) {
+                return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+            }
+            else {
+                $('#subtotaldetalle').val(value * valuecantidad);
+            }
+        });
+
+        $('#cantidaddeted').keyup(function () {
+            var value = $(this).val();
+            var valueprecio = $('#preciodeted').val();
+            if (value.length <= 0) {
+                return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+            }
+            else {
+                $('#subtotaldeted').val(value * valueprecio);
+            }
+        });
+
+        $('#preciodeted').keyup(function () {
+            var value = $(this).val();
+            var valuecantidad = $('#cantidaddeted').val();
+            if (value.length <= 0) {
+                return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+            }
+            else {
+                $('#subtotaldeted').val(value * valuecantidad);
+            }
+        });
+
         function GuardarDetalle() {
             var cantidad = $('#cantidaddetalle').val();
             var precio = $('#preciodetalle').val();
+            var lot = $('#lotedetalle').val();
 
             if (cantidad <= 0) {
                 return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
@@ -257,16 +338,22 @@
                 return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
             }
 
+            if (lot <= 0) {
+                return MostrarMensaje('Error este articulo no tiene ningun lote seleccionado');
+            }
+
             for (var j = 0; j < listadetalle.length; j++) {
                 if ($('#articulodetalle').val() == listadetalle[j].idArticulo) {
-                    return MostrarMensaje('Error este articulo ya ha sido agregada al detalle');
+                    if ($('#lotedetalle').val() == listadetalle[j].nroLote) {
+                        return MostrarMensaje('Error este lote ya ha sido agregada al detalle');
+                    }
                 }
             }
 
             const det = {
                 idArticulo: $('#articulodetalle').val(),
                 articulo: $('#articulodetalle option:selected').text(),
-                lote: $('#lotedetalle').val(),
+                nroLote: $('#lotedetalle').val(),
                 cantidad: $('#cantidaddetalle').val(),
                 precio: $('#preciodetalle').val(),
                 subtotal: $('#subtotaldetalle').val()
@@ -281,7 +368,7 @@
             for (let i = 0; i < listadetalle.length; i++) {
                 row = "<tr>" +
                     "<td>" + listadetalle[i].articulo + "</td>" +
-                    "<td style='text-align: right;'>" + listadetalle[i].lote + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].nroLote + "</td>" +
                     "<td style='text-align: right;'>" + listadetalle[i].cantidad + "</td>" +
                     "<td style='text-align: right;'>" + listadetalle[i].precio + "</td>" +
                     "<td style='text-align: right;'>" + listadetalle[i].subtotal + "</td>" +
@@ -298,11 +385,11 @@
             $('#subtotaldetalle').val('');
         }
 
-        function EditarDetalle(seleccionado) {
-            $('#lotedeted').val(listadetalle[seleccionado.value].lote);
+        function EditarDetalle(seleccionado) {            
             $('#cantidaddeted').val(listadetalle[seleccionado.value].cantidad);
             $('#preciodeted').val(listadetalle[seleccionado.value].precio);
-            $('#subtotaldeted').val(seleccionado.subtotal);
+            $('#subtotaldeted').val(listadetalle[seleccionado.value].subtotal);
+            $('#seleccionadoedit').val(seleccionado.value);
             $("#articulodeted").empty();
             $.ajax({
                 url: "@Url.Action("CargarArticulos", "NotaVenta")",
@@ -318,6 +405,7 @@
                             theme: "classic"
                         });
                     });
+                    CargarLotes(2);
                 }
             });
 
@@ -326,26 +414,34 @@
 
         function EditDetalle() {
             var seleccionado = $('#seleccionadoedit').val();
-            var cantidad = $('#cantidaddeted').val();
-            var precio = $('#preciodeted').val();
-            if (cantidad <= 0) {
+            var cant = $('#cantidaddeted').val();
+            var pre = $('#preciodeted').val();
+            var lot = $('#lotedeted').val();
+            if (cant <= 0) {
                 return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
             }
 
-            if (precio <= 0) {
+            if (pre <= 0) {
                 return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+            }
+
+            if (lot <= 0) {
+                return MostrarMensaje('Error este articulo no tiene ningun lote seleccionado');
             }
 
 
             for (let j = 0; j < listadetalle.length; j++) {
                 if (j != seleccionado) {
-                    if ($('#lotedeted').val() == listadetalle[j].lote) {
-                        return MostrarMensaje('Error este lote ya ha sido agregada al detalle');
+                    if ($('#articulodeted').val() == listadetalle[j].idArticulo) {
+                        if ($('#lotedeted').val() == listadetalle[j].nroLote) {
+                            return MostrarMensaje('Error este lote ya ha sido agregada al detalle');
+                        }
                     }
+                    
                 }
             }
 
-            //Actualizamos el total debe y haber, primero eliminados el valor anterior
+            //Actualizamos el total, primero eliminados el valor anterior
             var cantidad = listadetalle[seleccionado].cantidad;
             var precio = listadetalle[seleccionado].precio;
 
@@ -361,7 +457,7 @@
             //Editamos la lista
             listadetalle[seleccionado].idArticulo = $('#articulodeted').val();
             listadetalle[seleccionado].articulo = $('#articulodeted option:selected').text();
-            listadetalle[seleccionado].lote = $('#lotedeted').val();
+            listadetalle[seleccionado].nroLote = $('#lotedeted').val();
             listadetalle[seleccionado].cantidad = $('#cantidaddeted').val();
             listadetalle[seleccionado].precio = $('#preciodeted').val();
             listadetalle[seleccionado].subtotal = $('#subtotaldeted').val();
@@ -373,7 +469,7 @@
             for (let i = 0; i < listadetalle.length; i++) {
                 row = "<tr>" +
                     "<td>" + listadetalle[i].articulo + "</td>" +
-                    "<td style='text-align: right;'>" + listadetalle[i].lote + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].nroLote + "</td>" +
                     "<td style='text-align: right;'>" + listadetalle[i].cantidad + "</td>" +
                     "<td style='text-align: right;'>" + listadetalle[i].precio + "</td>" +
                     "<td style='text-align: right;'>" + listadetalle[i].subtotal + "</td>" +
@@ -410,7 +506,7 @@
             for (let i = 0; i < listadetalle.length; i++) {
                 row = "<tr>" +
                     "<td>" + listadetalle[i].articulo + "</td>" +
-                    "<td style='text-align: right;'>" + listadetalle[i].lote + "</td>" +
+                    "<td style='text-align: right;'>" + listadetalle[i].nroLote + "</td>" +
                     "<td style='text-align: right;'>" + listadetalle[i].cantidad + "</td>" +
                     "<td style='text-align: right;'>" + listadetalle[i].precio + "</td>" +
                     "<td style='text-align: right;'>" + listadetalle[i].subtotal + "</td>" +
@@ -426,8 +522,8 @@
                 return MostrarMensaje('Error seleccione una fecha');
             }
 
-            if (listadetalle.length < 2) {
-                return MostrarMensaje('Error debe agregar almenos 2 detalles de nota de venta');
+            if (listadetalle.length < 1) {
+                return MostrarMensaje('Error debe agregar almenos 1 detalles de nota de venta');
             }
 
             $.ajax({
@@ -443,7 +539,7 @@
         }
 
         function VolverAtras() {
-            redireccionar("@Url.Action("Index", "NotaCompra")")
+            redireccionar("@Url.Action("Index", "NotaVenta")")
         }
 
         function MostrarMensajeExitoso(msj) {
