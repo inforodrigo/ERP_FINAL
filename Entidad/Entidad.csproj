@@ -46,6 +46,7 @@
     <Compile Include="EArticulo.cs" />
     <Compile Include="ECategoria.cs" />
     <Compile Include="EComprobante.cs" />
+    <Compile Include="EConfiguracionIntegracion.cs" />
     <Compile Include="ECuenta.cs" />
     <Compile Include="EDetalleComprobante.cs" />
     <Compile Include="EDetalleNota.cs" />

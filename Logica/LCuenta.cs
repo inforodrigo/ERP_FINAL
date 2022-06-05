@@ -174,6 +174,42 @@ namespace Logica
             }
         }
 
+        public List<ECuenta> ObtenerCuentasConfiguracion(int idempresa)
+        {
+            using (var esquema = GetEsquema())
+            {
+
+                try
+                {
+                    var consulta = (from x in esquema.cuenta
+                                    where x.estado == (int)Estado.Habilitado
+                                    && x.idEmpresa == idempresa                                    
+                                    && x.tipocuenta == (int)ETipoCuentas.Detallado
+                                    select x).ToList();
+
+                    List<ECuenta> cuentas = new List<ECuenta>();
+
+
+                    foreach (var item in consulta)
+                    {
+                        ECuenta cuenta = new ECuenta();
+                        cuenta.Id = item.id;
+                        cuenta.Codigo = item.codigo;
+                        cuenta.Nombre = item.nombre;
+                        cuenta.IdCuentaPadre = (int)item.idCuentaPadre;
+
+                        cuentas.Add(cuenta);
+                    }
+
+                    return cuentas;
+                }
+                catch (Exception ex)
+                {
+                    throw new BussinessException("Error no se puedo obtener la lista de cuentas");
+                }
+            }
+        }
+
         public ECuenta Agregar(ECuenta objCuenta, int idcuenta, int padre)
         {
             try
@@ -537,6 +573,122 @@ namespace Logica
                     throw new BussinessException(ex.Message);
                 }
 
+            }
+        }
+        public EConfiguracionIntegracion RegistrarConfiguracion(EConfiguracionIntegracion conf)
+        {
+            using (var esquema = GetEsquema())
+            {
+
+                try
+                {
+                    confIntegracion integracion = new confIntegracion();
+                    integracion.idEmpresa = conf.IdEmpresa;
+                    integracion.integracion = conf.Integracion;
+                    integracion.caja = conf.Caja;
+                    integracion.creditoFiscal = conf.CreditoFiscal;
+                    integracion.debitoFiscal = conf.DebitoFiscal;
+                    integracion.compras = conf.Compras;
+                    integracion.ventas = conf.Ventas;
+                    integracion.it = conf.It;
+                    integracion.itxPagar = conf.ItxPagar;
+                    esquema.confIntegracion.Add(integracion);
+                    esquema.SaveChanges();
+                   
+
+                    return conf;
+                }
+                catch (BussinessException ex)
+                {
+                    throw new BussinessException(ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+        }
+
+        public int VerificarConfiguracion(int idEmpresa)
+        {
+            using (var esquema = GetEsquema())
+            {
+                try
+                {
+                    var consulta = (from x in esquema.confIntegracion
+                                    where x.idEmpresa == idEmpresa                                   
+                                    select x).FirstOrDefault();
+
+                    var nro = 0;
+                    if(consulta != null)
+                    {
+                        nro = 1;
+                    }
+                    else
+                    {
+                        nro = 0;
+                    }                  
+
+                    return nro;
+
+                }
+                catch (Exception ex)
+                {
+                    throw new BussinessException("Error no se pudo verificar la configuracion");
+                }
+            }
+        }
+
+        public EConfiguracionIntegracion ObtenerConfiguracion(int idEmpresa)
+        {
+            using (var esquema = GetEsquema())
+            {
+                try
+                {
+                    var consulta = (from x in esquema.confIntegracion
+                                    where x.idEmpresa == idEmpresa
+                                    select x).FirstOrDefault();
+
+                    EConfiguracionIntegracion conf = new EConfiguracionIntegracion();
+                    conf.Integracion = consulta.integracion;
+                    conf.CajaStr = consulta.cuenta.codigo + " - " + consulta.cuenta.nombre;
+                    conf.CreditoFiscalStr = consulta.cuenta1.codigo + " - " + consulta.cuenta1.nombre;
+                    conf.DebitoFiscalStr = consulta.cuenta2.codigo + " - " + consulta.cuenta2.nombre;
+                    conf.ComprasStr = consulta.cuenta3.codigo + " - " + consulta.cuenta3.nombre;
+                    conf.VentasStr = consulta.cuenta4.codigo + " - " + consulta.cuenta4.nombre;
+                    conf.ItStr = consulta.cuenta5.codigo + " - " + consulta.cuenta5.nombre;
+                    conf.ItxPagarStr = consulta.cuenta6.codigo + " - " + consulta.cuenta6.nombre;                   
+
+                    return conf;
+
+                }
+                catch (Exception ex)
+                {
+                    throw new BussinessException("Error no se pudo obtener la configuracion");
+                }
+            }
+        }
+
+        public bool ActualizarConfiguracion(int idEmpresa, int configuracion)
+        {
+            using (var esquema = GetEsquema())
+            {
+                try
+                {
+                    var consulta = (from x in esquema.confIntegracion
+                                    where x.idEmpresa == idEmpresa
+                                    select x).FirstOrDefault();
+
+                    consulta.integracion = configuracion;
+                    esquema.SaveChanges();
+
+                    return true;
+
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
             }
         }
     }

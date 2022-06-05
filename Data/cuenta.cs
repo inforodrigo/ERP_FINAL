@@ -19,6 +19,13 @@ namespace Data
         {
             this.cuenta1 = new HashSet<cuenta>();
             this.detalleComprobante = new HashSet<detalleComprobante>();
+            this.confIntegracion = new HashSet<confIntegracion>();
+            this.confIntegracion1 = new HashSet<confIntegracion>();
+            this.confIntegracion2 = new HashSet<confIntegracion>();
+            this.confIntegracion3 = new HashSet<confIntegracion>();
+            this.confIntegracion4 = new HashSet<confIntegracion>();
+            this.confIntegracion5 = new HashSet<confIntegracion>();
+            this.confIntegracion6 = new HashSet<confIntegracion>();
         }
     
         public int id { get; set; }
@@ -38,5 +45,19 @@ namespace Data
         public virtual usuario usuario { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<detalleComprobante> detalleComprobante { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<confIntegracion> confIntegracion { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<confIntegracion> confIntegracion1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<confIntegracion> confIntegracion2 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<confIntegracion> confIntegracion3 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<confIntegracion> confIntegracion4 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<confIntegracion> confIntegracion5 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<confIntegracion> confIntegracion6 { get; set; }
     }
 }

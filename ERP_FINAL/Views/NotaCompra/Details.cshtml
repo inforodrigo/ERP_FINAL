@@ -145,7 +145,7 @@
                     $("#fecha").val(result.fecha);
                     $("#proveedor").val(result.proveedor);
                     $("#descripcion").val(result.descripcion);
-                    $("#total").val(result.total);                                     
+                    $("#total").val(result.total);
                     var listadetalle = result.detalle;
                     var tabladatos = $('#datosdetallenota');
                     $('#datosdetallenota').empty();
@@ -157,8 +157,8 @@
                             "<td style='text-align: right;'>" + listadetalle[i].precio + "</td>" +
                             "<td style='text-align: right;'>" + listadetalle[i].subtotal + "</td>" +
                             "</tr>"
-                        tabladatos.append(row);                       
-                    }                                    
+                        tabladatos.append(row);
+                    }
                 }
             });
         }
@@ -201,7 +201,7 @@
                 body: msjbody
             });
 
-            $("#modalEliminar").modal('hide');
+            $("#modalEliminar").modal('hide');           
             location.reload();
         }
 

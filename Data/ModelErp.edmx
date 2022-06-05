@@ -52,6 +52,20 @@
           <Property Name="idUsuario" Type="int" Nullable="false" />
           <Property Name="idMoneda" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="confIntegracion">
+          <Key>
+            <PropertyRef Name="idEmpresa" />
+          </Key>
+          <Property Name="idEmpresa" Type="int" Nullable="false" />
+          <Property Name="integracion" Type="int" Nullable="false" />
+          <Property Name="caja" Type="int" Nullable="false" />
+          <Property Name="creditoFiscal" Type="int" Nullable="false" />
+          <Property Name="debitoFiscal" Type="int" Nullable="false" />
+          <Property Name="compras" Type="int" Nullable="false" />
+          <Property Name="ventas" Type="int" Nullable="false" />
+          <Property Name="it" Type="int" Nullable="false" />
+          <Property Name="itxPagar" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="cuenta">
           <Key>
             <PropertyRef Name="id" />
@@ -313,6 +327,102 @@
             </Principal>
             <Dependent Role="comprobante">
               <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__confInteg__compr__4D2A7347">
+          <End Role="cuenta" Type="Self.cuenta" Multiplicity="1" />
+          <End Role="confIntegracion" Type="Self.confIntegracion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuenta">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="confIntegracion">
+              <PropertyRef Name="compras" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__confInteg__credi__4B422AD5">
+          <End Role="cuenta" Type="Self.cuenta" Multiplicity="1" />
+          <End Role="confIntegracion" Type="Self.confIntegracion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuenta">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="confIntegracion">
+              <PropertyRef Name="creditoFiscal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__confInteg__debit__4C364F0E">
+          <End Role="cuenta" Type="Self.cuenta" Multiplicity="1" />
+          <End Role="confIntegracion" Type="Self.confIntegracion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuenta">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="confIntegracion">
+              <PropertyRef Name="debitoFiscal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__confInteg__idEmp__4959E263">
+          <End Role="empresa" Type="Self.empresa" Multiplicity="1" />
+          <End Role="confIntegracion" Type="Self.confIntegracion" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="empresa">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="confIntegracion">
+              <PropertyRef Name="idEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__confInteg__itxPa__5006DFF2">
+          <End Role="cuenta" Type="Self.cuenta" Multiplicity="1" />
+          <End Role="confIntegracion" Type="Self.confIntegracion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuenta">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="confIntegracion">
+              <PropertyRef Name="itxPagar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__confInteg__venta__4E1E9780">
+          <End Role="cuenta" Type="Self.cuenta" Multiplicity="1" />
+          <End Role="confIntegracion" Type="Self.confIntegracion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuenta">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="confIntegracion">
+              <PropertyRef Name="ventas" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__confIntegr__caja__4A4E069C">
+          <End Role="cuenta" Type="Self.cuenta" Multiplicity="1" />
+          <End Role="confIntegracion" Type="Self.confIntegracion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuenta">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="confIntegracion">
+              <PropertyRef Name="caja" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__confIntegrac__it__4F12BBB9">
+          <End Role="cuenta" Type="Self.cuenta" Multiplicity="1" />
+          <End Role="confIntegracion" Type="Self.confIntegracion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuenta">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="confIntegracion">
+              <PropertyRef Name="it" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -597,6 +707,7 @@
           <EntitySet Name="articuloCategoria" EntityType="Self.articuloCategoria" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="categoria" EntityType="Self.categoria" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="comprobante" EntityType="Self.comprobante" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="confIntegracion" EntityType="Self.confIntegracion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="cuenta" EntityType="Self.cuenta" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="detalleComprobante" EntityType="Self.detalleComprobante" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="detalleNota" EntityType="Self.detalleNota" Schema="dbo" store:Type="Tables" />
@@ -647,6 +758,38 @@
           <AssociationSet Name="FK__comproban__idUsu__503BEA1C" Association="Self.FK__comproban__idUsu__503BEA1C">
             <End Role="usuario" EntitySet="usuario" />
             <End Role="comprobante" EntitySet="comprobante" />
+          </AssociationSet>
+          <AssociationSet Name="FK__confInteg__compr__4D2A7347" Association="Self.FK__confInteg__compr__4D2A7347">
+            <End Role="cuenta" EntitySet="cuenta" />
+            <End Role="confIntegracion" EntitySet="confIntegracion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__confInteg__credi__4B422AD5" Association="Self.FK__confInteg__credi__4B422AD5">
+            <End Role="cuenta" EntitySet="cuenta" />
+            <End Role="confIntegracion" EntitySet="confIntegracion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__confInteg__debit__4C364F0E" Association="Self.FK__confInteg__debit__4C364F0E">
+            <End Role="cuenta" EntitySet="cuenta" />
+            <End Role="confIntegracion" EntitySet="confIntegracion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__confInteg__idEmp__4959E263" Association="Self.FK__confInteg__idEmp__4959E263">
+            <End Role="empresa" EntitySet="empresa" />
+            <End Role="confIntegracion" EntitySet="confIntegracion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__confInteg__itxPa__5006DFF2" Association="Self.FK__confInteg__itxPa__5006DFF2">
+            <End Role="cuenta" EntitySet="cuenta" />
+            <End Role="confIntegracion" EntitySet="confIntegracion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__confInteg__venta__4E1E9780" Association="Self.FK__confInteg__venta__4E1E9780">
+            <End Role="cuenta" EntitySet="cuenta" />
+            <End Role="confIntegracion" EntitySet="confIntegracion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__confIntegr__caja__4A4E069C" Association="Self.FK__confIntegr__caja__4A4E069C">
+            <End Role="cuenta" EntitySet="cuenta" />
+            <End Role="confIntegracion" EntitySet="confIntegracion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__confIntegrac__it__4F12BBB9" Association="Self.FK__confIntegrac__it__4F12BBB9">
+            <End Role="cuenta" EntitySet="cuenta" />
+            <End Role="confIntegracion" EntitySet="confIntegracion" />
           </AssociationSet>
           <AssociationSet Name="FK__cuenta__idCuenta__1CBC4616" Association="Self.FK__cuenta__idCuenta__1CBC4616">
             <End Role="cuenta" EntitySet="cuenta" />
@@ -767,6 +910,7 @@
           <NavigationProperty Name="categoria" Relationship="dbErpModel.FK__categoria__idEmp__7E02B4CC" FromRole="empresa" ToRole="categoria" />
           <NavigationProperty Name="articulo" Relationship="dbErpModel.FK__articulo__idEmpr__0A688BB1" FromRole="empresa" ToRole="articulo" />
           <NavigationProperty Name="nota" Relationship="dbErpModel.FK__nota__idEmpresa__1209AD79" FromRole="empresa" ToRole="nota" />
+          <NavigationProperty Name="confIntegracion" Relationship="dbErpModel.FK__confInteg__idEmp__4959E263" FromRole="empresa" ToRole="confIntegracion" />
           </EntityType>
         <EntityType Name="gestion">
           <Key>
@@ -989,6 +1133,39 @@
             <End Role="nota" EntitySet="nota" />
             <End Role="lote" EntitySet="lote" />
           </AssociationSet>
+          <EntitySet Name="confIntegracion" EntityType="dbErpModel.confIntegracion" />
+          <AssociationSet Name="FK__confInteg__compr__4D2A7347" Association="dbErpModel.FK__confInteg__compr__4D2A7347">
+            <End Role="cuenta" EntitySet="cuenta" />
+            <End Role="confIntegracion" EntitySet="confIntegracion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__confInteg__credi__4B422AD5" Association="dbErpModel.FK__confInteg__credi__4B422AD5">
+            <End Role="cuenta" EntitySet="cuenta" />
+            <End Role="confIntegracion" EntitySet="confIntegracion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__confInteg__debit__4C364F0E" Association="dbErpModel.FK__confInteg__debit__4C364F0E">
+            <End Role="cuenta" EntitySet="cuenta" />
+            <End Role="confIntegracion" EntitySet="confIntegracion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__confInteg__idEmp__4959E263" Association="dbErpModel.FK__confInteg__idEmp__4959E263">
+            <End Role="empresa" EntitySet="empresa" />
+            <End Role="confIntegracion" EntitySet="confIntegracion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__confInteg__itxPa__5006DFF2" Association="dbErpModel.FK__confInteg__itxPa__5006DFF2">
+            <End Role="cuenta" EntitySet="cuenta" />
+            <End Role="confIntegracion" EntitySet="confIntegracion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__confInteg__venta__4E1E9780" Association="dbErpModel.FK__confInteg__venta__4E1E9780">
+            <End Role="cuenta" EntitySet="cuenta" />
+            <End Role="confIntegracion" EntitySet="confIntegracion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__confIntegr__caja__4A4E069C" Association="dbErpModel.FK__confIntegr__caja__4A4E069C">
+            <End Role="cuenta" EntitySet="cuenta" />
+            <End Role="confIntegracion" EntitySet="confIntegracion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__confIntegrac__it__4F12BBB9" Association="dbErpModel.FK__confIntegrac__it__4F12BBB9">
+            <End Role="cuenta" EntitySet="cuenta" />
+            <End Role="confIntegracion" EntitySet="confIntegracion" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="periodo">
           <Key>
@@ -1046,6 +1223,13 @@
           <NavigationProperty Name="empresa" Relationship="dbErpModel.FK__cuenta__idEmpres__1BC821DD" FromRole="cuenta" ToRole="empresa" />
           <NavigationProperty Name="usuario" Relationship="dbErpModel.FK__cuenta__idUsuari__1AD3FDA4" FromRole="cuenta" ToRole="usuario" />
           <NavigationProperty Name="detalleComprobante" Relationship="dbErpModel.FK__detalleCo__idCue__3864608B" FromRole="cuenta" ToRole="detalleComprobante" />
+          <NavigationProperty Name="confIntegracion" Relationship="dbErpModel.FK__confInteg__compr__4D2A7347" FromRole="cuenta" ToRole="confIntegracion" />
+          <NavigationProperty Name="confIntegracion1" Relationship="dbErpModel.FK__confInteg__credi__4B422AD5" FromRole="cuenta" ToRole="confIntegracion" />
+          <NavigationProperty Name="confIntegracion2" Relationship="dbErpModel.FK__confInteg__debit__4C364F0E" FromRole="cuenta" ToRole="confIntegracion" />
+          <NavigationProperty Name="confIntegracion3" Relationship="dbErpModel.FK__confInteg__itxPa__5006DFF2" FromRole="cuenta" ToRole="confIntegracion" />
+          <NavigationProperty Name="confIntegracion4" Relationship="dbErpModel.FK__confInteg__venta__4E1E9780" FromRole="cuenta" ToRole="confIntegracion" />
+          <NavigationProperty Name="confIntegracion5" Relationship="dbErpModel.FK__confIntegr__caja__4A4E069C" FromRole="cuenta" ToRole="confIntegracion" />
+          <NavigationProperty Name="confIntegracion6" Relationship="dbErpModel.FK__confIntegrac__it__4F12BBB9" FromRole="cuenta" ToRole="confIntegracion" />
         </EntityType>
         <Association Name="FK__cuenta__idCuenta__1CBC4616">
           <End Type="dbErpModel.cuenta" Role="cuenta" Multiplicity="0..1" />
@@ -1547,6 +1731,124 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="confIntegracion">
+          <Key>
+            <PropertyRef Name="idEmpresa" />
+          </Key>
+          <Property Name="idEmpresa" Type="Int32" Nullable="false" />
+          <Property Name="integracion" Type="Int32" Nullable="false" />
+          <Property Name="caja" Type="Int32" Nullable="false" />
+          <Property Name="creditoFiscal" Type="Int32" Nullable="false" />
+          <Property Name="debitoFiscal" Type="Int32" Nullable="false" />
+          <Property Name="compras" Type="Int32" Nullable="false" />
+          <Property Name="ventas" Type="Int32" Nullable="false" />
+          <Property Name="it" Type="Int32" Nullable="false" />
+          <Property Name="itxPagar" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="cuenta" Relationship="dbErpModel.FK__confInteg__compr__4D2A7347" FromRole="confIntegracion" ToRole="cuenta" />
+          <NavigationProperty Name="cuenta1" Relationship="dbErpModel.FK__confInteg__credi__4B422AD5" FromRole="confIntegracion" ToRole="cuenta" />
+          <NavigationProperty Name="cuenta2" Relationship="dbErpModel.FK__confInteg__debit__4C364F0E" FromRole="confIntegracion" ToRole="cuenta" />
+          <NavigationProperty Name="empresa" Relationship="dbErpModel.FK__confInteg__idEmp__4959E263" FromRole="confIntegracion" ToRole="empresa" />
+          <NavigationProperty Name="cuenta3" Relationship="dbErpModel.FK__confInteg__itxPa__5006DFF2" FromRole="confIntegracion" ToRole="cuenta" />
+          <NavigationProperty Name="cuenta4" Relationship="dbErpModel.FK__confInteg__venta__4E1E9780" FromRole="confIntegracion" ToRole="cuenta" />
+          <NavigationProperty Name="cuenta5" Relationship="dbErpModel.FK__confIntegr__caja__4A4E069C" FromRole="confIntegracion" ToRole="cuenta" />
+          <NavigationProperty Name="cuenta6" Relationship="dbErpModel.FK__confIntegrac__it__4F12BBB9" FromRole="confIntegracion" ToRole="cuenta" />
+        </EntityType>
+        <Association Name="FK__confInteg__compr__4D2A7347">
+          <End Type="dbErpModel.cuenta" Role="cuenta" Multiplicity="1" />
+          <End Type="dbErpModel.confIntegracion" Role="confIntegracion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuenta">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="confIntegracion">
+              <PropertyRef Name="compras" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__confInteg__credi__4B422AD5">
+          <End Type="dbErpModel.cuenta" Role="cuenta" Multiplicity="1" />
+          <End Type="dbErpModel.confIntegracion" Role="confIntegracion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuenta">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="confIntegracion">
+              <PropertyRef Name="creditoFiscal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__confInteg__debit__4C364F0E">
+          <End Type="dbErpModel.cuenta" Role="cuenta" Multiplicity="1" />
+          <End Type="dbErpModel.confIntegracion" Role="confIntegracion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuenta">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="confIntegracion">
+              <PropertyRef Name="debitoFiscal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__confInteg__idEmp__4959E263">
+          <End Type="dbErpModel.empresa" Role="empresa" Multiplicity="1" />
+          <End Type="dbErpModel.confIntegracion" Role="confIntegracion" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="empresa">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="confIntegracion">
+              <PropertyRef Name="idEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__confInteg__itxPa__5006DFF2">
+          <End Type="dbErpModel.cuenta" Role="cuenta" Multiplicity="1" />
+          <End Type="dbErpModel.confIntegracion" Role="confIntegracion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuenta">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="confIntegracion">
+              <PropertyRef Name="itxPagar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__confInteg__venta__4E1E9780">
+          <End Type="dbErpModel.cuenta" Role="cuenta" Multiplicity="1" />
+          <End Type="dbErpModel.confIntegracion" Role="confIntegracion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuenta">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="confIntegracion">
+              <PropertyRef Name="ventas" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__confIntegr__caja__4A4E069C">
+          <End Type="dbErpModel.cuenta" Role="cuenta" Multiplicity="1" />
+          <End Type="dbErpModel.confIntegracion" Role="confIntegracion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuenta">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="confIntegracion">
+              <PropertyRef Name="caja" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__confIntegrac__it__4F12BBB9">
+          <End Type="dbErpModel.cuenta" Role="cuenta" Multiplicity="1" />
+          <End Type="dbErpModel.confIntegracion" Role="confIntegracion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuenta">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="confIntegracion">
+              <PropertyRef Name="it" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1752,6 +2054,21 @@
                 <ScalarProperty Name="fechaIngreso" ColumnName="fechaIngreso" />
                 <ScalarProperty Name="nroLote" ColumnName="nroLote" />
                 <ScalarProperty Name="idArticulo" ColumnName="idArticulo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="confIntegracion">
+            <EntityTypeMapping TypeName="dbErpModel.confIntegracion">
+              <MappingFragment StoreEntitySet="confIntegracion">
+                <ScalarProperty Name="itxPagar" ColumnName="itxPagar" />
+                <ScalarProperty Name="it" ColumnName="it" />
+                <ScalarProperty Name="ventas" ColumnName="ventas" />
+                <ScalarProperty Name="compras" ColumnName="compras" />
+                <ScalarProperty Name="debitoFiscal" ColumnName="debitoFiscal" />
+                <ScalarProperty Name="creditoFiscal" ColumnName="creditoFiscal" />
+                <ScalarProperty Name="caja" ColumnName="caja" />
+                <ScalarProperty Name="integracion" ColumnName="integracion" />
+                <ScalarProperty Name="idEmpresa" ColumnName="idEmpresa" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

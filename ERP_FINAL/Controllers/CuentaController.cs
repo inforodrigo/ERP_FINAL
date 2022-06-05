@@ -203,5 +203,160 @@ namespace ERP_FINAL.Controllers
                 return JavaScript("MostrarMensaje('" + ex.Message + "');");
             }
         }
+
+        [HttpPost]
+        public ActionResult ObtenerCuentasConfiguracion(int id)
+        {
+            try
+            {
+                EUsuario sUsuario = (EUsuario)Session["Usuario"];
+                EEmpresa sEmpresa = (EEmpresa)Session["Empresa"];
+
+                List<ECuenta> cuentas = new List<ECuenta>();
+                cuentas = lLogica.ObtenerCuentasConfiguracion(sEmpresa.Id);
+
+                return Json(new
+                {
+                    cuentas = cuentas
+
+                });
+
+            }
+            catch (BussinessException ex)
+            {
+                string mensaje = ex.Message.Replace("'", "");
+                ViewBag.Mensaje = mensaje;
+                return JavaScript("MostrarMensaje('" + mensaje + "');");
+            }
+            catch (Exception ex)
+            {
+                return JavaScript("MostrarMensaje('Ha ocurrido un error');");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult RegistrarConfiguracion(int configuracion, int caja, int creditofiscal, int debitofiscal, int compras, int ventas, int it, int itxpagar)
+        {
+            try
+            {
+                EUsuario sUsuario = (EUsuario)Session["Usuario"];
+                EEmpresa sEmpresa = (EEmpresa)Session["Empresa"];
+
+                EConfiguracionIntegracion conf = new EConfiguracionIntegracion();
+                conf.IdEmpresa = sEmpresa.Id;
+                conf.Integracion = configuracion;
+                conf.Caja = caja;
+                conf.CreditoFiscal = creditofiscal;
+                conf.DebitoFiscal = debitofiscal;
+                conf.Compras = compras;
+                conf.Ventas = ventas;
+                conf.It = it;
+                conf.ItxPagar = itxpagar;
+                lLogica.RegistrarConfiguracion(conf);
+
+                return JavaScript("MostrarMensajeConfiguracion('Registro de Configuracion Exitoso');");
+            }
+            catch (BussinessException ex)
+            {
+                string mensaje = ex.Message.Replace("'", "");
+                ViewBag.Mensaje = mensaje;
+                return JavaScript("MostrarMensaje('" + mensaje + "');");
+            }
+            catch (Exception ex)
+            {
+                return JavaScript("MostrarMensaje('Ha ocurrido un error');");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult VerificarConfiguracion(int id)
+        {
+            try
+            {
+                EUsuario sUsuario = (EUsuario)Session["Usuario"];
+                EEmpresa sEmpresa = (EEmpresa)Session["Empresa"];
+
+                
+                var integracion = lLogica.VerificarConfiguracion(sEmpresa.Id);
+
+                return Json(new
+                {
+                    integracion = integracion
+                });
+
+            }
+            catch (BussinessException ex)
+            {
+                string mensaje = ex.Message.Replace("'", "");
+                ViewBag.Mensaje = mensaje;
+                return JavaScript("MostrarMensaje('" + mensaje + "');");
+            }
+            catch (Exception ex)
+            {
+                return JavaScript("MostrarMensaje('Ha ocurrido un error');");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ObtenerConfiguracion(int id)
+        {
+            try
+            {
+                EUsuario sUsuario = (EUsuario)Session["Usuario"];
+                EEmpresa sEmpresa = (EEmpresa)Session["Empresa"];
+
+                EConfiguracionIntegracion conf = new EConfiguracionIntegracion();
+                conf = lLogica.ObtenerConfiguracion(sEmpresa.Id);
+
+                return Json(new
+                {
+                    integracion = conf.Integracion,
+                    caja = conf.CajaStr,
+                    creditofiscal = conf.CreditoFiscalStr,
+                    debitofiscal = conf.DebitoFiscalStr,
+                    compras = conf.ComprasStr,
+                    ventas = conf.VentasStr,
+                    it = conf.ItStr,
+                    itxpagar = conf.ItxPagarStr
+                });
+
+            }
+            catch (BussinessException ex)
+            {
+                string mensaje = ex.Message.Replace("'", "");
+                ViewBag.Mensaje = mensaje;
+                return JavaScript("MostrarMensaje('" + mensaje + "');");
+            }
+            catch (Exception ex)
+            {
+                return JavaScript("MostrarMensaje('Ha ocurrido un error');");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ActualizarConfiguracion(int configuracion)
+        {
+            try
+            {
+                EUsuario sUsuario = (EUsuario)Session["Usuario"];
+                EEmpresa sEmpresa = (EEmpresa)Session["Empresa"];
+
+
+                var integracion = lLogica.ActualizarConfiguracion(sEmpresa.Id, configuracion);
+
+
+                return JavaScript("MostrarMensajeConfiguracion('Actualizacion de Configuracion Exitosa');");
+            }
+            catch (BussinessException ex)
+            {
+                string mensaje = ex.Message.Replace("'", "");
+                ViewBag.Mensaje = mensaje;
+                return JavaScript("MostrarMensaje('" + mensaje + "');");
+            }
+            catch (Exception ex)
+            {
+                return JavaScript("MostrarMensaje('Ha ocurrido un error');");
+            }
+        }
     }
 }

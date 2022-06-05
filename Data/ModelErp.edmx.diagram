@@ -53,6 +53,15 @@
         <EntityTypeShape EntityType="dbErpModel.lote" Width="1.5" PointX="13.125" PointY="5.25" />
         <AssociationConnector Association="dbErpModel.FK__lote__idArticulo__36470DEF" />
         <AssociationConnector Association="dbErpModel.FK__lote__idNota__373B3228" />
+        <EntityTypeShape EntityType="dbErpModel.confIntegracion" Width="1.5" PointX="10.875" PointY="9.5" />
+        <AssociationConnector Association="dbErpModel.FK__confInteg__compr__4D2A7347" />
+        <AssociationConnector Association="dbErpModel.FK__confInteg__credi__4B422AD5" />
+        <AssociationConnector Association="dbErpModel.FK__confInteg__debit__4C364F0E" />
+        <AssociationConnector Association="dbErpModel.FK__confInteg__idEmp__4959E263" />
+        <AssociationConnector Association="dbErpModel.FK__confInteg__itxPa__5006DFF2" />
+        <AssociationConnector Association="dbErpModel.FK__confInteg__venta__4E1E9780" />
+        <AssociationConnector Association="dbErpModel.FK__confIntegr__caja__4A4E069C" />
+        <AssociationConnector Association="dbErpModel.FK__confIntegrac__it__4F12BBB9" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

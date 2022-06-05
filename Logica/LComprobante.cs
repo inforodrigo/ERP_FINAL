@@ -464,6 +464,15 @@ namespace Logica
         {          
             using (var esquema = GetEsquema())
             {
+                var notas = (from x in esquema.nota
+                                   where x.idComprobante == id
+                                   select x).FirstOrDefault();
+
+                if(notas != null)
+                {
+                    throw new BussinessException("No se puede anular este comprobante por que esta relacionado con una Nota de Compra o Venta.");
+                }
+
                 var comprobante = (from x in esquema.comprobante
                                 where x.id == id
                                 select x).FirstOrDefault();

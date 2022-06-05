@@ -299,6 +299,7 @@ namespace Logica
                     notac.estado = nota.Estado;
                     esquema.nota.Add(notac);
                     esquema.SaveChanges();
+                    nota.Id = notac.id;
 
                     foreach (var det in detalle)
                     {                                                                
@@ -326,6 +327,18 @@ namespace Logica
 
                         consultaarticulo.cantidad = consultaarticulo.cantidad - det.cantidad;
                         esquema.SaveChanges();
+                    }
+
+                    var consulta = (from x in esquema.confIntegracion
+                                    where x.idEmpresa == nota.IdEmpresa
+                                    select x).FirstOrDefault();
+
+                    if (consulta != null)
+                    {
+                        if (consulta.integracion == 1)
+                        {
+                            AgregarComprobanteIntegracion(nota, detalle);
+                        }
                     }
 
                     ENota respuesta = new ENota();
@@ -383,9 +396,162 @@ namespace Logica
 
                     nota.estado = 2;
                     esquema.SaveChanges();
+
+                    //anulamos el comprobante si hay
+                    var integracion = (from x in esquema.confIntegracion
+                                       where x.idEmpresa == nota.idEmpresa
+                                       select x).FirstOrDefault();
+
+                    if (integracion != null)
+                    {
+                        if (integracion.integracion == 1)
+                        {
+                            var comprobante = (from x in esquema.comprobante
+                                               where x.id == nota.idComprobante
+                                               && x.idEmpresa == nota.idEmpresa
+                                               select x).FirstOrDefault();
+
+                            comprobante.estado = 2;
+                            esquema.SaveChanges();
+                        }
+                    }
+
                     return true;
                 }
                 catch (BussinessException ex)
+                {
+                    return false;
+                }
+            }
+        }
+
+        public bool AgregarComprobanteIntegracion(ENota nota, List<EDetalleNotaAux> detalle)
+        {
+            using (var esquema = GetEsquema())
+            {
+                try
+                {
+
+                    var consultarserie = (from x in esquema.comprobante
+                                          where x.idEmpresa == nota.IdEmpresa
+                                          select x).OrderByDescending(x => x.serie).FirstOrDefault();
+
+                    var serie = 0;
+
+                    if (consultarserie != null)
+                    {
+                        serie = consultarserie.serie + 1;
+                    }
+
+                    var cambio = (from x in esquema.empresaMoneda
+                                  where x.idUsuario == nota.IdUsuario && x.idEmpresa == nota.IdEmpresa
+                                  && x.activo == 1
+                                  select x).FirstOrDefault();
+
+                    var integracion = (from x in esquema.confIntegracion
+                                       where x.idEmpresa == nota.IdEmpresa
+                                       select x).FirstOrDefault();
+
+                    comprobante comp = new comprobante();
+                    comp.serie = serie;
+                    comp.glosa = "Venta de Mercaderias";
+                    comp.fecha = nota.Fecha;
+                    comp.tipoCambio = (double)cambio.cambio;
+                    comp.estado = 1;
+                    comp.tipoComprobante = (int)ETipoComprobante.Ingreso;
+                    comp.idEmpresa = nota.IdEmpresa;
+                    comp.idUsuario = nota.IdUsuario;
+                    comp.idMoneda = cambio.idMonedaPrincipal;
+                    esquema.comprobante.Add(comp);
+                    esquema.SaveChanges();
+
+                    var numero = (from x in esquema.detalleComprobante
+                                  where x.idUsuario == nota.IdUsuario
+                                  select x).OrderByDescending(x => x.id).FirstOrDefault();
+
+
+                    //Detalle de cuenta Caja
+                    detalleComprobante detcaja = new detalleComprobante();
+                    detcaja.numero = numero.numero + 1;
+                    detcaja.glosa = "Venta de Mercaderias";
+                    detcaja.montoDebe = nota.Total;
+                    detcaja.montoHaber = 0;
+                    detcaja.montoDebeAlt = Convert.ToDouble(detcaja.montoDebe / cambio.cambio);
+                    detcaja.montoHaberAlt = 0;
+                    detcaja.idUsuario = nota.IdUsuario;
+                    detcaja.idComprobante = comp.id;
+                    detcaja.idCuenta = integracion.caja;
+                    esquema.detalleComprobante.Add(detcaja);
+                    esquema.SaveChanges();
+
+                    //Detalle de cuenta It
+                    detalleComprobante detit = new detalleComprobante();
+                    detit.numero = detcaja.numero + 1;
+                    detit.glosa = "Venta de Mercaderias";
+                    detit.montoDebe = nota.Total * 0.03;
+                    detit.montoHaber = 0;
+                    detit.montoDebeAlt = Convert.ToDouble(detit.montoDebe / cambio.cambio);
+                    detit.montoHaberAlt = 0;
+                    detit.idUsuario = nota.IdUsuario;
+                    detit.idComprobante = comp.id;
+                    detit.idCuenta = integracion.it;
+                    esquema.detalleComprobante.Add(detit);
+                    esquema.SaveChanges();
+
+                    //Detalle de cuenta debito fiscal
+                    detalleComprobante detdebito = new detalleComprobante();
+                    detdebito.numero = detit.numero + 1;
+                    detdebito.glosa = "Venta de Mercaderias";
+                    detdebito.montoDebe = 0;
+                    detdebito.montoHaber = nota.Total * 0.13;
+                    detdebito.montoDebeAlt = 0;
+                    detdebito.montoHaberAlt = Convert.ToDouble(detdebito.montoHaber / cambio.cambio);
+                    detdebito.idUsuario = nota.IdUsuario;
+                    detdebito.idComprobante = comp.id;
+                    detdebito.idCuenta = integracion.debitoFiscal;
+                    esquema.detalleComprobante.Add(detdebito);
+                    esquema.SaveChanges();
+
+
+                    //Detalle de cuenta credito
+                    detalleComprobante detventas = new detalleComprobante();
+                    detventas.numero = detdebito.numero + 1;
+                    detventas.glosa = "Venta de Mercaderias";
+                    detventas.montoDebe = 0;
+                    detventas.montoHaber = detcaja.montoDebe - detdebito.montoHaber;
+                    detventas.montoDebeAlt = 0;
+                    detventas.montoHaberAlt = Convert.ToDouble(detventas.montoHaber / cambio.cambio);
+                    detventas.idUsuario = nota.IdUsuario;
+                    detventas.idComprobante = comp.id;
+                    detventas.idCuenta = integracion.ventas;
+                    esquema.detalleComprobante.Add(detventas);
+                    esquema.SaveChanges();
+
+                    //Detalle de cuenta Compras
+                    detalleComprobante detitxpagar = new detalleComprobante();
+                    detitxpagar.numero = detventas.numero + 1;
+                    detitxpagar.glosa = "Venta de Mercaderias";
+                    detitxpagar.montoDebe = 0;
+                    detitxpagar.montoHaber = nota.Total * 0.03;
+                    detitxpagar.montoDebeAlt = 0;
+                    detitxpagar.montoHaberAlt = Convert.ToDouble(detitxpagar.montoHaber / cambio.cambio);
+                    detitxpagar.idUsuario = nota.IdUsuario;
+                    detitxpagar.idComprobante = comp.id;
+                    detitxpagar.idCuenta = integracion.itxPagar;
+                    esquema.detalleComprobante.Add(detitxpagar);
+                    esquema.SaveChanges();
+
+                    var consultanota = (from x in esquema.nota
+                                        where x.id == nota.Id
+                                        select x).FirstOrDefault();
+
+                    consultanota.idComprobante = comp.id;
+                    esquema.SaveChanges();
+
+                    return true;
+
+                }
+                catch (Exception ex)
                 {
                     return false;
                 }

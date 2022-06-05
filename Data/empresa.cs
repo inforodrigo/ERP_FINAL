@@ -52,5 +52,6 @@ namespace Data
         public virtual ICollection<articulo> articulo { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<nota> nota { get; set; }
+        public virtual confIntegracion confIntegracion { get; set; }
     }
 }

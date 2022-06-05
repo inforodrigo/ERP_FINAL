@@ -40,5 +40,6 @@ namespace Data
         public virtual DbSet<detalleNota> detalleNota { get; set; }
         public virtual DbSet<nota> nota { get; set; }
         public virtual DbSet<lote> lote { get; set; }
+        public virtual DbSet<confIntegracion> confIntegracion { get; set; }
     }
 }

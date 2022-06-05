@@ -62,6 +62,9 @@
     <Compile Include="comprobante.cs">
       <DependentUpon>ModelErp.tt</DependentUpon>
     </Compile>
+    <Compile Include="confIntegracion.cs">
+      <DependentUpon>ModelErp.tt</DependentUpon>
+    </Compile>
     <Compile Include="cuenta.cs">
       <DependentUpon>ModelErp.tt</DependentUpon>
     </Compile>
