@@ -239,6 +239,33 @@ namespace Logica
             }
         }
 
+        public bool VerificarStock(int idArticulo, int nroLote, int cantidad)
+        {
+            using (var esquema = GetEsquema())
+            {
+                try
+                {
+                    var consulta = (from x in esquema.lote
+                                    where x.idArticulo == idArticulo
+                                    && x.nroLote == nroLote                                  
+                                    select x).FirstOrDefault();
+
+                    var res = true;
+
+                   if(cantidad > consulta.stock)
+                   {                     
+                       res = false;
+                   }
+
+                    return res;
+                }              
+                catch (Exception ex)
+                {
+                    throw new BussinessException("Error no se pudo verificar el stock");
+                }
+            }
+        }
+
         public ENota AgregarNotaVenta(ENota nota, List<EDetalleNotaAux> detalle)
         {
             using (var esquema = GetEsquema())
@@ -318,6 +345,9 @@ namespace Logica
                                                 select x).FirstOrDefault();
 
                         consultalote.stock = consultalote.stock - det.cantidad;
+                        if(consultalote.stock == 0){
+                            consultalote.estado = 0;
+                        }
                         esquema.SaveChanges();
 
                         var consultaarticulo = (from x in esquema.articulo

@@ -54,6 +54,8 @@
                 @Html.DisplayFor(modelItem => item.PrecioVenta)
             </td>
             <td>
+                <a class="btn btn-outline btn-circle btn-sm purple" onclick="AbrirModalLotes('@item.Id');"><i class="fa fa-boxes"></i></a>
+                <a class="btn btn-outline btn-circle btn-sm purple" onclick="EliminarArticulo('@item.Id')"><i class="fa fa-trash"></i></a>
             </td>
         </tr>
     }
@@ -129,6 +131,73 @@
     </div>
 </div>
 
+<div class="modal" id="modallotes" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Lotes del Articulo: <strong id="nombrearticulo"></strong></h5>
+            </div>
+            <div class="alert alert-danger" style="display:none" role="alert" id="mensajeError"></div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12" style="padding-top: 20px; overflow: scroll; height: 400px;">
+                        <table id="tablalotes" class="table table-bordered table-striped mb-0" >
+                            <thead>
+                                <tr>
+                                    <th class="th-sm">
+                                        Nro Lote
+                                    </th>
+                                    <th class="th-sm">
+                                        Fecha Ingreso
+                                    </th>
+                                    <th class="th-sm">
+                                        Fecha Venc.
+                                    </th>
+                                    <th class="th-sm">
+                                        Cantidad
+                                    </th>
+                                    <th class="th-sm">
+                                        Stock
+                                    </th>
+                                    <th class="th-sm">
+                                        Estado
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="datoslotes">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">              
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEliminar">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirmacion</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="idarticulo" hidden>
+                <p id="texto">¿Esta seguro que deseas eliminar el Articulo?</p>
+            </div>
+            <div class="modal-footer ">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="AnularC()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -150,9 +219,9 @@
                 dataType: "json",
                 data: {
                     id: 0
-            }, success: function (result) {                                        
+            }, success: function (result) {
                 $.each(result.categorias, function (index, value) {
-                    $('#categorias').append('<option value=' + value.Id + ' > ' + value.Nombre + '</option>');                 
+                    $('#categorias').append('<option value=' + value.Id + ' > ' + value.Nombre + '</option>');
                     /*$('#categorias').select2({
                         theme: "classic",
                         dropdownParent: $("#modalarticulo"),
@@ -239,53 +308,112 @@
         });
     }
 
-    function EliminarGestion(id) {
-        swal.fire({
-            title: "ESTA SEGURO QUE DESEA ELIMINAR?",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Si, eliminarlo!",
-            cancelButtonText: "No, cancelar!",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: "@Url.Action("Delete", "Gestion")",
-                    cache: false,
-                    data: {
-                        id: id
-                    },
-                    type: "GET",
-                    dataType: "script"
-                });
+    function EliminarArticulo(id) {
+        var mesjModalEliminar = "¿Esta seguro que deseas anular el Articulo?";
+        $("#texto").html(mesjModalEliminar);
+        $("#idarticulo").val(id);
+        $("#modalEliminar").modal('show');
+    }
+
+    function AnularC() {                    
+        $.ajax({
+        url: "@Url.Action("Delete", "Articulo")",
+        cache: false,
+                type: "POST",
+                dataType: "script",
+                data: {
+                    id: $("#idarticulo").val()
+
+            }, success: function () {
+
             }
-
         });
-        }
+            
+    }
 
-        function MostrarMensajeExito(msj) {                   
-            var msjbody = "Se Registro los Datos Exitosamente";
-            $(document).Toasts('create', {
-                class: 'bg-success',
-                title: msj,
-                autohide: true,
-                delay: 10000,
-                body: msjbody
-            });
+    function AbrirModalLotes(id) {
+        CargarLotes(id);
+        $('#modallotes').modal('show');
+    }
 
-            $("#nombre").val("");
-            $("#descripcion").val("");
-            $("#precio").val("");
-            $("#modalarticulo").modal('hide');
-        }
+    function CargarLotes(id) {
+            $.ajax({
+            url: "@Url.Action("CargarLotes", "Articulo")",
+            cache: false,
+            type: "POST",
+            dataType: "json",
+                data: {
+                    id: id
+            }, success: function (result) {
+                var listalotes = result.lotes;
+                    var tabladatos = $('#datoslotes');
+                    $("#nombrearticulo").text(listalotes[0].NombreArticulo);
+                    $('#datoslotes').empty();
+
+                    for (let i = 0; i < listalotes.length; i++) {
+                    row = "<tr>" +
+                        "<td style='text-align: right;'>" + listalotes[i].NroLote + "</td>" +
+                        "<td style='text-align: center;'> " + listalotes[i].FechaIngresoStr + "</td>" +
+                        "<td style='text-align: center;'>" + listalotes[i].FechaVencimientoStr + "</td>" +
+                        "<td style='text-align: right;'>" + listalotes[i].Cantidad + "</td>" +
+                        "<td style='text-align: right;'>" + listalotes[i].Stock + "</td>" +
+                        "<td style='text-align: center;'>" + listalotes[i].EstadoStr + "</td>" +
+                        "</tr>"
+                    tabladatos.append(row);
+                }
+            }
+        });
+    }
+
+    function MostrarMensajeExito(msj) {
+        var msjbody = "Se Registro los Datos Exitosamente";
+        $(document).Toasts('create', {
+            class: 'bg-success',
+            title: msj,
+            autohide: true,
+            delay: 10000,
+            body: msjbody
+        });
+
+        $("#nombre").val("");
+        $("#descripcion").val("");
+        $("#precio").val("");
+        $("#modalarticulo").modal('hide');
+    }
 
     function MostrarMensaje(msj) {
         $("#mensajeError").show();
         $("#mensajeError").html(msj);
     }
 
+    function MostrarMensajeError(msj) {
+        $(document).Toasts('create', {
+            class: ' bg-danger',
+            title: "Alerta",
+            autohide: true,
+            delay: 10000,
+            body: msj
+        });
+    }
+
     function MostrarMensajeEditar(msj) {
         $("#mensajeErrorEd").show();
         $("#mensajeErrorEd").html(msj);
+    }
+
+    function MostrarMensajeEliminacion(msj) {
+        var msjbody = "Se anulo el Articulo";
+
+        $(document).Toasts('create', {
+            class: 'bg-success',
+            title: msj,
+            autohide: true,
+            delay: 10000,
+            body: msjbody
+        });
+
+        $("#modalEliminar").modal('hide');
+        location.reload();
     }
 
     function LimpiarMensaje() {

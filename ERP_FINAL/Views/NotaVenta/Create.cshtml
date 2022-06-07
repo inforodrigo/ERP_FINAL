@@ -90,6 +90,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Agregar detalle</h5>
+                <input type="text" class="form-control" id="stockdispo" hidden>
             </div>
             <div class="alert alert-danger" style="display:none" role="alert" id="mensajeError"></div>
             <div class="modal-body">
@@ -119,7 +120,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="GuardarDetalle()">Agregar</button>
+                <button type="button" class="btn btn-primary" onclick="verificarStock()">Agregar</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
@@ -241,7 +242,7 @@
                     CargarLotes(1);
                 }
             });
-            
+
         }
 
         function CargarLotes(tipo) {
@@ -253,7 +254,7 @@
                 $("#lotedeted").empty();
                 idAr = $("#articulodeted").val();
             }
-            
+
             $.ajax({
                 url: "@Url.Action("CargarLotesArticulo", "NotaVenta")",
                 cache: false,
@@ -261,13 +262,13 @@
                 dataType: "json",
                 data: {
                     idArticulo: idAr
-                }, success: function (result) {                   
+                }, success: function (result) {
                     $.each(result.lotes, function (index, value) {
                         if (tipo == 1) {
                             $('#lotedetalle').append('<option value=' + value.NroLote + ' > ' + value.NroLote + '</option>');
-                        } else {                           
-                            $('#lotedeted').append('<option value=' + value.NroLote + ' > ' + value.NroLote + '</option>');                            
-                        }                      
+                        } else {
+                            $('#lotedeted').append('<option value=' + value.NroLote + ' > ' + value.NroLote + '</option>');
+                        }
                     });
                 }
             });
@@ -285,7 +286,7 @@
             var value = $(this).val();
             var valueprecio = $('#preciodetalle').val();
             if (value.length <= 0) {
-                return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+                return MostrarMensaje('Error la Cantidad Introducida debe ser mayor a 0');
             }
             else {
                 $('#subtotaldetalle').val(value * valueprecio);
@@ -296,7 +297,7 @@
             var value = $(this).val();
             var valuecantidad = $('#cantidaddetalle').val();
             if (value.length <= 0) {
-                return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+                return MostrarMensaje('Error el Precio Introducido debe ser mayor a 0');
             }
             else {
                 $('#subtotaldetalle').val(value * valuecantidad);
@@ -307,7 +308,7 @@
             var value = $(this).val();
             var valueprecio = $('#preciodeted').val();
             if (value.length <= 0) {
-                return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+                return MostrarMensaje('Error la Cantidad Introducida debe ser mayor a 0');
             }
             else {
                 $('#subtotaldeted').val(value * valueprecio);
@@ -318,12 +319,32 @@
             var value = $(this).val();
             var valuecantidad = $('#cantidaddeted').val();
             if (value.length <= 0) {
-                return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+                return MostrarMensaje('Error el Precio Introducido debe ser mayor a 0');
             }
             else {
                 $('#subtotaldeted').val(value * valuecantidad);
             }
         });
+
+        function verificarStock() {
+            var stockdisponible;
+            $.ajax({
+                url: "@Url.Action("VerificarStock", "NotaVenta")",
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: {
+                    idArticulo: $('#articulodetalle').val(), nroLote: $('#lotedetalle').val(), cantidad: $('#cantidaddetalle').val()
+                }, success: function (result) {
+                    stockdisponible = result.respuesta;
+                    if (stockdisponible == false) {
+                        return MostrarMensaje('Error La cantidad supera el stock del Lote');
+                    } else {
+                        GuardarDetalle();
+                    }
+                }
+            });
+        }     
 
         function GuardarDetalle() {
             var cantidad = $('#cantidaddetalle').val();
@@ -331,11 +352,11 @@
             var lot = $('#lotedetalle').val();
 
             if (cantidad <= 0) {
-                return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+                return MostrarMensaje('Error la Cantidad Introducida debe ser mayor a 0');
             }
 
             if (precio <= 0) {
-                return MostrarMensaje('Error el Monto Introducido debe ser mayor a 0');
+                return MostrarMensaje('Error el Precio Introducido debe ser mayor a 0');
             }
 
             if (lot <= 0) {
@@ -385,7 +406,7 @@
             $('#subtotaldetalle').val('');
         }
 
-        function EditarDetalle(seleccionado) {            
+        function EditarDetalle(seleccionado) {
             $('#cantidaddeted').val(listadetalle[seleccionado.value].cantidad);
             $('#preciodeted').val(listadetalle[seleccionado.value].precio);
             $('#subtotaldeted').val(listadetalle[seleccionado.value].subtotal);
@@ -437,7 +458,7 @@
                             return MostrarMensaje('Error este lote ya ha sido agregada al detalle');
                         }
                     }
-                    
+
                 }
             }
 

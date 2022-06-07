@@ -100,25 +100,41 @@ namespace ERP_FINAL.Controllers
         }
 
         // GET: Articulo/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+        //public ActionResult Delete()
+        //{
+        //    return View();
+        //}
 
         // POST: Articulo/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(int id)
         {
             try
             {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
+                lLogica.EliminarArticulo(id);
+                return JavaScript("MostrarMensajeEliminacion('Anulacion Exitosa');");
             }
-            catch
+            catch (BussinessException ex)
             {
-                return View();
+                return JavaScript("MostrarMensajeError('" + ex.Message + "');");
             }
+            catch (Exception ex)
+            {
+                return JavaScript("MostrarMensajeError('" + ex.Message + "');");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult CargarLotes(int id)
+        {           
+            EEmpresa sEmpresa = (EEmpresa)Session["Empresa"];
+            List<ELote> lotes = new List<ELote>();
+            lotes = lLogica.ObtenerLotesXArticulo(sEmpresa.Id, id);            
+
+            return Json(new
+            {
+                lotes = lotes           
+            });
         }
     }
 }

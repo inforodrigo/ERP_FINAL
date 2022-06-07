@@ -179,6 +179,28 @@ namespace ERP_FINAL.Controllers
             });
         }
 
+        [HttpPost]
+        public ActionResult VerificarStock(int idArticulo, int nroLote, int cantidad)
+        {
+            try
+            {
+                EEmpresa sEmpresa = (EEmpresa)Session["Empresa"];
+                var respuesta = lLogica.VerificarStock(idArticulo, nroLote, cantidad);
+                return Json(new
+                {
+                    respuesta = respuesta
+                });
+            }
+            catch (BussinessException ex)
+            {
+                return JavaScript("MostrarMensaje('" + ex.Message + "');");
+            }
+            catch (Exception ex)
+            {
+                return JavaScript("MostrarMensaje('" + ex.Message + "');");
+            }
+        }
+
         public ActionResult ReporteNotaVenta(int id)
         {
             try
