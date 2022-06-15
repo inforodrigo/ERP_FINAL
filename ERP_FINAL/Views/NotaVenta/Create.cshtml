@@ -111,11 +111,11 @@
                     </div>
                     <div class="col-2">
                         <label for="preciodetalle" class="form-label">Precio</label>
-                        <input type="text" class="form-control" id="preciodetalle" style="text-align: right;">
+                        <input type="text" class="form-control" id="preciodetalle" style="text-align: right;" disabled>
                     </div>
                     <div class="col-2">
                         <label for="subtotaldetalle" class="form-label">SubTotal</label>
-                        <input type="text" class="form-control" id="subtotaldetalle" style="text-align: right;">
+                        <input type="text" class="form-control" id="subtotaldetalle" style="text-align: right;" disabled>
                     </div>
                 </div>
             </div>
@@ -152,11 +152,11 @@
                     </div>
                     <div class="col-2">
                         <label for="preciodeted" class="form-label">Precio</label>
-                        <input type="text" class="form-control" id="preciodeted" style="text-align: right;">
+                        <input type="text" class="form-control" id="preciodeted" style="text-align: right;" disabled>
                     </div>
                     <div class="col-2">
                         <label for="subtotaldeted" class="form-label">SubTotal</label>
-                        <input type="text" class="form-control" id="subtotaldeted" style="text-align: right;">
+                        <input type="text" class="form-control" id="subtotaldeted" style="text-align: right;" disabled>
                     </div>
                     <input type="hidden" class="form-control" id="seleccionadoedit" name="seleccionadoedit">
                 </div>
@@ -262,12 +262,14 @@
                 dataType: "json",
                 data: {
                     idArticulo: idAr
-                }, success: function (result) {
+                }, success: function (result) {                   
                     $.each(result.lotes, function (index, value) {
                         if (tipo == 1) {
                             $('#lotedetalle').append('<option value=' + value.NroLote + ' > ' + value.NroLote + '</option>');
+                            $('#preciodetalle').val(value.PrecioCompra);
                         } else {
                             $('#lotedeted').append('<option value=' + value.NroLote + ' > ' + value.NroLote + '</option>');
+                            $('#preciodeted').val(value.PrecioCompra);
                         }
                     });
                 }
@@ -279,6 +281,7 @@
         });
 
         $('#articulodeted').change(function () {
+            $('#cantidaddeted').val('');
             CargarLotes(2);
         });
 
@@ -293,7 +296,7 @@
             }
         });
 
-        $('#preciodetalle').keyup(function () {
+        /*$('#preciodetalle').keyup(function () {
             var value = $(this).val();
             var valuecantidad = $('#cantidaddetalle').val();
             if (value.length <= 0) {
@@ -302,7 +305,7 @@
             else {
                 $('#subtotaldetalle').val(value * valuecantidad);
             }
-        });
+        });*/
 
         $('#cantidaddeted').keyup(function () {
             var value = $(this).val();
@@ -315,7 +318,7 @@
             }
         });
 
-        $('#preciodeted').keyup(function () {
+        /*$('#preciodeted').keyup(function () {
             var value = $(this).val();
             var valuecantidad = $('#cantidaddeted').val();
             if (value.length <= 0) {
@@ -324,7 +327,7 @@
             else {
                 $('#subtotaldeted').val(value * valuecantidad);
             }
-        });
+        });*/
 
         function verificarStock() {
             var stockdisponible;

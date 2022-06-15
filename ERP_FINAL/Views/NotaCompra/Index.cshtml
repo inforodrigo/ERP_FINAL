@@ -13,10 +13,10 @@
 <table class="table table-striped table-bordered table-hover" id="tablanotacompra">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.NroNota)
+            @Html.Label("Nro Nota")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FechaStr)
+            @Html.Label("Fecha")
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Descripcion)
@@ -36,7 +36,7 @@
     @foreach (var item in Model)
     {
         <tr>
-            <td>
+            <td style="text-align: right;">
                 @Html.DisplayFor(modelItem => item.NroNota)
             </td>
             <td>
@@ -45,11 +45,18 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Descripcion)
             </td>
-            <td>
+            <td style="text-align: right;">
                 @Html.DisplayFor(modelItem => item.Total)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Tipo)
+                @if (item.Tipo == 1)
+                {
+                    @Html.Label("Compra");
+                }
+                else
+                {
+                    @Html.Label("Venta");
+                }
             </td>
             <td>
                 @if (item.Estado == 0)

@@ -31,6 +31,7 @@ namespace Logica
         private LArticulo lArticulo;
         private LNotaCompra lNotaCompra;
         private LNotaVenta lNotaVenta;
+        private LEstadoResultados lEstadoResultados;
 
         public static LBase<E> Instancia
         {
@@ -194,6 +195,18 @@ namespace Logica
                     lNotaVenta = new LNotaVenta();
                 }
                 return lNotaVenta;
+            }
+        }
+
+        public LEstadoResultados LEstadoResultados
+        {
+            get
+            {
+                if (lEstadoResultados == null)
+                {
+                    lEstadoResultados = new LEstadoResultados();
+                }
+                return lEstadoResultados;
             }
         }
     }

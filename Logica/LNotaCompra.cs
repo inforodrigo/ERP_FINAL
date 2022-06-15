@@ -36,7 +36,7 @@ namespace Logica
                         nota.Fecha = item.fecha;
                         nota.FechaStr = item.fecha.ToString("dd/MM/yyyy");
                         nota.Descripcion = item.descripcion;
-                        nota.Total = item.tipo;
+                        nota.Total = item.total;
                         nota.Tipo = item.tipo;                        
                         nota.IdEmpresa = item.idEmpresa;
                         nota.IdUsuario = item.idUsuario;
@@ -357,7 +357,8 @@ namespace Logica
                         foreach(var lot in lotes)
                         {
                             var detalles = (from x in esquema.detalleNota
-                                            where x.nroLote == lot.nroLote                                          
+                                            where x.nroLote == lot.nroLote 
+                                            && x.idArticulo == lot.idArticulo
                                             select x).ToList();
 
                             foreach(var de in detalles)
@@ -464,49 +465,49 @@ namespace Logica
                     var numero = (from x in esquema.detalleComprobante
                                   where x.idUsuario == nota.IdUsuario
                                   select x).OrderByDescending(x => x.id).FirstOrDefault();
-                
 
-                    //Detalle de cuenta Caja
-                    detalleComprobante detcaja = new detalleComprobante();
-                    detcaja.numero = numero.numero + 1;
-                    detcaja.glosa = "Compra de Mercaderias";
-                    detcaja.montoDebe = nota.Total;
-                    detcaja.montoHaber = 0;
-                    detcaja.montoDebeAlt = Convert.ToDouble(detcaja.montoDebe / cambio.cambio);
-                    detcaja.montoHaberAlt = 0;
-                    detcaja.idUsuario = nota.IdUsuario;
-                    detcaja.idComprobante = comp.id;
-                    detcaja.idCuenta = integracion.caja;
-                    esquema.detalleComprobante.Add(detcaja);
+
+                    //Detalle de cuenta Compras
+                    detalleComprobante detcompras = new detalleComprobante();
+                    detcompras.numero = numero.numero + 1;
+                    detcompras.glosa = "Compra de Mercaderias";
+                    detcompras.montoDebe = Math.Round(nota.Total - (nota.Total * 0.13), 2);
+                    detcompras.montoHaber = 0;
+                    detcompras.montoDebeAlt = Math.Round(Convert.ToDouble(detcompras.montoDebe / cambio.cambio), 2);
+                    detcompras.montoHaberAlt = 0;
+                    detcompras.idUsuario = nota.IdUsuario;
+                    detcompras.idComprobante = comp.id;
+                    detcompras.idCuenta = integracion.compras;
+                    esquema.detalleComprobante.Add(detcompras);
                     esquema.SaveChanges();
 
 
                     //Detalle de cuenta credito
                     detalleComprobante detcredito = new detalleComprobante();
-                    detcredito.numero = detcaja.numero + 1;
+                    detcredito.numero = detcompras.numero + 1;
                     detcredito.glosa = "Compra de Mercaderias";
-                    detcredito.montoDebe = nota.Total * 0.13;
+                    detcredito.montoDebe = Math.Round((nota.Total * 0.13), 2);
                     detcredito.montoHaber = 0;
-                    detcredito.montoDebeAlt = Convert.ToDouble(detcredito.montoDebe / cambio.cambio);
+                    detcredito.montoDebeAlt = Math.Round(Convert.ToDouble(detcredito.montoDebe / cambio.cambio), 2);
                     detcredito.montoHaberAlt = 0;
                     detcredito.idUsuario = nota.IdUsuario;
                     detcredito.idComprobante = comp.id;
                     detcredito.idCuenta = integracion.creditoFiscal;
                     esquema.detalleComprobante.Add(detcredito);
-                    esquema.SaveChanges();
+                    esquema.SaveChanges();                  
 
-                    //Detalle de cuenta Compras
-                    detalleComprobante detcompras = new detalleComprobante();
-                    detcompras.numero = detcredito.numero + 1;
-                    detcompras.glosa = "Compra de Mercaderias";
-                    detcompras.montoDebe = 0;
-                    detcompras.montoHaber = detcaja.montoDebe - detcredito.montoDebe;
-                    detcompras.montoDebeAlt = 0;
-                    detcompras.montoHaberAlt = Convert.ToDouble(detcompras.montoHaber / cambio.cambio);
-                    detcompras.idUsuario = nota.IdUsuario;
-                    detcompras.idComprobante = comp.id;
-                    detcompras.idCuenta = integracion.compras;
-                    esquema.detalleComprobante.Add(detcompras);
+                    //Detalle de cuenta Caja
+                    detalleComprobante detcaja = new detalleComprobante();
+                    detcaja.numero = detcredito.numero + 1;
+                    detcaja.glosa = "Compra de Mercaderias";
+                    detcaja.montoDebe = 0;
+                    detcaja.montoHaber = nota.Total;
+                    detcaja.montoDebeAlt = 0;
+                    detcaja.montoHaberAlt = Math.Round(Convert.ToDouble(detcaja.montoHaber / cambio.cambio), 2);
+                    detcaja.idUsuario = nota.IdUsuario;
+                    detcaja.idComprobante = comp.id;
+                    detcaja.idCuenta = integracion.caja;
+                    esquema.detalleComprobante.Add(detcaja);
                     esquema.SaveChanges();
 
                     var consultanota = (from x in esquema.nota

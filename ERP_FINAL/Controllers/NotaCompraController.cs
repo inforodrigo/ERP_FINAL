@@ -104,7 +104,10 @@ namespace ERP_FINAL.Controllers
         {
             try
             {
-                lLogica.AnularNotaCompra(idNota);
+                if (!lLogica.AnularNotaCompra(idNota))
+                {
+                   
+                }
                 return JavaScript("MostrarMensajeEliminacion('Anulacion Exitosa');");
             }
             catch (BussinessException ex)

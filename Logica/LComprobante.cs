@@ -303,6 +303,10 @@ namespace Logica
                     {
                         comprobante.Serie = consultarserie.serie + 1;
                     }
+                    else
+                    {
+                        comprobante.Serie = 1;
+                    }
 
                     var verificargestion = (from x in esquema.gestion
                                        where x.idEmpresa == comprobante.IdEmpresa

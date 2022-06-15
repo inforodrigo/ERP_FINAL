@@ -24,7 +24,7 @@
 <section class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-2">
+            <div class="col-1">
                 <label>Nro</label>
                 <input type="text" class="form-control" id="nro" disabled style="text-align: right;">
             </div>
@@ -37,12 +37,6 @@
                 <input type="text" class="form-control" id="fecha">
             </div>
             <div class="col-6">
-                <label>Proveedor</label>
-                <input type="text" class="form-control" id="proveedor">
-            </div>
-        </div>
-        <div class="row">          
-            <div class="col-11">
                 <label>Descripcion</label>
                 <input type="text" class="form-control" id="descripcion">
             </div>
@@ -50,6 +44,7 @@
                 <button class="btn btn-info" onclick="CargarDatosDetalle()" style="margin-top:30px;"> <i class="fas fa-plus"></i></button>
             </div>
         </div>
+        
         <div class="row">
             <div class="col-12" style="padding-top: 20px;">
                 <table id="detallenota" class="table table-bordered table-striped mb-0">
@@ -115,7 +110,7 @@
                     </div>
                     <div class="col-2">
                         <label for="subtotaldetalle" class="form-label">SubTotal</label>
-                        <input type="text" class="form-control" id="subtotaldetalle" style="text-align: right;">
+                        <input type="text" class="form-control" id="subtotaldetalle" style="text-align: right;" disabled>
                     </div>
                 </div>
             </div>
@@ -154,7 +149,7 @@
                     </div>
                     <div class="col-2">
                         <label for="subtotaldeted" class="form-label">SubTotal</label>
-                        <input type="text" class="form-control" id="subtotaldeted" style="text-align: right;">
+                        <input type="text" class="form-control" id="subtotaldeted" style="text-align: right;" disabled>
                     </div>
                     <input type="hidden" class="form-control" id="seleccionadoedit" name="seleccionadoedit">
                 </div>
@@ -304,7 +299,7 @@
             const det = {
                 idArticulo: $('#articulodetalle').val(),
                 articulo: $('#articulodetalle option:selected').text(),
-                fecha: $('#fechadetalle').val(),
+                fecha: $('#fechavencimientodetalle').val(),
                 cantidad: $('#cantidaddetalle').val(),
                 precio: $('#preciodetalle').val(),
                 subtotal: $('#subtotaldetalle').val()

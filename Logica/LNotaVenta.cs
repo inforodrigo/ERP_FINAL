@@ -36,7 +36,7 @@ namespace Logica
                         nota.Fecha = item.fecha;
                         nota.FechaStr = item.fecha.ToString("dd/MM/yyyy");
                         nota.Descripcion = item.descripcion;
-                        nota.Total = item.tipo;
+                        nota.Total = item.total;
                         nota.Tipo = item.tipo;
                         nota.IdEmpresa = item.idEmpresa;
                         nota.IdUsuario = item.idUsuario;
@@ -224,6 +224,7 @@ namespace Logica
                         lote.IdArticulo = item.idArticulo;
                         lote.NroLote = item.nroLote;
                         lote.FechaIngreso = item.fechaIngreso;
+                        lote.PrecioCompra = item.articulo.precioVenta;
                         lote.Stock = (int)item.stock;
                         lote.Estado = item.estado;                       
 
@@ -506,7 +507,7 @@ namespace Logica
                     detcaja.glosa = "Venta de Mercaderias";
                     detcaja.montoDebe = nota.Total;
                     detcaja.montoHaber = 0;
-                    detcaja.montoDebeAlt = Convert.ToDouble(detcaja.montoDebe / cambio.cambio);
+                    detcaja.montoDebeAlt = Math.Round(Convert.ToDouble(detcaja.montoDebe / cambio.cambio), 2);
                     detcaja.montoHaberAlt = 0;
                     detcaja.idUsuario = nota.IdUsuario;
                     detcaja.idComprobante = comp.id;
@@ -518,9 +519,9 @@ namespace Logica
                     detalleComprobante detit = new detalleComprobante();
                     detit.numero = detcaja.numero + 1;
                     detit.glosa = "Venta de Mercaderias";
-                    detit.montoDebe = nota.Total * 0.03;
+                    detit.montoDebe = Math.Round(nota.Total * 0.03, 2);
                     detit.montoHaber = 0;
-                    detit.montoDebeAlt = Convert.ToDouble(detit.montoDebe / cambio.cambio);
+                    detit.montoDebeAlt = Math.Round(Convert.ToDouble(detit.montoDebe / cambio.cambio), 2);
                     detit.montoHaberAlt = 0;
                     detit.idUsuario = nota.IdUsuario;
                     detit.idComprobante = comp.id;
@@ -533,9 +534,9 @@ namespace Logica
                     detdebito.numero = detit.numero + 1;
                     detdebito.glosa = "Venta de Mercaderias";
                     detdebito.montoDebe = 0;
-                    detdebito.montoHaber = nota.Total * 0.13;
+                    detdebito.montoHaber = Math.Round(nota.Total * 0.13, 2);
                     detdebito.montoDebeAlt = 0;
-                    detdebito.montoHaberAlt = Convert.ToDouble(detdebito.montoHaber / cambio.cambio);
+                    detdebito.montoHaberAlt = Math.Round(Convert.ToDouble(detdebito.montoHaber / cambio.cambio), 2);
                     detdebito.idUsuario = nota.IdUsuario;
                     detdebito.idComprobante = comp.id;
                     detdebito.idCuenta = integracion.debitoFiscal;
@@ -550,7 +551,7 @@ namespace Logica
                     detventas.montoDebe = 0;
                     detventas.montoHaber = detcaja.montoDebe - detdebito.montoHaber;
                     detventas.montoDebeAlt = 0;
-                    detventas.montoHaberAlt = Convert.ToDouble(detventas.montoHaber / cambio.cambio);
+                    detventas.montoHaberAlt = Math.Round(Convert.ToDouble(detventas.montoHaber / cambio.cambio), 2);
                     detventas.idUsuario = nota.IdUsuario;
                     detventas.idComprobante = comp.id;
                     detventas.idCuenta = integracion.ventas;
@@ -562,9 +563,9 @@ namespace Logica
                     detitxpagar.numero = detventas.numero + 1;
                     detitxpagar.glosa = "Venta de Mercaderias";
                     detitxpagar.montoDebe = 0;
-                    detitxpagar.montoHaber = nota.Total * 0.03;
+                    detitxpagar.montoHaber = Math.Round(nota.Total * 0.03, 2);
                     detitxpagar.montoDebeAlt = 0;
-                    detitxpagar.montoHaberAlt = Convert.ToDouble(detitxpagar.montoHaber / cambio.cambio);
+                    detitxpagar.montoHaberAlt = Math.Round(Convert.ToDouble(detitxpagar.montoHaber / cambio.cambio), 2);
                     detitxpagar.idUsuario = nota.IdUsuario;
                     detitxpagar.idComprobante = comp.id;
                     detitxpagar.idCuenta = integracion.itxPagar;

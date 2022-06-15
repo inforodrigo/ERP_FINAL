@@ -651,13 +651,13 @@ namespace Logica
 
                     EConfiguracionIntegracion conf = new EConfiguracionIntegracion();
                     conf.Integracion = consulta.integracion;
-                    conf.CajaStr = consulta.cuenta.codigo + " - " + consulta.cuenta.nombre;
+                    conf.CajaStr = consulta.cuenta5.codigo + " - " + consulta.cuenta5.nombre;
                     conf.CreditoFiscalStr = consulta.cuenta1.codigo + " - " + consulta.cuenta1.nombre;
                     conf.DebitoFiscalStr = consulta.cuenta2.codigo + " - " + consulta.cuenta2.nombre;
-                    conf.ComprasStr = consulta.cuenta3.codigo + " - " + consulta.cuenta3.nombre;
+                    conf.ComprasStr = consulta.cuenta.codigo + " - " + consulta.cuenta.nombre;
                     conf.VentasStr = consulta.cuenta4.codigo + " - " + consulta.cuenta4.nombre;
-                    conf.ItStr = consulta.cuenta5.codigo + " - " + consulta.cuenta5.nombre;
-                    conf.ItxPagarStr = consulta.cuenta6.codigo + " - " + consulta.cuenta6.nombre;                   
+                    conf.ItStr = consulta.cuenta6.codigo + " - " + consulta.cuenta6.nombre;
+                    conf.ItxPagarStr = consulta.cuenta3.codigo + " - " + consulta.cuenta3.nombre;                   
 
                     return conf;
 
