@@ -1,0 +1,130 @@
+﻿
+@using ReportViewerForMvc;
+@using Entidad;
+@{
+    ViewBag.Title = "ReporteBalanceGeneral";
+    List<EGestion> gestiones = ViewBag.Gestion;
+    List<EMoneda> empresaMonedas = ViewBag.EmpresaMonedas; }
+
+@section EtiquetaHead
+    {
+    <link href="@Url.Content("~/Content/adminLte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/adminLte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/bootstrap-datepicker/css/bootstrap-datepicker.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/bootstrap-datepicker/css/bootstrap-datepicker3.css")" rel="stylesheet" />
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Reporte Balance General</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row ">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Gestion</label>
+                                    <select class="form-control select2" style="width: 100%;" id="select_gestion">
+                                        @{ 
+                                            foreach (var i in gestiones)
+                                            {
+                                                <option value="@i.Id">@i.Nombre</option> 
+                                            }
+                                          }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Moneda</label>
+                                    <select class="form-control select2" style="width: 100%;" id="select_moneda">
+                                        @{ 
+                                            foreach (var i in empresaMonedas)
+                                            {
+                                                <option value="@i.Id">@i.Abreviatura - @i.Nombre</option> 
+                                             } 
+                                         }
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <button class="btn btn-primary" onclick="GenerarReporte()" style="margin-top: 30px;"> <i class="fas fa-print"></i> Generar Reporte </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="contenedor" style="width:1000px; height:900px; ">
+                            @Html.Partial("ReporteBalanceGeneralParcial")
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+
+    <script src="@Url.Content("~/Content/adminLte/plugins/datatables/jquery.dataTables.min.js")"></script>
+    <script src="@Url.Content("~/Content/adminLte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js")"></script>
+    <script src="@Url.Content("~/Content/adminLte/plugins/datatables-responsive/js/dataTables.responsive.min.js")"></script>
+    <script src="@Url.Content("~/Content/adminLte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js")"></script>
+    <script src="@Url.Content("~/Content/bootstrap-datepicker/js/bootstrap-datepicker.min.js")"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+        });
+
+        function GenerarReporte()
+        {
+            var IdGestion = $("#select_gestion").val();
+            var IdMoneda = $("#select_moneda").val();
+
+            $.ajax({
+                url: "@Url.Action("ReporteDeBalanceGeneral", "Reporte")",
+                cache: false,
+                data: {
+                    idgestion: IdGestion,
+                    idmoneda: IdMoneda
+                },
+                type: "GET", success: function (html) {
+                    $("#contenedor").html(html);
+                }
+            })
+        }
+
+        function redireccionar(url) {
+            window.location = url;
+        }
+
+        function MostrarMensaje(msj) {
+            $(document).Toasts('create', {
+                class: ' bg-danger',
+                title: "Alerta",
+                autohide: true,
+                delay: 10000,
+                body: msj
+            });
+        }
+    </script>
+
+}
+
+

@@ -1,0 +1,11 @@
+﻿@using ReportViewerForMvc;
+@using Entidad;
+
+@{ 
+    if (ViewBag.ReporteEstadoResultados != null)
+    {
+        @Html.ReportViewer(ViewBag.ReporteEstadoResultados as Microsoft.Reporting.WebForms.ReportViewer, new { style = "width: 900px; height:900px;" }) 
+    } 
+}
+
+

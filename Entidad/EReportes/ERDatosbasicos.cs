@@ -86,4 +86,13 @@ namespace Entidad.EReportes
         public string FechaActual { get; set; }
     }
 
+    public class ERDatosBasicoBalanceGeneral
+    {
+        public string Usuario { get; set; }
+        public string NombreEmpresa { get; set; }
+        public string Gestion { get; set; }
+        public string Moneda { get; set; }
+        public string FechaActual { get; set; }
+    }
+
 }

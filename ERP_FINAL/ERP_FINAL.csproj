@@ -2581,6 +2581,10 @@
     <Content Include="Views\NotaCompra\ReporteNotaCompra.cshtml" />
     <Content Include="Views\NotaVenta\Details.cshtml" />
     <Content Include="Views\NotaVenta\ReporteNotaVenta.cshtml" />
+    <Content Include="Views\Reporte\ReporteBalanceGeneral.cshtml" />
+    <Content Include="Views\Reporte\ReporteBalanceGeneralParcial.cshtml" />
+    <Content Include="Views\Reporte\ReporteEstadoResultado.cshtml" />
+    <Content Include="Views\Reporte\ReporteEstadoResultadoParcial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2611,12 +2615,14 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Reportes\ReporteBalanceGeneral.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteBalanceInicial.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteBalanceInicialNivel4.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteBalanceInicialNivel5.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteBalanceInicialNivel6.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteBalanceInicialNivel7.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteComprobanteContable.rdlc" />
+    <EmbeddedResource Include="Reportes\ReporteEstadoResultados.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteGestion.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteLibroDiario.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteLibroMayor.rdlc" />

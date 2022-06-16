@@ -66,6 +66,7 @@
     <Compile Include="Enums\EUtils.cs" />
     <Compile Include="Enums\EValidaciones.cs" />
     <Compile Include="EPeriodo.cs" />
+    <Compile Include="EReportes\ERBalanceGeneral.cs" />
     <Compile Include="EReportes\ERBalanceInicial.cs" />
     <Compile Include="EReportes\ERComprobanteContable.cs" />
     <Compile Include="EReportes\ERDatosbasicos.cs" />

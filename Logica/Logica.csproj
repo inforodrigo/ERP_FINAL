@@ -63,6 +63,7 @@
     <Compile Include="LNotaCompra.cs" />
     <Compile Include="LNotaVenta.cs" />
     <Compile Include="LPeriodo.cs" />
+    <Compile Include="LRBalanceGeneral.cs" />
     <Compile Include="LReporte.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -32,6 +32,7 @@ namespace Logica
         private LNotaCompra lNotaCompra;
         private LNotaVenta lNotaVenta;
         private LEstadoResultados lEstadoResultados;
+        private LRBalanceGeneral lRBalanceGeneral;
 
         public static LBase<E> Instancia
         {
@@ -207,6 +208,18 @@ namespace Logica
                     lEstadoResultados = new LEstadoResultados();
                 }
                 return lEstadoResultados;
+            }
+        }
+
+        public LRBalanceGeneral LRBalanceGeneral
+        {
+            get
+            {
+                if (lRBalanceGeneral == null)
+                {
+                    lRBalanceGeneral = new LRBalanceGeneral();
+                }
+                return lRBalanceGeneral;
             }
         }
     }
