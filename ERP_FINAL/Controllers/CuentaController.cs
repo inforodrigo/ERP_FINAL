@@ -204,6 +204,11 @@ namespace ERP_FINAL.Controllers
             }
         }
 
+        public ActionResult ConfiguracionCuentas()
+        {
+            return View(); 
+        }
+
         [HttpPost]
         public ActionResult ObtenerCuentasConfiguracion(int id)
         {
@@ -307,17 +312,24 @@ namespace ERP_FINAL.Controllers
 
                 EConfiguracionIntegracion conf = new EConfiguracionIntegracion();
                 conf = lLogica.ObtenerConfiguracion(sEmpresa.Id);
+                var caja = lLogica.ObtenerConfiguracionPorCuenta(sEmpresa.Id, conf.Caja);
+                var creditofiscal = lLogica.ObtenerConfiguracionPorCuenta(sEmpresa.Id, conf.CreditoFiscal);
+                var debitofiscal = lLogica.ObtenerConfiguracionPorCuenta(sEmpresa.Id, conf.DebitoFiscal);
+                var compras = lLogica.ObtenerConfiguracionPorCuenta(sEmpresa.Id, conf.Compras);
+                var ventas = lLogica.ObtenerConfiguracionPorCuenta(sEmpresa.Id, conf.Ventas);
+                var it = lLogica.ObtenerConfiguracionPorCuenta(sEmpresa.Id, conf.It);
+                var itxpagar = lLogica.ObtenerConfiguracionPorCuenta(sEmpresa.Id, conf.ItxPagar);
 
                 return Json(new
                 {
                     integracion = conf.Integracion,
-                    caja = conf.CajaStr,
-                    creditofiscal = conf.CreditoFiscalStr,
-                    debitofiscal = conf.DebitoFiscalStr,
-                    compras = conf.ComprasStr,
-                    ventas = conf.VentasStr,
-                    it = conf.ItStr,
-                    itxpagar = conf.ItxPagarStr
+                    caja = caja,
+                    creditofiscal = creditofiscal,
+                    debitofiscal = debitofiscal,
+                    compras = compras,
+                    ventas = ventas,
+                    it = it,
+                    itxpagar = itxpagar
                 });
 
             }
@@ -334,15 +346,24 @@ namespace ERP_FINAL.Controllers
         }
 
         [HttpPost]
-        public ActionResult ActualizarConfiguracion(int configuracion)
+        public ActionResult ActualizarConfiguracion(int configuracion, int caja, int creditofiscal, int debitofiscal, int compras, int ventas, int it, int itxpagar)
         {
             try
             {
                 EUsuario sUsuario = (EUsuario)Session["Usuario"];
                 EEmpresa sEmpresa = (EEmpresa)Session["Empresa"];
 
-
-                var integracion = lLogica.ActualizarConfiguracion(sEmpresa.Id, configuracion);
+                EConfiguracionIntegracion conf = new EConfiguracionIntegracion();
+                conf.IdEmpresa = sEmpresa.Id;
+                conf.Integracion = configuracion;
+                conf.Caja = caja;
+                conf.CreditoFiscal = creditofiscal;
+                conf.DebitoFiscal = debitofiscal;
+                conf.Compras = compras;
+                conf.Ventas = ventas;
+                conf.It = it;
+                conf.ItxPagar = itxpagar;
+                var integracion = lLogica.ActualizarConfiguracion(sEmpresa.Id, conf);
 
 
                 return JavaScript("MostrarMensajeConfiguracion('Actualizacion de Configuracion Exitosa');");

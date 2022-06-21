@@ -649,14 +649,21 @@ namespace Logica
                                     where x.idEmpresa == idEmpresa
                                     select x).FirstOrDefault();
 
-                    EConfiguracionIntegracion conf = new EConfiguracionIntegracion();
+                    EConfiguracionIntegracion conf = new EConfiguracionIntegracion();                    
                     conf.Integracion = consulta.integracion;
+                    conf.Caja = consulta.cuenta5.id;
                     conf.CajaStr = consulta.cuenta5.codigo + " - " + consulta.cuenta5.nombre;
+                    conf.CreditoFiscal = consulta.cuenta1.id;
                     conf.CreditoFiscalStr = consulta.cuenta1.codigo + " - " + consulta.cuenta1.nombre;
+                    conf.DebitoFiscal = consulta.cuenta2.id;
                     conf.DebitoFiscalStr = consulta.cuenta2.codigo + " - " + consulta.cuenta2.nombre;
+                    conf.Compras = consulta.cuenta.id;
                     conf.ComprasStr = consulta.cuenta.codigo + " - " + consulta.cuenta.nombre;
+                    conf.Ventas = consulta.cuenta4.id;
                     conf.VentasStr = consulta.cuenta4.codigo + " - " + consulta.cuenta4.nombre;
+                    conf.It = consulta.cuenta6.id;
                     conf.ItStr = consulta.cuenta6.codigo + " - " + consulta.cuenta6.nombre;
+                    conf.ItxPagar = consulta.cuenta3.id;
                     conf.ItxPagarStr = consulta.cuenta3.codigo + " - " + consulta.cuenta3.nombre;                   
 
                     return conf;
@@ -669,7 +676,60 @@ namespace Logica
             }
         }
 
-        public bool ActualizarConfiguracion(int idEmpresa, int configuracion)
+        public List<ECuenta> ObtenerConfiguracionPorCuenta(int idempresa, int idcuenta)
+        {
+            using (var esquema = GetEsquema())
+            {
+
+                try
+                {                   
+
+                    var cuenta = (from x in esquema.cuenta
+                                    where x.estado == (int)Estado.Habilitado
+                                    && x.idEmpresa == idempresa
+                                    && x.tipocuenta == (int)ETipoCuentas.Detallado
+                                    && x.id == idcuenta
+                                    select x).FirstOrDefault();
+
+                    //agregamos de primer lugar la cuenta que se esta consultado
+                    List<ECuenta> cuentas = new List<ECuenta>();
+                    ECuenta cuentai = new ECuenta();
+                    cuentai.Id = cuenta.id;
+                    cuentai.Codigo = cuenta.codigo;
+                    cuentai.Nombre = cuenta.nombre;
+                    cuentai.IdCuentaPadre = (int)cuenta.idCuentaPadre;
+                    cuentas.Add(cuentai);
+
+                    //luego agergamos las demas cuentas para que la cuenta consultada aparezca de primero en la lista
+
+                    var cue = (from x in esquema.cuenta
+                                  where x.estado == (int)Estado.Habilitado
+                                  && x.idEmpresa == idempresa
+                                  && x.tipocuenta == (int)ETipoCuentas.Detallado
+                                  && x.id != idcuenta
+                                  select x).ToList();
+
+                    foreach (var item in cue)
+                    {
+                        ECuenta cu = new ECuenta();
+                        cu.Id = item.id;
+                        cu.Codigo = item.codigo;
+                        cu.Nombre = item.nombre;
+                        cu.IdCuentaPadre = (int)item.idCuentaPadre;
+
+                        cuentas.Add(cu);
+                    }
+
+                    return cuentas;
+                }
+                catch (Exception ex)
+                {
+                    throw new BussinessException("Error no se puedo obtener la lista de cuentas");
+                }
+            }
+        }
+
+        public bool ActualizarConfiguracion(int idEmpresa, EConfiguracionIntegracion conf)
         {
             using (var esquema = GetEsquema())
             {
@@ -679,7 +739,14 @@ namespace Logica
                                     where x.idEmpresa == idEmpresa
                                     select x).FirstOrDefault();
 
-                    consulta.integracion = configuracion;
+                    consulta.integracion = conf.Integracion;
+                    consulta.caja = conf.Caja;
+                    consulta.creditoFiscal = conf.CreditoFiscal;
+                    consulta.debitoFiscal = conf.DebitoFiscal;
+                    consulta.compras = conf.Compras;
+                    consulta.ventas = conf.Ventas;
+                    consulta.it = conf.It;
+                    consulta.itxPagar = conf.ItxPagar;                    
                     esquema.SaveChanges();
 
                     return true;

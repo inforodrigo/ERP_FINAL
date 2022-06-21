@@ -2585,6 +2585,9 @@
     <Content Include="Views\Reporte\ReporteBalanceGeneralParcial.cshtml" />
     <Content Include="Views\Reporte\ReporteEstadoResultado.cshtml" />
     <Content Include="Views\Reporte\ReporteEstadoResultadoParcial.cshtml" />
+    <Content Include="Views\Articulo\ReporteStockArticulos.cshtml" />
+    <Content Include="Views\Articulo\ReporteStockArticulosParcial.cshtml" />
+    <Content Include="Views\Cuenta\ConfiguracionCuentas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2628,6 +2631,7 @@
     <EmbeddedResource Include="Reportes\ReporteLibroMayor.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteNotaCompra.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteNotaVenta.rdlc" />
+    <EmbeddedResource Include="Reportes\ReporteStockArticulos.rdlc" />
     <EmbeddedResource Include="Reportes\ReporteSumasSaldos.rdlc" />
   </ItemGroup>
   <PropertyGroup>

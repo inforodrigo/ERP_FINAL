@@ -79,6 +79,7 @@
     <Compile Include="EReportes\ERLibroMayor.cs" />
     <Compile Include="EReportes\ERNotaCompra.cs" />
     <Compile Include="EReportes\ERNotaVenta.cs" />
+    <Compile Include="EReportes\ERStockArticulos.cs" />
     <Compile Include="EReportes\ERSumasSaldos.cs" />
     <Compile Include="EUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

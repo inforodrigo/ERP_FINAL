@@ -1,0 +1,411 @@
+﻿
+@{
+    ViewBag.Title = "ConfiguracionCuentas";
+}
+
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="@Url.Content("~/Front/plugins/select2/css/select2.min.css")" rel="stylesheet" />
+<link href="@Url.Content("~/Front/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css")" rel="stylesheet" />
+
+<h2>Configuracion de Cuentas</h2>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Configuracion</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row justify-content-end">
+
+                            <div class="form-group">
+                                <a id="btnconfiguracion" class="btn btn-info" onclick="presionarBoton()" style="margin-right:10px;"> <i class=" fas fa-plus-square"></i> Registrar Configuracion </a>
+                            </div>
+
+                            <input type="hidden" id="tipoconfiguracion" value="" />
+
+                        </div>
+
+                        <br />
+
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="form-group row col-6">
+                                    <label for="radio" class="col-sm-4 col-form-label">Integracion </label>
+                                    <input name="integracion" type="radio" id="si" value="1" checked style="margin-top: 5px; margin-right: 5px" />
+                                    <label for="si"> Si</label>
+                                    <input name="integracion" type="radio" id="no" value="0" style="margin-top: 5px; margin-right: 5px; margin-left: 5px" />
+                                    <label for="no"> No</label>
+                                </div>
+                                <div class="form-group row col-6">
+                                    <label for="caja" class="col-sm-4 col-form-label">Caja:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="caja" name="caja">
+                                            <option value="0">Seleccione una Cuenta</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group row col-6">
+                                    <label for="creaditofiscal" class="col-sm-4 col-form-label">Credito fiscal:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="creditofiscal">
+                                            <option value="">Seleccione una Cuenta</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row col-6">
+                                    <label for="debitofiscal" class="col-sm-4 col-form-label">Debito Fiscal:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="debitofiscal">
+                                            <option value="">Seleccione una Cuenta</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group row col-6">
+                                    <label for="compras" class="col-sm-4 col-form-label">Compras:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="compras" name="compras">
+                                            <option value="">Seleccione una Cuenta</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row col-6">
+                                    <label for="ventas" class="col-sm-4 col-form-label">Ventas:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="ventas">
+                                            <option value="">Seleccione una Cuenta</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group row col-6">
+                                    <label for="it" class="col-sm-4 col-form-label">IT:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="it">
+                                            <option value="">Seleccione una Cuenta</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row col-6">
+                                    <label for="itxpagar" class="col-sm-4 col-form-label">It x Pagar:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="itxpagar">
+                                            <option value="">Seleccione una Cuenta</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+
+                    </div>
+                    <!-- /.card-footer-->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="//cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="~/Front/plugins/select2/js/select2.full.min.js"></script>
+
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+            VerificarConfiguracion();
+        });
+
+        function VerificarConfiguracion() {
+
+            $.ajax({
+                url: "@Url.Action("VerificarConfiguracion", "Cuenta")",
+                cache: false,
+                        type: "POST",
+                        dataType: "json",
+                data: {
+                    id: 0
+
+                }, success: function (result) {
+                    var conf = result.integracion;
+                    if (conf == 0) {
+                        $('#tipoconfiguracion').val(0)
+                        ObtenerCuentasConfiguracion();
+                    } else {
+                        $('#tipoconfiguracion').val(1)
+                        document.getElementById("btnconfiguracion").textContent = "Actualizar Configuracion";
+                        ObtenerConfiguracion();
+                    }
+                }
+            });
+        }
+
+        function ObtenerConfiguracion() {
+            LimpiarSelects();
+            var si = document.getElementById('si');
+            var no = document.getElementById('no');
+            $.ajax({
+                url: "@Url.Action("ObtenerConfiguracion", "Cuenta")",
+                cache: false,
+                        type: "POST",
+                        dataType: "json",
+                data: {
+                    id: 0
+
+                }, success: function (result) {
+                    console.log(result);
+                    var conf = result.integracion;
+                    if (conf == 0) {
+                        no.checked = true;
+                    } else {
+                        si.checked = true;
+                    }
+
+                    $.each(result.caja, function (index, value) {
+                        $('#caja').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                        $('#caja').select2({
+                            theme: "classic",
+                        });
+                    });
+
+                    $.each(result.creditofiscal, function (index, value) {
+                        $('#creditofiscal').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                        $('#creditofiscal').select2({
+                            theme: "classic"
+                        });
+                    });
+
+                    $.each(result.debitofiscal, function (index, value) {
+                        $('#debitofiscal').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                        $('#debitofiscal').select2({
+                            theme: "classic"
+                        });
+                    });
+
+                    $.each(result.compras, function (index, value) {
+                        $('#compras').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                        $('#compras').select2({
+                            theme: "classic"
+                        });
+                    });
+
+                    $.each(result.ventas, function (index, value) {
+                        $('#ventas').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                        $('#ventas').select2({
+                            theme: "classic"
+                        });
+                    });
+
+                    $.each(result.it, function (index, value) {
+                        $('#it').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                        $('#it').select2({
+                            theme: "classic"
+                        });
+                    });
+
+                    $.each(result.itxpagar, function (index, value) {
+                        $('#itxpagar').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                        $('#itxpagar').select2({
+                            theme: "classic"
+                        });
+                    });
+                }
+            });
+        }
+
+        function ObtenerCuentasConfiguracion() {
+            LimpiarSelects();
+            $.ajax({
+                url: "@Url.Action("ObtenerCuentasConfiguracion", "Cuenta")",
+                cache: false,
+                        type: "POST",
+                        dataType: "json",
+                data: {
+                    id: 0
+
+                }, success: function (result) {
+                    $.each(result.cuentas, function (index, value) {
+                        $('#caja').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                        $('#caja').select2({
+                            theme: "classic"
+                        });
+                        $('#creditofiscal').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                        $('#creditofiscal').select2({
+                            theme: "classic"
+                        });
+                        $('#debitofiscal').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                        $('#debitofiscal').select2({
+                            theme: "classic"
+                        });
+                        $('#compras').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                        $('#compras').select2({
+                            theme: "classic"
+                        });
+                        $('#ventas').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                        $('#ventas').select2({
+                            theme: "classic"
+                        });
+                        $('#it').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                        $('#it').select2({
+                            theme: "classic"
+                        });
+                        $('#itxpagar').append('<option value=' + value.Id + ' > ' + value.Codigo + ' - ' + value.Nombre + '</option>');
+                        $('#itxpagar').select2({
+                            theme: "classic"
+                        });
+                    });
+                }
+            });
+        }
+
+        function presionarBoton() {
+            var verificar = $('#tipoconfiguracion').val()
+            if (verificar == 0) {
+                RegistrarConfiguracion();
+            } else {
+                ActualizarConfiguracion();
+            }
+        }
+
+        function LimpiarSelects() {
+            $("#caja").empty();
+            $("#creditofiscal").empty();
+            $("#debitofiscal").empty();
+            $("#compras").empty();
+            $("#ventas").empty();
+            $("#it").empty();
+            $("#itxpagar").empty();
+        }
+
+        function validarCuentas() {
+            if ($("#caja").val() == $("#creditofiscal").val() || $("#caja").val() == $("#debitofiscal").val() || $("#caja").val() == $("#compras").val() || $("#caja").val() == $("#ventas").val() || $("#caja").val() == $("#it").val() || $("#caja").val() == $("#itxpagar").val()) {
+                return MostrarMensaje('Error no se puede seleccionar mas de una vez una sola cuenta');
+                return false;
+            }
+            if ($("#creditofiscal").val() == $("#caja").val() || $("#creditofiscal").val() == $("#debitofiscal").val() || $("#creditofiscal").val() == $("#compras").val() || $("#creditofiscal").val() == $("#ventas").val() || $("#creditofiscal").val() == $("#it").val() || $("#creditofiscal").val() == $("#itxpagar").val()) {
+                return MostrarMensaje('Error no se puede seleccionar mas de una vez una sola cuenta');
+                return false;
+            }
+            if ($("#debitofiscal").val() == $("#caja").val() || $("#debitofiscal").val() == $("#creditofiscal").val() || $("#debitofiscal").val() == $("#compras").val() || $("#debitofiscal").val() == $("#ventas").val() || $("#debitofiscal").val() == $("#it").val() || $("#debitofiscal").val() == $("#itxpagar").val()) {
+                return MostrarMensaje('Error no se puede seleccionar mas de una vez una sola cuenta');
+                return false;
+            }
+            if ($("#compras").val() == $("#caja").val() || $("#compras").val() == $("#creditofiscal").val() || $("#compras").val() == $("#debitofiscal").val() || $("#compras").val() == $("#ventas").val() || $("#compras").val() == $("#it").val() || $("#compras").val() == $("#itxpagar").val()) {
+                return MostrarMensaje('Error no se puede seleccionar mas de una vez una sola cuenta');
+                return false;
+            }
+            if ($("#ventas").val() == $("#caja").val() || $("#ventas").val() == $("#creditofiscal").val() || $("#ventas").val() == $("#debitofiscal").val() || $("#ventas").val() == $("#compras").val() || $("#ventas").val() == $("#it").val() || $("#ventas").val() == $("#itxpagar").val()) {
+                return MostrarMensaje('Error no se puede seleccionar mas de una vez una sola cuenta');
+                return false;
+            }
+            if ($("#it").val() == $("#caja").val() || $("#it").val() == $("#creditofiscal").val() || $("#it").val() == $("#debitofiscal").val() || $("#it").val() == $("#compras").val() || $("#it").val() == $("#ventas").val() || $("#it").val() == $("#itxpagar").val()) {
+                return MostrarMensaje('Error no se puede seleccionar mas de una vez una sola cuenta');
+                return false;
+            }
+            if ($("#itxpagar").val() == $("#caja").val() || $("#itxpagar").val() == $("#creditofiscal").val() || $("#itxpagar").val() == $("#debitofiscal").val() || $("#itxpagar").val() == $("#compras").val() || $("#itxpagar").val() == $("#ventas").val() || $("#itxpagar").val() == $("#it").val()) {
+                return MostrarMensaje('Error no se puede seleccionar mas de una vez una sola cuenta');
+                return false;
+            }
+            return true;
+        }
+
+        function RegistrarConfiguracion() {
+            var configuracion = $("input[name='integracion']:checked").val();
+            var validate = validarCuentas();
+            if (!validate) {
+                return;
+            }
+
+
+            $.ajax({
+                url: "@Url.Action("RegistrarConfiguracion", "Cuenta")",
+                cache: false,
+                        type: "POST",
+                        dataType: "script",
+                data: {
+                    configuracion: configuracion, caja: $("#caja").val(), creditofiscal: $("#creditofiscal").val(),
+                    debitofiscal: $("#debitofiscal").val(), compras: $("#compras").val(), ventas: $("#ventas").val(),
+                    it: $("#it").val(), itxpagar: $("#itxpagar").val()
+                }
+            });
+            $("#modalconfiguracion").modal('hide');
+        }
+
+        function ActualizarConfiguracion() {
+            var configuracion = $("input[name='integracion']:checked").val();
+            var validate = validarCuentas();
+            if (!validate) {
+                return;
+            }
+
+            $.ajax({
+                url: "@Url.Action("ActualizarConfiguracion", "Cuenta")",
+                cache: false,
+                        type: "POST",
+                        dataType: "script",
+                data: {
+                    configuracion: configuracion, caja: $("#caja").val(), creditofiscal: $("#creditofiscal").val(),
+                    debitofiscal: $("#debitofiscal").val(), compras: $("#compras").val(), ventas: $("#ventas").val(),
+                    it: $("#it").val(), itxpagar: $("#itxpagar").val()
+                }
+            });            
+        }
+
+        function MostrarMensajeConfiguracion(msj) {
+            var verificar = $('#tipoconfiguracion').val();
+            var msjbody = "";
+            if (verificar == 0) {
+                msjbody = "Registrado exitosamente";
+                setTimeout("location.reload(true);", 3000);
+            } else {
+                msjbody = "Actualizado exitosamente"         
+            }
+             
+            $(document).Toasts('create', {
+                class: 'bg-success',
+                title: msj,
+                autohide: true,
+                delay: 10000,
+                body: msjbody
+            });                     
+        }
+
+        function MostrarMensaje(msj) {
+            $("#modalEliminar").modal('hide');
+            $(document).Toasts('create', {
+                class: ' bg-danger',
+                title: "Alerta",
+                autohide: true,
+                delay: 10000,
+                body: msj
+            });
+        }
+
+
+    function redireccionar(url) {
+        window.location = url;
+    }
+
+    </script>
+}
+

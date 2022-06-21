@@ -1,0 +1,16 @@
+﻿@using ReportViewerForMvc;
+@using Entidad;
+
+@{ if (ViewBag.ReporteBalanceInicial != null)
+    {
+@Html.ReportViewer(ViewBag.ReporteBalanceInicial as Microsoft.Reporting.WebForms.ReportViewer, new { style = "width: 900px; height:900px;" }) } }
+@using ReportViewerForMvc;
+@using Entidad;
+
+@{ 
+    if (ViewBag.ReporteStockArticulos != null)
+    {
+        @Html.ReportViewer(ViewBag.ReporteStockArticulos as Microsoft.Reporting.WebForms.ReportViewer, new { style = "width: 900px; height:900px;" }) 
+    } 
+ }
+
